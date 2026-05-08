@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/fluxogramas/', include('fluxogramas.urls')),
     path('api/acessos/', include('acessos.urls')),
+    path('api/favoritos/', include('favoritos.urls')),
 ]
