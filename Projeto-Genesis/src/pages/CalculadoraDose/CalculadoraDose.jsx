@@ -7,6 +7,10 @@ const App = () => {
     const [dose, setDose] = useState(0);
     const [resultadoTotal, setResultadoTotal] = useState(0);
 
+    const [pedAberto, setPedAberto] = useState(false);
+    const [campoAtivo, setCampoAtivo] = useState(null);
+    const [buffer, setBuffet] = useState('');
+
     const handlePesoChange = (valor) => {
         if (valor === "") { setPeso(""); return; }
         const num = parseFloat(valor);
@@ -15,18 +19,26 @@ const App = () => {
         }
     };
 
+    const handleDoseChange = (valor) => {
+        if (valor === "") { setDose(""); return; }
+        const num = parseFloat(valor);
+        if (!isNaN(num) && num >= 0) {
+            setDose(parseFloat(num.toFixed(1)));
+        }
+    };
+
     const ajustarDose = (delta) => {
         setDose(prev => {
-            const nova = Math.max(0.1, prev + delta);
+            const nova = Math.max(0, (parseFloat(prev) || 0) + delta);
             return parseFloat(nova.toFixed(1));
         });
     };
 
     useEffect(() => {
-        setResultadoTotal((parseFloat(peso) || 0) * dose);
+        setResultadoTotal((parseFloat(peso) || 0) * (parseFloat(dose) || 0));
     }, [peso, dose]);
 
-    const isDoseAlta = resultadoTotal > 100;
+    // const isDoseAlta = resultadoTotal > 100; (depende da medicaçao)
 
     return (
         <div className="body-container">
@@ -66,9 +78,14 @@ const App = () => {
                         </div>
                         <div className="container-input">
                             <button onClick={() => ajustarDose(-0.1)} className="step-btn">-</button>
-                            <div className="input-field" style={{ lineHeight: '40px' }}>
-                                {dose.toLocaleString('pt-BR')}
-                            </div>
+                            <input
+                                type="number"
+                                value={dose}
+                                onChange={(e) => handleDoseChange(e.target.value)}
+                                className="input-peso"
+                                step="0.1"
+                                min="0"
+                            />
                             <button onClick={() => ajustarDose(0.1)} className="step-btn">+</button>
                         </div>
                     </div>
@@ -100,7 +117,7 @@ const App = () => {
                     </div>
                 </div>
 
-                <footer className="app-footrt">
+                <footer className="app-footer">
                     <Home color="white" size={24} />
                     <Pill color="white" size={24} />
                     <ClipboardList color="white" size={24} />

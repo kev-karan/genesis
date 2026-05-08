@@ -1,0 +1,142 @@
+:root {
+  --primaria: #5B91C0;
+  --secundaria: #2a569f;
+  --fundo: #FFFFFF;
+  --texto: #002646;
+  --verde-card: #e2fbe5;
+  --verde-texto: #27AE60;
+  --vermelho-alerta: #FFDADA;
+  --vermelho-texto: #C0392B;
+  --cinza-borda: #E0E0E0;
+}
+
+.body-container {
+  background-color: #f0f2f5;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.telefone-tela {
+  width: 100%;
+  max-width: 400px;
+  background-color: var(--fundo); 
+  color: var(--texto); 
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-height: 100vh;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.app-header {
+  background-color: var(--secundaria);
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+
+.app-container {
+  padding: 20px;
+  flex: 1;
+}
+
+.instrucao {
+  text-align: center;
+  color: var(--secundaria);
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.icones, .icon-circle {
+  width: 45px;
+  height: 45px;
+  background-color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  margin-right: 15px;
+}
+
+.input-linha {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.container-input {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--cinza-borda);
+  border-radius: 10px;
+  overflow: hidden;
+  background: white;
+}
+
+.step-btn {
+  background: none;
+  border: none;
+  padding: 10px 15px;
+  font-size: 20px;
+  color: var(--secundaria);
+  cursor: pointer;
+}
+
+.input-peso, .input-field {
+  width: 60px;
+  border: none;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--texto) !important; 
+  outline: none;
+}
+
+.resultado-card {
+  border-radius: 20px;
+  padding: 25px;
+  text-align: center;
+  margin-bottom: 15px;
+  margin-top: 10px;
+}
+
+.result-value {
+  font-size: 35px;
+  font-weight: 900;
+  margin: 5px 0;
+}
+
+.app-footer {
+  background-color: var(--secundaria);
+  padding: 15px;
+  display: flex;
+  justify-content: space-around;
+  margin-top: auto;
+}
+
+input.input-peso, 
+input.input-field {
+  -webkit-appearance: none !important;
+  -moz-appearance: textfield !important;
+  appearance: none !important;
+  background-color: white !important; 
+  color: var(--texto) !important;      
+  border: none !important;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  width: 60px;
+  outline: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
