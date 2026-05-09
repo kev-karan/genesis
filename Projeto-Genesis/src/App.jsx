@@ -45,7 +45,7 @@ function AppContent() {
             {tela === 'home' && <Home navegar={navegar} />}
             {tela === 'emergencia' && <ModoEmergencia navegar={navegar} />}
             {(tela === 'dengue' || tela === 'sedacao') && protocoloId && <Protocolo protocoloId={protocoloId} navegar={navegar} />}
-            {tela === 'calculadora' && <CalculadoraDose />}
+            {tela === 'calculadora' && <CalculadoraDose navegar={navegar} />}
           </>
         )}
       </div>
