@@ -3,6 +3,7 @@ import TopBar from '../components/TopBar'
 import BottomNav from '../components/BottomNav'
 import DownloadBtn from '../assets/DownloadBtn.png'
 import VisualizarBtn from '../assets/VisualizarBtn.png'
+import { useFavorites } from '../hooks/useFavorites'
 
 const LINE_COLOR = '#A8C4DF'
 const PILL_H = 38
@@ -145,6 +146,22 @@ function GrupoNode({ grupo, nodeRef }) {
 }
 
 export default function ProtocoloSedacao({ navegar }) {
+  const FLUXO_ID = 2
+  const { isFavorited, addToFavorites, removeFromFavorites } = useFavorites()
+  const isFav = isFavorited(FLUXO_ID)
+
+  const handleToggleFavorite = async () => {
+    try {
+      if (isFav) {
+        await removeFromFavorites(FLUXO_ID)
+      } else {
+        await addToFavorites(FLUXO_ID)
+      }
+    } catch (err) {
+      console.error('Erro ao atualizar favorito:', err)
+    }
+  }
+
   // refs para cada nó de grupo — para medir a posição real do último
   const nodeRefs = useRef(grupos.map(() => ({ current: null })))
   const containerRef = useRef(null)
@@ -243,18 +260,21 @@ export default function ProtocoloSedacao({ navegar }) {
 
       {/* FABs */}
       <div className="fab-group">
+        <button className="fab" title="Favoritar" onClick={handleToggleFavorite} style={{ fontSize: '20px', color: isFav ? '#fff' : '#999' }}>
+          {isFav ? '★' : '☆'}
+        </button>
         <button className="fab" title="Download">
-          <img 
-           src={DownloadBtn} 
-           alt="Botão de Download" 
-           style={{ width: '20px', height: '20px', objectFit: 'contain' }} 
+          <img
+           src={DownloadBtn}
+           alt="Botão de Download"
+           style={{ width: '20px', height: '20px', objectFit: 'contain' }}
           />
         </button>
         <button className="fab" title="Visualizar">
-          <img 
-           src={VisualizarBtn} 
-           alt="Botão de Visualização" 
-           style={{ width: '20px', height: '20px', objectFit: 'contain' }} 
+          <img
+           src={VisualizarBtn}
+           alt="Botão de Visualização"
+           style={{ width: '20px', height: '20px', objectFit: 'contain' }}
           />
         </button>
       </div>

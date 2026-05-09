@@ -3,6 +3,7 @@ import TopBar from '../components/TopBar'
 import BottomNav from '../components/BottomNav'
 import DownloadBtn from '../assets/DownloadBtn.png'
 import VisualizarBtn from '../assets/VisualizarBtn.png'
+import { useFavorites } from '../hooks/useFavorites'
 
 const LINE_COLOR = '#8FA8C1' 
 
@@ -123,6 +124,22 @@ function FluxoNo({ no, depth = 0, isLast = false }) {
 }
 
 export default function ProtocoloDengue({ navegar }) {
+  const FLUXO_ID = 1
+  const { isFavorited, addToFavorites, removeFromFavorites } = useFavorites()
+  const isFav = isFavorited(FLUXO_ID)
+
+  const handleToggleFavorite = async () => {
+    try {
+      if (isFav) {
+        await removeFromFavorites(FLUXO_ID)
+      } else {
+        await addToFavorites(FLUXO_ID)
+      }
+    } catch (err) {
+      console.error('Erro ao atualizar favorito:', err)
+    }
+  }
+
   return (
     /* Container principal com position: relative para prender os FABs */
     <div className="screen" style={{ position: 'relative', height: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
@@ -142,27 +159,30 @@ export default function ProtocoloDengue({ navegar }) {
       </div>
 
       {/* FABs: Agora dentro do fluxo do celular usando position: absolute */}
-      <div className="fab-group" style={{ 
-        position: 'absolute', 
-        right: '20px', 
-        bottom: '100px', 
+      <div className="fab-group" style={{
+        position: 'absolute',
+        right: '20px',
+        bottom: '100px',
         zIndex: 999,
         display: 'flex',
         flexDirection: 'column',
         gap: '12px'
       }}>
+        <button className="fab" title="Favoritar" onClick={handleToggleFavorite} style={{ fontSize: '20px', color: isFav ? '#fff' : '#999' }}>
+          {isFav ? '★' : '☆'}
+        </button>
         <button className="fab" title="Download">
-          <img 
-           src={DownloadBtn} 
-           alt="Botão de Download" 
-           style={{ width: '20px', height: '20px', objectFit: 'contain' }} 
+          <img
+           src={DownloadBtn}
+           alt="Botão de Download"
+           style={{ width: '20px', height: '20px', objectFit: 'contain' }}
           />
         </button>
         <button className="fab" title="Visualizar">
-          <img 
-           src={VisualizarBtn} 
-           alt="Botão de Visualização" 
-           style={{ width: '20px', height: '20px', objectFit: 'contain' }} 
+          <img
+           src={VisualizarBtn}
+           alt="Botão de Visualização"
+           style={{ width: '20px', height: '20px', objectFit: 'contain' }}
           />
         </button>
       </div>

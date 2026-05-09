@@ -6,6 +6,7 @@ import CalculadoraIcon from '../assets/Calculadora.png'
 import EstudoIcon from '../assets/Estudo.png'
 
 export default function Home({ navegar }) {
+
   return (
     <div className="screen">
       <TopBar showLogo={false} />
@@ -34,17 +35,15 @@ export default function Home({ navegar }) {
         <div className="quick-grid">
           <button className="quick-btn" onClick={() => navegar('emergencia')}>
             <div className="quick-icon">
-              {/* Modo Emergência */}
-              <img src={EmergenciaIcon} alt='Icon Modo Emergência' 
+              <img src={EmergenciaIcon} alt='Icon Modo Emergência'
               style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
             </div>
             <span className="quick-label">Modo Emergência</span>
           </button>
 
-          <button className="quick-btn">
+          <button className="quick-btn" onClick={() => navegar('calculadora')}>
             <div className="quick-icon">
-              {/* Calculadora de Doses */}
-              <img src={CalculadoraIcon} alt='Icon Calculadora de Doses' 
+              <img src={CalculadoraIcon} alt='Icon Calculadora de Doses'
               style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
             </div>
             <span className="quick-label">Calculadora de Doses</span>
@@ -52,13 +51,13 @@ export default function Home({ navegar }) {
 
           <button className="quick-btn">
             <div className="quick-icon">
-              {/* Modo Estudo */}
-              <img src={EstudoIcon} alt='Icon Modo Estudo' 
+              <img src={EstudoIcon} alt='Icon Modo Estudo'
               style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
             </div>
             <span className="quick-label">Modo Estudo</span>
           </button>
         </div>
+
       </div>
 
       <BottomNav navegar={navegar} active="home" />

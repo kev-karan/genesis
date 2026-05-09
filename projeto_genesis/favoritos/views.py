@@ -1,7 +1,15 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from .models import Favorito, Fluxograma
 
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def favoritar_fluxograma(request, id_fluxo):
     fluxo = get_object_or_404(Fluxograma, id = id_fluxo)
 
@@ -18,6 +26,9 @@ def favoritar_fluxograma(request, id_fluxo):
     }
     return JsonResponse(dados)
 
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def listar_favoritos(request):
     favoritos = Favorito.objects.filter(usuario = request.user)
 
@@ -34,6 +45,9 @@ def listar_favoritos(request):
     return JsonResponse(lista_json, safe=False)
 
 
+@api_view(['DELETE'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def remover_favorito(request, id_fluxo):
     fluxo = get_object_or_404(Fluxograma, id=id_fluxo)
 
