@@ -67,7 +67,7 @@ export default function Login({ onLoginSuccess }) {
           </form>
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginTop: '16px' }}>
-            <p className="test-user" style={{ margin: 0 }}>Teste: medico / senha123</p>
+            
             
             <div 
               style={{ position: 'relative', display: 'flex', alignItems: 'center' }}
