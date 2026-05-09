@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { getFluxograma } from '../api/fluxogramas'
 
 export function useFluxograma(id) {
   const [fluxo, setFluxo] = useState(null)
@@ -11,9 +12,7 @@ export function useFluxograma(id) {
     const fetchFluxo = async () => {
       try {
         setLoading(true)
-        const response = await fetch(`http://localhost:8000/api/fluxogramas/${id}/`)
-        if (!response.ok) throw new Error(`HTTP ${response.status}`)
-        const data = await response.json()
+        const data = await getFluxograma(id)
         setFluxo(data)
         setError(null)
       } catch (err) {
