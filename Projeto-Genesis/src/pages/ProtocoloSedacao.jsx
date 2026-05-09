@@ -4,35 +4,16 @@ import BottomNav from '../components/BottomNav'
 import DownloadBtn from '../assets/DownloadBtn.png'
 import VisualizarBtn from '../assets/VisualizarBtn.png'
 import { useFavorites } from '../hooks/useFavorites'
+import { useFluxograma } from '../hooks/useFluxograma'
 
 const LINE_COLOR = '#A8C4DF'
 const PILL_H = 38
 const GAP_FILHOS = 14
 const DOT_R = 4
-const H_LINE = 24        // horizontal até bolinha do grupo
-const H_LINE_FILHO = 20  // horizontal até bolinha do filho
+const H_LINE = 24
+const H_LINE_FILHO = 20
 const GAP_GRUPOS = 28
-
-const grupos = [
-  {
-    id: 'sedativos',
-    label: 'Sedativos',
-    color: '#1B6FD8',
-    drogas: ['Midazolan Contínua', 'Lorazepam'],
-  },
-  {
-    id: 'analgésicos',
-    label: 'Analgésicos',
-    color: '#3D3190',
-    drogas: ['Morfina Contínua', 'Fentanil Contínuo'],
-  },
-  {
-    id: 'alfa2',
-    label: 'Alfa-2',
-    color: '#1A8C8C',
-    drogas: ['Clonidina Contínua', 'Dexamedetomidina'],
-  },
-]
+const FLUXO_ID = 2
 
 // Conectores dos filhos via SVG — não muda com expansão de outros grupos
 function FilhosConectores({ drogas, color }) {
@@ -146,9 +127,10 @@ function GrupoNode({ grupo, nodeRef }) {
 }
 
 export default function ProtocoloSedacao({ navegar }) {
-  const FLUXO_ID = 2
+  const { fluxo: data, loading, error } = useFluxograma(FLUXO_ID)
   const { isFavorited, addToFavorites, removeFromFavorites } = useFavorites()
   const isFav = isFavorited(FLUXO_ID)
+  const grupos = data?.conteudo?.grupos || []
 
   const handleToggleFavorite = async () => {
     try {
@@ -197,6 +179,26 @@ export default function ProtocoloSedacao({ navegar }) {
 
   // Calcula o top da linha (posição do centro do 1º grupo dentro do container)
   const lineTop = PILL_H / 2
+
+  if (loading) return (
+    <div className="screen">
+      <TopBar />
+      <div className="content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+        Carregando...
+      </div>
+      <BottomNav navegar={navegar} active="emergencia" />
+    </div>
+  )
+
+  if (error) return (
+    <div className="screen">
+      <TopBar />
+      <div className="content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+        Erro ao carregar: {error}
+      </div>
+      <BottomNav navegar={navegar} active="emergencia" />
+    </div>
+  )
 
   return (
     <div className="screen" style={{ position: 'relative' }}>

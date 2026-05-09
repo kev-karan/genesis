@@ -1,0 +1,92 @@
+[
+  {
+    "model": "fluxogramas.fluxograma",
+    "pk": 1,
+    "fields": {
+      "titulo": "Protocolo Dengue",
+      "descricao": "Fluxograma de atendimento para casos de dengue",
+      "data_criacao": "2026-05-09T14:00:00Z",
+      "conteudo": {
+        "id": "suspeita",
+        "texto": "Febre por 2 a 7 dias acompanhada de pelo menos dois sintomas (como náusea, vômito, dores no corpo, dor de cabeça, manchas na pele ou outros).\nEm crianças, qualquer febre aguda sem causa aparente também pode ser considerada suspeita.",
+        "cor": "#5A8BBA",
+        "filhos": [
+          {
+            "id": "grupoC",
+            "texto": "GRUPO C: Paciente com dengue com sinais de alarme, porém sem critérios de gravidade. Caracteriza-se por manifestações como dor abdominal intensa e contínua, vômitos persistentes, extravasamento de líquidos, hipotensão postural, sangramento de mucosas, letargia/irritabilidade e elevação progressiva do hematócrito.",
+            "cor": "#275CC5",
+            "filhos": [
+              {
+                "id": "acaoC",
+                "texto": "Iniciar hidratação imediata independentemente de exames laboratoriais via intravenosa",
+                "cor": "#275CC5",
+                "filhos": [
+                  {
+                    "id": "acompC",
+                    "texto": "Acompanhamento",
+                    "cor": "#1D4CA5",
+                    "pill": true,
+                    "filhos": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "grupoD",
+            "texto": "GRUPO D: Extravasamento plasmático grave com evolução para choque (instabilidade hemodinâmica e hipoperfusão), podendo cursar com insuficiência respiratória, hemorragia grave e disfunção orgânica.",
+            "cor": "#3697A6",
+            "filhos": [
+              {
+                "id": "acaoD",
+                "texto": "Iniciar hidratação imediata independentemente de exames laboratoriais via intravenosa",
+                "cor": "#3697A6",
+                "filhos": [
+                  {
+                    "id": "acompD",
+                    "texto": "Acompanhamento",
+                    "cor": "#267A87",
+                    "pill": true,
+                    "filhos": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "model": "fluxogramas.fluxograma",
+    "pk": 2,
+    "fields": {
+      "titulo": "Protocolo Sedação",
+      "descricao": "Algoritmo de conversão de sedativos analgésicos",
+      "data_criacao": "2026-05-09T14:00:00Z",
+      "conteudo": {
+        "tipo": "grupos",
+        "grupos": [
+          {
+            "id": "sedativos",
+            "label": "Sedativos",
+            "color": "#1B6FD8",
+            "drogas": ["Midazolan Contínua", "Lorazepam"]
+          },
+          {
+            "id": "analgésicos",
+            "label": "Analgésicos",
+            "color": "#3D3190",
+            "drogas": ["Morfina Contínua", "Fentanil Contínuo"]
+          },
+          {
+            "id": "alfa2",
+            "label": "Alfa-2",
+            "color": "#1A8C8C",
+            "drogas": ["Clonidina Contínua", "Dexamedetomidina"]
+          }
+        ]
+      }
+    }
+  }
+]

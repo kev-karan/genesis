@@ -4,58 +4,10 @@ import BottomNav from '../components/BottomNav'
 import DownloadBtn from '../assets/DownloadBtn.png'
 import VisualizarBtn from '../assets/VisualizarBtn.png'
 import { useFavorites } from '../hooks/useFavorites'
+import { useFluxograma } from '../hooks/useFluxograma'
 
-const LINE_COLOR = '#8FA8C1' 
-
-const fluxo = {
-  id: 'suspeita',
-  texto: 'Febre por 2 a 7 dias acompanhada de pelo menos dois sintomas (como náusea, vômito, dores no corpo, dor de cabeça, manchas na pele ou outros).\nEm crianças, qualquer febre aguda sem causa aparente também pode ser considerada suspeita.',
-  cor: '#5A8BBA',
-  filhos: [
-    {
-      id: 'grupoC',
-      texto: 'GRUPO C: Paciente com dengue com sinais de alarme, porém sem critérios de gravidade. Caracteriza-se por manifestações como dor abdominal intensa e contínua, vômitos persistentes, extravasamento de líquidos, hipotensão postural, sangramento de mucosas, letargia/irritabilidade e elevação progressiva do hematócrito.',
-      cor: '#275CC5',
-      filhos: [
-        {
-          id: 'acaoC',
-          texto: 'Iniciar hidratação imediata independentemente de exames laboratoriais via intravenosa',
-          cor: '#275CC5',
-          filhos: [
-            {
-              id: 'acompC',
-              texto: 'Acompanhamento',
-              cor: '#1D4CA5',
-              pill: true,
-              filhos: [],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'grupoD',
-      texto: 'GRUPO D: Extravasamento plasmático grave com evolução para choque (instabilidade hemodinâmica e hipoperfusão), podendo cursar com insuficiência respiratória, hemorragia grave e disfunção orgânica.',
-      cor: '#3697A6',
-      filhos: [
-        {
-          id: 'acaoD',
-          texto: 'Iniciar hidratação imediata independentemente de exames laboratoriais via intravenosa',
-          cor: '#3697A6',
-          filhos: [
-            {
-              id: 'acompD',
-              texto: 'Acompanhamento',
-              cor: '#267A87',
-              pill: true,
-              filhos: [],
-            },
-          ],
-        },
-      ],
-    },
-  ],
-}
+const LINE_COLOR = '#8FA8C1'
+const FLUXO_ID = 1
 
 function FluxoNo({ no, depth = 0, isLast = false }) {
   const [aberto, setAberto] = useState(false)
@@ -124,7 +76,7 @@ function FluxoNo({ no, depth = 0, isLast = false }) {
 }
 
 export default function ProtocoloDengue({ navegar }) {
-  const FLUXO_ID = 1
+  const { fluxo: apiFluxo, loading, error } = useFluxograma(FLUXO_ID)
   const { isFavorited, addToFavorites, removeFromFavorites } = useFavorites()
   const isFav = isFavorited(FLUXO_ID)
 
@@ -140,6 +92,26 @@ export default function ProtocoloDengue({ navegar }) {
     }
   }
 
+  if (loading) return (
+    <div className="screen">
+      <TopBar />
+      <div className="content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+        Carregando...
+      </div>
+      <BottomNav navegar={navegar} active="emergencia" />
+    </div>
+  )
+
+  if (error) return (
+    <div className="screen">
+      <TopBar />
+      <div className="content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+        Erro ao carregar: {error}
+      </div>
+      <BottomNav navegar={navegar} active="emergencia" />
+    </div>
+  )
+
   return (
     /* Container principal com position: relative para prender os FABs */
     <div className="screen" style={{ position: 'relative', height: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
@@ -154,7 +126,7 @@ export default function ProtocoloDengue({ navegar }) {
         </button>
 
         <div style={{ padding: '0 20px 120px 24px' }}>
-          <FluxoNo no={fluxo} />
+          <FluxoNo no={apiFluxo.conteudo} />
         </div>
       </div>
 
