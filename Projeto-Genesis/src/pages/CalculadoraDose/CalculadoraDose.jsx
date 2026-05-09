@@ -46,7 +46,7 @@ const CalculadoraDose = ({ navegar }) => {
                 <header className="app-header">
                     <ChevronLeft color="white" size={24} style={{ cursor: 'pointer' }} onClick={() => navegar('home')} />
                     <h2 className="header-titulo">Cálculo de Dose</h2>
-                    <Star color="white" size={20} />
+                    <Star color="white" size={20} style={{visibility: 'hidden'}}/>
                 </header>
 
                 <div className="app-container">
