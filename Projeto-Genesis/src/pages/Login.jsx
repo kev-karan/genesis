@@ -10,6 +10,9 @@ export default function Login({ onLoginSuccess }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  
+  const [showTooltip, setShowTooltip] = useState(false); 
+  
   const { login } = useAuth();
 
   const handleLogin = async (e) => {
@@ -63,7 +66,63 @@ export default function Login({ onLoginSuccess }) {
             </button>
           </form>
 
-          <p className="test-user">Teste: medico / senha123</p>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginTop: '16px' }}>
+            <p className="test-user" style={{ margin: 0 }}>Teste: medico / senha123</p>
+            
+            <div 
+              style={{ position: 'relative', display: 'flex', alignItems: 'center' }}
+              onMouseEnter={() => setShowTooltip(true)}
+              onMouseLeave={() => setShowTooltip(false)}
+            >
+
+              {/* Daqui pra baixo é tudo pro ícone de tooltip de login */}
+              <span style={{ 
+                  display: 'inline-flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  width: '18px', 
+                  height: '18px', 
+                  borderRadius: '50%', 
+                  backgroundColor: '#dbdbdb', 
+                  color: 'white', 
+                  fontSize: '12px', 
+                  fontWeight: 'bold', 
+                  cursor: 'help' 
+              }}>?</span>
+              
+              {showTooltip && (
+                <div style={{
+                  position: 'absolute',
+                  bottom: 'calc(100% + 8px)',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  width: '260px',
+                  padding: '12px',
+                  backgroundColor: '#333',
+                  color: 'white',
+                  fontSize: '12px',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                  zIndex: 100,
+                  textAlign: 'center',
+                  lineHeight: '1.5'
+                }}>
+                  Rode <strong>python manage.py createsuperuser</strong> na pasta <strong>projeto_genesis</strong> (cd projeto_genesis) pra criar o usuário. Quando pedir email deixa em branco e aperta enter
+                  
+                  <div style={{
+                    position: 'absolute',
+                    top: '100%',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    borderWidth: '6px',
+                    borderStyle: 'solid',
+                    borderColor: '#333 transparent transparent transparent'
+                  }} />
+                </div>
+              )}
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
