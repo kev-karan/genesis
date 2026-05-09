@@ -114,7 +114,15 @@ export default function Home({ navegar }) {
             <span className="quick-label">Modo Emergência</span>
           </button>
 
-          <button className="quick-btn" onClick={() => navegar('calculadora')}>
+          {/* <button className="quick-btn" onClick={() => navegar('calculadora')}>
+            <div className="quick-icon">
+              <img src={CalculadoraIcon} alt='Icon Calculadora de Doses'
+              style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
+            </div>
+            <span className="quick-label">Calculadora de Doses</span>
+          </button> */}
+
+          <button className="quick-btn" disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>
             <div className="quick-icon">
               <img src={CalculadoraIcon} alt='Icon Calculadora de Doses'
               style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
