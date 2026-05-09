@@ -333,14 +333,14 @@ export default function Protocolo({ protocoloId, navegar }) {
         <button className="fab" title="Favoritar" onClick={handleToggleFavorite} style={{ fontSize: '20px', color: isFav ? '#1B6FD8' : '#999' }}>
           {isFav ? '★' : '☆'}
         </button>
-        <button className="fab" title="Download">
+        <button className="fab" title="Download" style={{ display: 'none' }}>
           <img
             src={DownloadBtn}
             alt="Botão de Download"
             style={{ width: '20px', height: '20px', objectFit: 'contain' }}
           />
         </button>
-        <button className="fab" title="Visualizar">
+        <button className="fab" title="Visualizar" style={{ display: 'none' }}>
           <img
             src={VisualizarBtn}
             alt="Botão de Visualização"
