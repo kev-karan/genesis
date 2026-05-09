@@ -22,7 +22,7 @@ export const FavoritesProvider = ({ children }) => {
       const data = await listFavoritos();
       setFavorites(Array.isArray(data) ? data : []);
     } catch (err) {
-      setError(null);
+      setError(err.message);
     } finally {
       setLoading(false);
     }
