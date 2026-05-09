@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from 'react';
-import { getToken, removeToken } from '../api/client';
+import { getToken, removeToken, setToken } from '../api/client';
 
 export const AuthContext = createContext();
 
@@ -17,12 +17,14 @@ export const AuthProvider = ({ children }) => {
         setUser(parsed);
       } catch (e) {
         removeToken();
+        setTokenState(null);
       }
     }
     setLoading(false);
   }, []);
 
   const login = (userData, token) => {
+    setToken(token);
     setTokenState(token);
     setUser(userData);
   };

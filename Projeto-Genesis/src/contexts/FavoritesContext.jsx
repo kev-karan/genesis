@@ -8,7 +8,7 @@ export const FavoritesProvider = ({ children }) => {
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const { token } = useContext(AuthContext);
+  const { token, loading: authLoading } = useContext(AuthContext);
 
   const loadFavorites = useCallback(async () => {
     if (!token) {
@@ -22,16 +22,17 @@ export const FavoritesProvider = ({ children }) => {
       const data = await listFavoritos();
       setFavorites(Array.isArray(data) ? data : []);
     } catch (err) {
-      setError(err.message);
-      console.error('Erro ao carregar favoritos:', err);
+      setError(null);
     } finally {
       setLoading(false);
     }
   }, [token]);
 
   useEffect(() => {
-    loadFavorites();
-  }, [loadFavorites]);
+    if (!authLoading) {
+      loadFavorites();
+    }
+  }, [loadFavorites, authLoading]);
 
   const addToFavorites = useCallback(async (fluxogramaId) => {
     try {

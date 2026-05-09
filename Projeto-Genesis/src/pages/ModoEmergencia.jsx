@@ -85,7 +85,7 @@ export default function ModoEmergencia({ navegar }) {
                     />
                   </div>
                   <span className="protocol-name">{meta.nome}</span>
-                  <button
+                  <div
                     onClick={(e) => {
                       e.stopPropagation()
                       handleToggleFavorite(fluxo.id)
@@ -104,7 +104,7 @@ export default function ModoEmergencia({ navegar }) {
                     }}
                   >
                     {isFavorited(fluxo.id) ? '★' : '☆'}
-                  </button>
+                  </div>
                 </button>
               )
             })}
