@@ -168,7 +168,7 @@ export default function ProtocoloDengue({ navegar }) {
         flexDirection: 'column',
         gap: '12px'
       }}>
-        <button className="fab" title="Favoritar" onClick={handleToggleFavorite} style={{ fontSize: '20px', color: isFav ? '#fff' : '#999' }}>
+        <button className="fab" title="Favoritar" onClick={handleToggleFavorite} style={{ fontSize: '20px', color: isFav ? '#1B6FD8' : '#999' }}>
           {isFav ? '★' : '☆'}
         </button>
         <button className="fab" title="Download">

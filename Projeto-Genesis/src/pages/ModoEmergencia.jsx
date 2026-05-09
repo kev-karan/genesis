@@ -97,7 +97,7 @@ export default function ModoEmergencia({ navegar }) {
                       fontSize: '20px',
                       cursor: 'pointer',
                       padding: '8px',
-                      color: isFavorited(fluxo.id) ? '#fff' : '#999',
+                      color: isFavorited(fluxo.id) ? '#1B6FD8' : '#999',
                       transition: 'color 0.2s',
                       display: 'flex',
                       alignItems: 'center',
