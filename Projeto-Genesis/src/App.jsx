@@ -5,16 +5,26 @@ import { useAuth } from './hooks/useAuth'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import ModoEmergencia from './pages/ModoEmergencia'
-import ProtocoloDengue from './pages/ProtocoloDengue'
-import ProtocoloSedacao from './pages/ProtocoloSedacao'
+import Protocolo from './pages/Protocolo'
 import CalculadoraDose from './pages/CalculadoraDose/CalculadoraDose'
 import './App.css'
 
+const PROTOCOLOS = {
+  dengue: 1,
+  sedacao: 2,
+}
+
 function AppContent() {
   const [tela, setTela] = useState('home')
+  const [protocoloId, setProtocoloId] = useState(null)
   const { user, logout } = useAuth()
 
-  const navegar = (destino) => setTela(destino)
+  const navegar = (destino) => {
+    if (PROTOCOLOS[destino] !== undefined) {
+      setProtocoloId(PROTOCOLOS[destino])
+    }
+    setTela(destino)
+  }
 
   const handleLogout = () => {
     logout()
@@ -34,8 +44,7 @@ function AppContent() {
             </div>
             {tela === 'home' && <Home navegar={navegar} />}
             {tela === 'emergencia' && <ModoEmergencia navegar={navegar} />}
-            {tela === 'dengue' && <ProtocoloDengue navegar={navegar} />}
-            {tela === 'sedacao' && <ProtocoloSedacao navegar={navegar} />}
+            {(tela === 'dengue' || tela === 'sedacao') && protocoloId && <Protocolo protocoloId={protocoloId} navegar={navegar} />}
             {tela === 'calculadora' && <CalculadoraDose />}
           </>
         )}
