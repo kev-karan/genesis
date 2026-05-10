@@ -1,13 +1,17 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from fluxogramas.models import Fluxograma
 from .services import registrar_acesso
 from .models import AcessoRecente
 
 
 class RegistrarAcessoView(APIView):
     def post(self, request, fluxograma_id):
-        acesso = registrar_acesso(request.user, fluxograma_id)
+        try:
+            acesso = registrar_acesso(request.user, fluxograma_id)
+        except Fluxograma.DoesNotExist:
+            return Response({"erro": "Fluxograma não encontrado"}, status=status.HTTP_404_NOT_FOUND)
         return Response({
             "usuario": str(acesso.usuario),
             "fluxograma": str(acesso.fluxograma),
