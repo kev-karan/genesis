@@ -1,7 +1,7 @@
 from django.urls import path
-from . import views
+from .views import RegistrarAcessoView, ListarAcessosRecentesView
 
 urlpatterns = [
-    path('registrar/<int:fluxograma_id>/', views.registrar_acesso_view, name='registrar_acesso'),
-    path('recentes/', views.listar_acessos_recentes, name='listar_acessos_recentes'),
+    path('registrar/<int:fluxograma_id>/', RegistrarAcessoView.as_view(), name='registrar_acesso'),
+    path('recentes/', ListarAcessosRecentesView.as_view(), name='listar_acessos_recentes'),
 ]
