@@ -15,8 +15,7 @@ export default function TopBar({ showLogo = true }) {
         <div style={{ width: '36px', height: '36px' }}></div>
       )}
 
-      {}
-      <button className="topbar-menu">
+      <button className="topbar-menu" style={{ display: 'none' }}>
         <span></span>
         <span></span>
         <span></span>

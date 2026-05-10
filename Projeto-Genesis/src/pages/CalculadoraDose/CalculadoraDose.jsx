@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ChevronLeft, Star, User, Droplet, ChevronDown, Home, ClipboardList, Pill } from 'lucide-react';
 import "./CalculadoraDose.css";
 
-const App = () => {
+const CalculadoraDose = ({ navegar }) => {
     const [peso, setPeso] = useState(0);
     const [dose, setDose] = useState(0);
     const [resultadoTotal, setResultadoTotal] = useState(0);
@@ -38,15 +38,15 @@ const App = () => {
         setResultadoTotal((parseFloat(peso) || 0) * (parseFloat(dose) || 0));
     }, [peso, dose]);
 
-    // const isDoseAlta = resultadoTotal > 100; (depende da medicaçao)
+    const isDoseAlta = resultadoTotal > 100;
 
     return (
         <div className="body-container">
             <div className="telefone-tela">
                 <header className="app-header">
-                    <ChevronLeft color="white" size={24} /> 
+                    <ChevronLeft color="white" size={24} style={{ cursor: 'pointer' }} onClick={() => navegar('home')} />
                     <h2 className="header-titulo">Cálculo de Dose</h2>
-                    <Star color="white" size={20} />
+                    <Star color="white" size={20} style={{visibility: 'hidden'}}/>
                 </header>
 
                 <div className="app-container">
@@ -127,4 +127,4 @@ const App = () => {
     );
 };
 
-export default App;
+export default CalculadoraDose;
