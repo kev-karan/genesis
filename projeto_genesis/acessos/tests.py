@@ -17,7 +17,7 @@ class AcessoRegistroTestCase(TestCase):
         )
 
     def test_registrar_acesso_first_time(self):
-        response = self.client.get(f'/api/acessos/registrar/{self.fluxo.id}/')
+        response = self.client.post(f'/api/acessos/registrar/{self.fluxo.id}/')
 
         self.assertEqual(response.status_code, 200)
         data = response.json()
@@ -27,11 +27,8 @@ class AcessoRegistroTestCase(TestCase):
         self.assertEqual(acesso.quantidade_de_acessos, 1)
 
     def test_registrar_acesso_increments(self):
-        # First access
-        self.client.get(f'/api/acessos/registrar/{self.fluxo.id}/')
-
-        # Second access
-        response = self.client.get(f'/api/acessos/registrar/{self.fluxo.id}/')
+        self.client.post(f'/api/acessos/registrar/{self.fluxo.id}/')
+        response = self.client.post(f'/api/acessos/registrar/{self.fluxo.id}/')
 
         self.assertEqual(response.status_code, 200)
         data = response.json()
@@ -42,14 +39,14 @@ class AcessoRegistroTestCase(TestCase):
 
     def test_registrar_acesso_unauthenticated(self):
         client_unauth = Client()
-        response = client_unauth.get(f'/api/acessos/registrar/{self.fluxo.id}/')
+        response = client_unauth.post(f'/api/acessos/registrar/{self.fluxo.id}/')
 
         self.assertEqual(response.status_code, 401)
 
     def test_registrar_acesso_nonexistent_fluxograma(self):
-        from fluxogramas.models import Fluxograma
-        with self.assertRaises(Fluxograma.DoesNotExist):
-            self.client.get('/api/acessos/registrar/99999/')
+        response = self.client.post('/api/acessos/registrar/99999/')
+
+        self.assertEqual(response.status_code, 404)
 
 
 class AcessoRecientesTestCase(TestCase):
