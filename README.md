@@ -54,17 +54,17 @@ Cada sprint tem duração de **2 semanas**. As histórias épicas são desenvolv
 
 ---
 
-## Sprint 1  [26/04] -> [10/05] 
+## Sprint 1  [05/05] -> [19/05] 
 ![alt text](imagens/sprint1.png)
 
 ---
 
-## Sprint 2  [10/05] -> [24/05] 
+## Sprint 2  [19/05] -> [02/06] 
 [quadro sprint 2]
 
 ---
 
-## Sprint 3  [24/05] -> [07/06] 
+## Sprint 3  [02/06] -> [16/06] 
 [quadro sprint 3]
 
 ---
