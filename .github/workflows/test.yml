@@ -1,0 +1,44 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r projeto_genesis/requirements.txt
+
+      - name: Run tests
+        run: python projeto_genesis/manage.py test
+        env:
+          DATABASE_URL: ""
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: Projeto-Genesis/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: Projeto-Genesis
+
+      - name: Run tests
+        run: npm run test:run
+        working-directory: Projeto-Genesis
