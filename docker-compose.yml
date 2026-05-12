@@ -1,0 +1,14 @@
+services:
+  backend:
+    build: ./projeto_genesis
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+
+  frontend:
+    build: ./Projeto-Genesis
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
