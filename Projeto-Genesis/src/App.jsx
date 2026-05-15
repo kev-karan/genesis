@@ -20,6 +20,9 @@ function AppContent() {
   const { user, logout } = useAuth()
 
   const navegar = (destino) => {
+    if (destino === 'home') {
+      localStorage.removeItem('genesis_emergency_start')
+    }
     if (PROTOCOLOS[destino] !== undefined) {
       setProtocoloId(PROTOCOLOS[destino])
     }
