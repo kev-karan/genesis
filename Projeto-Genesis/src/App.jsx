@@ -20,6 +20,9 @@ function AppContent() {
   const { user, logout } = useAuth()
 
   const navegar = (destino) => {
+    if (destino === 'home') {
+      localStorage.removeItem('genesis_emergency_start')
+    }
     if (PROTOCOLOS[destino] !== undefined) {
       setProtocoloId(PROTOCOLOS[destino])
     }
@@ -31,23 +34,23 @@ function AppContent() {
     setTela('home')
   }
 
+  if (!user) {
+    return <Login onLoginSuccess={() => setTela('home')} />
+  }
+
   return (
     <div className="app-wrapper">
       <div className="mobile-frame">
-        {!user ? (
-          <Login onLoginSuccess={() => setTela('home')} />
-        ) : (
-          <>
-            <div className="header">
-              <span className="user-info">{user.username}</span>
-              <button onClick={handleLogout} className="logout-btn">Sair</button>
-            </div>
-            {tela === 'home' && <Home navegar={navegar} />}
-            {tela === 'emergencia' && <ModoEmergencia navegar={navegar} />}
-            {(tela === 'dengue' || tela === 'sedacao') && protocoloId && <Protocolo protocoloId={protocoloId} navegar={navegar} />}
-            {tela === 'calculadora' && <CalculadoraDose navegar={navegar} />}
-          </>
-        )}
+        <>
+          <div className="header">
+            <span className="user-info">{user.username}</span>
+            <button onClick={handleLogout} className="logout-btn">Sair</button>
+          </div>
+          {tela === 'home' && <Home navegar={navegar} />}
+          {tela === 'emergencia' && <ModoEmergencia navegar={navegar} />}
+          {(tela === 'dengue' || tela === 'sedacao') && protocoloId && <Protocolo protocoloId={protocoloId} navegar={navegar} />}
+          {tela === 'calculadora' && <CalculadoraDose navegar={navegar} />}
+        </>
       </div>
     </div>
   )
