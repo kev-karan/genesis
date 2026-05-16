@@ -4,6 +4,7 @@ import { FavoritesProvider } from './contexts/FavoritesContext'
 import { useAuth } from './hooks/useAuth'
 import Home from './pages/Home'
 import Login from './pages/Login'
+import Cadastro from './pages/Cadastro'
 import ModoEmergencia from './pages/ModoEmergencia'
 import Protocolo from './pages/Protocolo'
 import CalculadoraDose from './pages/CalculadoraDose/CalculadoraDose'
@@ -17,6 +18,7 @@ const PROTOCOLOS = {
 function AppContent() {
   const [tela, setTela] = useState('home')
   const [protocoloId, setProtocoloId] = useState(null)
+  const [mostrarCadastro, setMostrarCadastro] = useState(false)
   const { user, logout } = useAuth()
 
   const navegar = (destino) => {
@@ -35,7 +37,14 @@ function AppContent() {
     <div className="app-wrapper">
       <div className="mobile-frame">
         {!user ? (
-          <Login onLoginSuccess={() => setTela('home')} />
+          mostrarCadastro ? (
+            <Cadastro onCadastroSuccess={() => setMostrarCadastro(false)} />
+          ) : (
+            <Login
+              onLoginSuccess={() => setTela('home')}
+              onCriarConta={() => setMostrarCadastro(true)}
+            />
+          )
         ) : (
           <>
             <div className="header">
