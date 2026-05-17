@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import TopBar from '../components/TopBar';
-import GenesisLogo from '../assets/GenesisLogoAlt.png';
+import GenesisLogo from '../assets/GenesisLogo.png';
 
 export default function Cadastro({ onCadastroSuccess }){
     const [email, setEmail] = useState('');
