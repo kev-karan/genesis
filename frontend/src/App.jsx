@@ -8,6 +8,7 @@ import Cadastro from './pages/Cadastro'
 import ModoEmergencia from './pages/ModoEmergencia'
 import Protocolo from './pages/Protocolo'
 import CalculadoraDose from './pages/CalculadoraDose/CalculadoraDose'
+import ModoEmergenciaShell from './pages/ModoEmergenciaShell'
 import './App.css'
 
 const PROTOCOLOS = {
@@ -47,8 +48,13 @@ function AppContent() {
     )
   }
 
+  const isFluxogramaView = tela === 'emergencia' || tela === 'dengue' || tela === 'sedacao'
+
   return (
     <div className="app-wrapper">
+      {isFluxogramaView && (
+        <ModoEmergenciaShell tela={tela} protocoloId={protocoloId} navegar={navegar} />
+      )}
       <div className="mobile-frame">
         <div className="header">
           <span className="user-info">{user.username}</span>
