@@ -6,6 +6,13 @@
   box-sizing: border-box;
 }
 
+#root {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 :root {
   --blue-primary: #1B6FD8;
   --blue-dark: #2A569F;
@@ -190,6 +197,12 @@ body {
 
 .content::-webkit-scrollbar {
   display: none;
+}
+
+.login-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Bottom nav */
