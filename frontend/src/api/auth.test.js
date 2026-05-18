@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { login, logout } from './auth'
+import { login, logout, cadastro } from './auth'
 import * as client from './client'
 
 vi.mock('./client')
@@ -77,6 +77,52 @@ describe('Auth API', () => {
 
       expect(result.token).toBe('test-token-123')
       expect(result.user).toBeUndefined()
+    })
+  })
+
+  describe('cadastro', () => {
+    it('sends email, password, and confirmPassword to cadastro endpoint', async () => {
+      client.apiCall.mockResolvedValue({})
+
+      await cadastro({ email: 'user@example.com', password: 'senha123', confirmPassword: 'senha123' })
+
+      expect(client.apiCall).toHaveBeenCalledWith('/auth/cadastro/', {
+        method: 'POST',
+        body: JSON.stringify({ email: 'user@example.com', password: 'senha123', confirmPassword: 'senha123' }),
+      })
+    })
+
+    it('returns response from cadastro endpoint', async () => {
+      const mockResponse = { detail: 'Conta criada com sucesso' }
+      client.apiCall.mockResolvedValue(mockResponse)
+
+      const result = await cadastro({ email: 'user@example.com', password: 'senha123', confirmPassword: 'senha123' })
+
+      expect(result).toEqual(mockResponse)
+    })
+
+    it('does not set token on successful cadastro', async () => {
+      client.apiCall.mockResolvedValue({})
+
+      await cadastro({ email: 'user@example.com', password: 'senha123', confirmPassword: 'senha123' })
+
+      expect(client.setToken).not.toHaveBeenCalled()
+    })
+
+    it('throws on api error', async () => {
+      client.apiCall.mockRejectedValue(new Error('Email já cadastrado'))
+
+      await expect(
+        cadastro({ email: 'user@example.com', password: 'senha123', confirmPassword: 'senha123' })
+      ).rejects.toThrow('Email já cadastrado')
+    })
+
+    it('handles network errors', async () => {
+      client.apiCall.mockRejectedValue(new Error('Network error'))
+
+      await expect(
+        cadastro({ email: 'user@example.com', password: 'senha123', confirmPassword: 'senha123' })
+      ).rejects.toThrow('Network error')
     })
   })
 
