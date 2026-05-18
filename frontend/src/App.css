@@ -744,6 +744,64 @@ body {
   background: rgba(255, 255, 255, 0.3);
 }
 
+/* =============== DESKTOP TOPBAR =============== */
+
+.desktop-topbar { display: none; }
+
+@media (min-width: 769px) {
+  .desktop-topbar {
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 90px;
+    background: #2A569F;
+    padding: 0 40px;
+    gap: 16px;
+    z-index: 200;
+    font-family: 'DM Sans', sans-serif;
+  }
+}
+
+.dt-nav-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 44px;
+}
+
+.dt-nav-pill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: white;
+  border-radius: 30px;
+  opacity: 0;
+  pointer-events: none;
+  transition: left 0.32s cubic-bezier(0.4,0,0.2,1), width 0.32s cubic-bezier(0.4,0,0.2,1);
+}
+
+.dt-nav-item {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.7);
+  transition: color 0.3s ease;
+  white-space: nowrap;
+}
+.dt-nav-item:disabled { opacity: 0.4; cursor: not-allowed; }
+.dt-nav-item--active { color: #2A569F; }
+
 /* =============== PROTOCOLO DESKTOP =============== */
 
 .proto-desktop { display: none; text-align: left; }
@@ -753,7 +811,7 @@ body {
     display: flex;
     flex-direction: column;
     position: fixed;
-    inset: 0;
+    inset: 90px 0 0 0;
     background: #F3F6FA;
     z-index: 100;
     overflow: hidden;

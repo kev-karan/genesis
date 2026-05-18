@@ -9,6 +9,7 @@ import ModoEmergencia from './pages/ModoEmergencia'
 import Protocolo from './pages/Protocolo'
 import CalculadoraDose from './pages/CalculadoraDose/CalculadoraDose'
 import ModoEmergenciaShell from './pages/ModoEmergenciaShell'
+import DesktopTopBar from './components/DesktopTopBar'
 import './App.css'
 
 const PROTOCOLOS = {
@@ -52,6 +53,7 @@ function AppContent() {
 
   return (
     <div className="app-wrapper">
+      <DesktopTopBar tela={tela} navegar={navegar} />
       {isFluxogramaView && (
         <ModoEmergenciaShell tela={tela} protocoloId={protocoloId} navegar={navegar} />
       )}
