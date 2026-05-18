@@ -619,41 +619,41 @@ export default function Protocolo({ protocoloId, navegar }) {
   }, [isGruposType, grupos.length])
 
   if (loading) return (
-    <div className="screen proto-mobile">
-      <TopBar />
-      <div className="content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-        Carregando...
+    <>
+      <div className="proto-desktop" style={{ alignItems: 'center', justifyContent: 'center', color: '#999', fontSize: 15 }}>Carregando...</div>
+      <div className="screen proto-mobile">
+        <TopBar />
+        <div className="content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>Carregando...</div>
+        <BottomNav navegar={navegar} active="emergencia" />
       </div>
-      <BottomNav navegar={navegar} active="emergencia" />
-    </div>
+    </>
   )
 
   if (error) return (
-    <div className="screen proto-mobile">
-      <TopBar />
-      <div className="content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-        Erro ao carregar: {error}
+    <>
+      <div className="proto-desktop" style={{ alignItems: 'center', justifyContent: 'center', color: '#999', fontSize: 15 }}>Erro ao carregar: {error}</div>
+      <div className="screen proto-mobile">
+        <TopBar />
+        <div className="content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>Erro ao carregar: {error}</div>
+        <BottomNav navegar={navegar} active="emergencia" />
       </div>
-      <BottomNav navegar={navegar} active="emergencia" />
-    </div>
+    </>
   )
 
   const lineTop = PILL_H / 2
 
   return (
     <>
-      {data && (
-        <DesktopProtocolo
-          grupos={grupos}
-          titulo={data.titulo}
-          rootColor={data.conteudo?.rootColor}
-          conteudo={data.conteudo}
-          navegar={navegar}
-          protocoloId={protocoloId}
-        />
-      )}
+      <DesktopProtocolo
+        grupos={grupos}
+        titulo={data.titulo}
+        rootColor={data.conteudo?.rootColor}
+        conteudo={data.conteudo}
+        navegar={navegar}
+        protocoloId={protocoloId}
+      />
 
-      <div className={`screen${data ? ' proto-mobile' : ''}`} style={{ position: 'relative' }}>
+      <div className="screen proto-mobile" style={{ position: 'relative' }}>
         <TopBar />
 
         <div className="content" style={data ? {} : { position: 'relative', zIndex: 1, flex: 1, overflowY: 'auto' }}>
