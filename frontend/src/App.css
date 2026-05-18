@@ -1240,6 +1240,88 @@ body {
 .pd-info-row  { display: flex; justify-content: space-between; padding: 8px 0; font-size: 12px; color: #002646; }
 .pd-divider   { height: 1px; background: rgba(145,196,241,0.35); }
 
+/* =============== HOME DESKTOP =============== */
+
+.hd-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 64px;
+}
+
+.hd-cards-row {
+  display: flex;
+  gap: 48px;
+  justify-content: center;
+}
+
+.hd-card {
+  background: #F2F2F2;
+  border-radius: 40px;
+  padding: 48px 40px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  width: 300px;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.hd-card:not(.hd-card--disabled):hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+}
+
+.hd-card--disabled {
+  opacity: 0.5;
+}
+
+.hd-card-icon {
+  width: 160px;
+  height: 160px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.hd-card-label {
+  font-size: 20px;
+  font-weight: 500;
+  color: #414141;
+  text-align: center;
+  line-height: 1.35;
+  white-space: pre-line;
+  margin: 0;
+}
+
+.hd-card-btn {
+  background: #2A569F;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 13px 44px;
+  font-size: 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hd-card-btn:hover:not(:disabled) {
+  background: #1B3F7A;
+}
+
+.hd-card-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* =============== LOGIN =============== */
 
 /* Layout toggle */
