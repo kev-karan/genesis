@@ -23,12 +23,11 @@ function LockIcon() {
   );
 }
 
-export default function Login({ onLoginSuccess }) {
+export default function Login({ onLoginSuccess, onCriarConta, message }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showTooltip, setShowTooltip] = useState(false);
 
   const { login } = useAuth();
 
@@ -65,7 +64,7 @@ export default function Login({ onLoginSuccess }) {
             <div className="login-field">
               <input
                 type="text"
-                placeholder="Usuário"
+                placeholder="Email"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
@@ -86,22 +85,18 @@ export default function Login({ onLoginSuccess }) {
               <span className="login-field-icon"><LockIcon /></span>
             </div>
 
+            {message && <p className="login-success">{message}</p>}
             {error && <p className="login-error">{error}</p>}
 
             <div className="login-actions">
-              <div
-                className="login-criar-conta-wrapper"
-                onMouseEnter={() => setShowTooltip(true)}
-                onMouseLeave={() => setShowTooltip(false)}
+              <button
+                type="button"
+                className="login-criar-conta login-link-button"
+                onClick={onCriarConta}
+                disabled={loading}
               >
-                <span className="login-criar-conta">Criar Conta</span>
-                {showTooltip && (
-                  <div className="login-tooltip">
-                    Rode <strong>python manage.py createsuperuser</strong> na pasta <strong>projeto_genesis</strong> pra criar o usuário. Quando pedir email deixa em branco e aperta enter
-                    <div className="login-tooltip-arrow" />
-                  </div>
-                )}
-              </div>
+                Criar Conta
+              </button>
 
               <button type="submit" className="login-btn-entrar" disabled={loading}>
                 {loading ? 'Entrando...' : 'Entrar'}
@@ -125,7 +120,7 @@ export default function Login({ onLoginSuccess }) {
           <form onSubmit={handleLogin}>
             <input
               type="text"
-              placeholder="Usuário"
+              placeholder="Email"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
@@ -139,40 +134,21 @@ export default function Login({ onLoginSuccess }) {
               required
               disabled={loading}
             />
+            {message && <p className="login-success">{message}</p>}
             {error && <p className="error">{error}</p>}
             <button type="submit" disabled={loading}>
               {loading ? 'Entrando...' : 'Entrar'}
             </button>
           </form>
 
-          <div
-            style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '16px' }}
-            onMouseEnter={() => setShowTooltip(true)}
-            onMouseLeave={() => setShowTooltip(false)}
+          <button
+            type="button"
+            className="login-link-button"
+            onClick={onCriarConta}
+            disabled={loading}
           >
-            <span style={{
-              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-              width: '18px', height: '18px', borderRadius: '50%',
-              backgroundColor: '#dbdbdb', color: 'white',
-              fontSize: '12px', fontWeight: 'bold', cursor: 'help'
-            }}>?</span>
-            {showTooltip && (
-              <div style={{
-                position: 'absolute', bottom: 'calc(100% + 8px)', left: '50%',
-                transform: 'translateX(-50%)', width: '260px', padding: '12px',
-                backgroundColor: '#333', color: 'white', fontSize: '12px',
-                borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-                zIndex: 100, textAlign: 'center', lineHeight: '1.5'
-              }}>
-                Rode <strong>python manage.py createsuperuser</strong> na pasta <strong>projeto_genesis</strong> (cd projeto_genesis) pra criar o usuário. Quando pedir email deixa em branco e aperta enter
-                <div style={{
-                  position: 'absolute', top: '100%', left: '50%',
-                  transform: 'translateX(-50%)', borderWidth: '6px',
-                  borderStyle: 'solid', borderColor: '#333 transparent transparent transparent'
-                }} />
-              </div>
-            )}
-          </div>
+            Criar Conta
+          </button>
         </div>
       </div>
     </>

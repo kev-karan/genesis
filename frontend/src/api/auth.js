@@ -10,9 +10,19 @@ export const login = async (username, password) => {
   return data;
 };
 
-export const logout = async () => {
-  removeToken();
-  return apiCall('/auth/logout/', {
+export const cadastro = async ({ email, password, confirmPassword }) => {
+  return apiCall('/auth/cadastro/', {
     method: 'POST',
+    body: JSON.stringify({ email, password, confirmPassword }),
   });
+};
+
+export const logout = async () => {
+  try {
+    return await apiCall('/auth/logout/', {
+      method: 'POST',
+    });
+  } finally {
+    removeToken();
+  }
 };

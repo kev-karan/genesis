@@ -21,6 +21,7 @@ function AppContent() {
   const [tela, setTela] = useState('home')
   const [protocoloId, setProtocoloId] = useState(null)
   const [mostrarCadastro, setMostrarCadastro] = useState(false)
+  const [authMessage, setAuthMessage] = useState('')
   const { user, logout } = useAuth()
 
   const navegar = (destino) => {
@@ -40,11 +41,24 @@ function AppContent() {
 
   if (!user) {
     return mostrarCadastro ? (
-      <Cadastro onCadastroSuccess={() => setMostrarCadastro(false)} />
+      <Cadastro
+        onCadastroSuccess={() => {
+          setAuthMessage('Conta criada com sucesso. Agora faça login com seu email e senha.')
+          setMostrarCadastro(false)
+        }}
+        onVoltarLogin={() => {
+          setAuthMessage('')
+          setMostrarCadastro(false)
+        }}
+      />
     ) : (
       <Login
+        message={authMessage}
         onLoginSuccess={() => setTela('home')}
-        onCriarConta={() => setMostrarCadastro(true)}
+        onCriarConta={() => {
+          setAuthMessage('')
+          setMostrarCadastro(true)
+        }}
       />
     )
   }
@@ -64,7 +78,9 @@ function AppContent() {
         </div>
         {tela === 'home' && <Home navegar={navegar} />}
         {tela === 'emergencia' && <ModoEmergencia navegar={navegar} />}
-        {(tela === 'dengue' || tela === 'sedacao') && protocoloId && <Protocolo protocoloId={protocoloId} navegar={navegar} />}
+        {(tela === 'dengue' || tela === 'sedacao') && protocoloId && (
+          <Protocolo protocoloId={protocoloId} navegar={navegar} />
+        )}
         {tela === 'calculadora' && <CalculadoraDose navegar={navegar} />}
       </div>
     </div>
