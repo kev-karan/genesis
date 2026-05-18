@@ -39,12 +39,9 @@ function IcoArrowLeft() {
 
 function formatAcesso(isoString) {
   const date = new Date(isoString)
-  const now = new Date()
+  const ddmmaaaa = date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })
   const hhmm = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
-  const diffDays = Math.floor((now - date) / 86400000)
-  if (diffDays === 0) return `Hoje, ${hhmm}`
-  if (diffDays === 1) return `Ontem, ${hhmm}`
-  return `${date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}, ${hhmm}`
+  return `${ddmmaaaa}, ${hhmm}`
 }
 
 // ---- Flowchart tree node (for tree-type protocols on desktop) ----
@@ -363,11 +360,11 @@ export default function DesktopFluxogramasShell({ tela, protocoloId, navegar }) 
             <p className="pd-card-title">Ações Rápidas</p>
             <div className="pd-acoes-grid">
               {[
-                { label: 'Calculadora',    sub: 'Cálculos rápidos de doses',     color: '#1B5DCA', bg: 'rgba(27,93,202,0.1)',  border: 'rgba(27,93,202,0.4)',  action: () => navegar('calculadora'), icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1B5DCA" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="8" y2="10" strokeWidth="3"/><line x1="12" y1="10" x2="12" y2="10" strokeWidth="3"/><line x1="16" y1="10" x2="16" y2="10" strokeWidth="3"/><line x1="8" y1="14" x2="8" y2="14" strokeWidth="3"/><line x1="12" y1="14" x2="12" y2="14" strokeWidth="3"/><line x1="16" y1="14" x2="16" y2="14" strokeWidth="3"/><line x1="8" y1="18" x2="13" y2="18"/></svg> },
-                { label: 'Nova Conversão', sub: 'Iniciar uma nova conversão',     color: '#2BA880', bg: 'rgba(43,168,128,0.1)', border: 'rgba(43,168,128,0.4)', action: () => {},                     icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2BA880" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg> },
-                { label: 'Alertas',        sub: 'Ver alertas e contraindicações', color: '#D58B02', bg: 'rgba(250,173,31,0.1)', border: 'rgba(250,173,31,0.4)', action: () => {},                     icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D58B02" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> },
-                { label: 'Protocolos',     sub: 'Ver todos os protocolos',        color: '#9317FF', bg: 'rgba(147,23,255,0.1)', border: 'rgba(147,23,255,0.4)', action: () => navegar('emergencia'), icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9317FF" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="8" y="2" width="8" height="5" rx="1"/><rect x="2" y="17" width="7" height="5" rx="1"/><rect x="15" y="17" width="7" height="5" rx="1"/><line x1="12" y1="7" x2="12" y2="12"/><line x1="12" y1="12" x2="5.5" y2="17"/><line x1="12" y1="12" x2="18.5" y2="17"/></svg> },
-              ].map(({ label, sub, color, bg, border, action, icon }) => (
+                { label: 'Calculadora',        sub: 'Cálculos rápidos de doses',     color: '#1B5DCA', bg: 'rgba(27,93,202,0.1)',  border: 'rgba(27,93,202,0.4)',  action: () => navegar('calculadora'), hidden: true,  icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1B5DCA" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="8" y2="10" strokeWidth="3"/><line x1="12" y1="10" x2="12" y2="10" strokeWidth="3"/><line x1="16" y1="10" x2="16" y2="10" strokeWidth="3"/><line x1="8" y1="14" x2="8" y2="14" strokeWidth="3"/><line x1="12" y1="14" x2="12" y2="14" strokeWidth="3"/><line x1="16" y1="14" x2="16" y2="14" strokeWidth="3"/><line x1="8" y1="18" x2="13" y2="18"/></svg> },
+                { label: 'Nova Conversão',      sub: 'Iniciar uma nova conversão',     color: '#2BA880', bg: 'rgba(43,168,128,0.1)', border: 'rgba(43,168,128,0.4)', action: () => {},                     hidden: true,  icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2BA880" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg> },
+                { label: 'Alertas',             sub: 'Ver alertas e contraindicações', color: '#D58B02', bg: 'rgba(250,173,31,0.1)', border: 'rgba(250,173,31,0.4)', action: () => {},                     hidden: true,  icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D58B02" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> },
+                { label: 'Todos os Protocolos', sub: 'Ver todos os protocolos',        color: '#9317FF', bg: 'rgba(147,23,255,0.1)', border: 'rgba(147,23,255,0.4)', action: () => navegar('emergencia'), hidden: false, icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9317FF" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="8" y="2" width="8" height="5" rx="1"/><rect x="2" y="17" width="7" height="5" rx="1"/><rect x="15" y="17" width="7" height="5" rx="1"/><line x1="12" y1="7" x2="12" y2="12"/><line x1="12" y1="12" x2="5.5" y2="17"/><line x1="12" y1="12" x2="18.5" y2="17"/></svg> },
+              ].filter(a => !a.hidden).map(({ label, sub, color, bg, border, action, icon }) => (
                 <button key={label} className="pd-acao" onClick={action}>
                   <div className="pd-acao-icon" style={{ background: bg, border: `1px solid ${border}` }}>{icon}</div>
                   <div className="pd-acao-text">
