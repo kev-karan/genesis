@@ -110,7 +110,7 @@ function FluxoNo({ no, depth = 0, isLast = false, lineColor }) {
 }
 
 // ---- Desktop flowchart renderer ----
-function DesktopFluxogramaView({ grupos, conteudo, navegar }) {
+function DesktopFluxogramaView({ grupos, conteudo, titulo, navegar }) {
   const [abertas, setAbertas] = useState({})
   const toggle = (id) => setAbertas(prev => ({ ...prev, [id]: !prev[id] }))
   const isGrupos = conteudo?.tipo === 'grupos'
@@ -132,7 +132,7 @@ function DesktopFluxogramaView({ grupos, conteudo, navegar }) {
       <button className="pd-back-btn" onClick={() => navegar('emergencia')}><IcoArrowLeft /></button>
       <div className="pd-fluxo-body">
         <div className="pd-algo-title" style={{ background: conteudo?.rootColor || '#2A569F' }}>
-          {conteudo?.titulo}
+          {titulo}
         </div>
         <div className="pd-connector-v" />
         <div className="pd-groups-row" style={{ gridTemplateColumns: `repeat(${n}, 1fr)`, '--n': n }}>
@@ -216,7 +216,7 @@ function ProtocolContent({ protocoloId, navegar }) {
         </div>
       </div>
       <div className="pd-card pd-fluxo-card">
-        <DesktopFluxogramaView grupos={grupos} conteudo={data.conteudo} navegar={navegar} />
+        <DesktopFluxogramaView grupos={grupos} conteudo={data.conteudo} titulo={data.titulo} navegar={navegar} />
       </div>
       <style>{`
         .card-protocolo { color:white; border-radius:16px; padding:16px 44px 16px 20px; font-size:13px; line-height:1.5; box-shadow:0 4px 12px rgba(0,0,0,0.08); white-space:pre-line; cursor:pointer; position:relative; }
@@ -386,7 +386,6 @@ export default function DesktopFluxogramasShell({ tela, protocoloId, navegar }) 
                 <IcoClock size={18} />
                 <span className="pd-sb-title">Últimos Acessados</span>
               </div>
-              <button className="pd-sb-link">Ver Todos</button>
             </div>
             <div className="pd-sb-list">
               {recentes.length === 0
@@ -411,7 +410,6 @@ export default function DesktopFluxogramasShell({ tela, protocoloId, navegar }) 
                 <IcoStar filled />
                 <span className="pd-sb-title">Favoritos</span>
               </div>
-              <button className="pd-sb-link">Editar</button>
             </div>
             <div className="pd-sb-list">
               {favoritos.length === 0
