@@ -18,11 +18,8 @@ export const cadastro = async ({ email, password, confirmPassword }) => {
 };
 
 export const logout = async () => {
-  try {
-    return await apiCall('/auth/logout/', {
-      method: 'POST',
-    });
-  } finally {
-    removeToken();
-  }
+  removeToken();
+  return apiCall('/auth/logout/', {
+    method: 'POST',
+  });
 };

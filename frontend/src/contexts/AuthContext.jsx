@@ -10,15 +10,13 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const storedToken = getToken();
-    const storedUser = localStorage.getItem('user');
-
-    if (storedToken && storedUser) {
+    if (storedToken) {
+      setTokenState(storedToken);
       try {
-        setTokenState(storedToken);
-        setUser(JSON.parse(storedUser));
+        const parsed = JSON.parse(atob(storedToken.split('.')[1]));
+        setUser(parsed);
       } catch (e) {
         removeToken();
-        localStorage.removeItem('user');
         setTokenState(null);
         setUser(null);
       }
@@ -28,7 +26,6 @@ export const AuthProvider = ({ children }) => {
 
   const login = (userData, token) => {
     setToken(token);
-    localStorage.setItem('user', JSON.stringify(userData));
     setTokenState(token);
     setUser(userData);
   };
@@ -37,7 +34,6 @@ export const AuthProvider = ({ children }) => {
     setTokenState(null);
     setUser(null);
     removeToken();
-    localStorage.removeItem('user');
   };
 
   return (
