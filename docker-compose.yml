@@ -1,13 +1,13 @@
 services:
   backend:
-    build: ./projeto_genesis
+    build: ./backend
     ports:
       - "8000:8000"
     env_file:
       - .env
 
   frontend:
-    build: ./Projeto-Genesis
+    build: ./frontend
     ports:
       - "80:80"
     depends_on:

@@ -17,10 +17,10 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install -r projeto_genesis/requirements.txt
+        run: pip install -r backend/requirements.txt
 
       - name: Run tests
-        run: python projeto_genesis/manage.py test
+        run: python backend/manage.py test
         env:
           DATABASE_URL: ""
 
@@ -33,16 +33,16 @@ jobs:
         with:
           node-version: "22"
           cache: "npm"
-          cache-dependency-path: Projeto-Genesis/package-lock.json
+          cache-dependency-path: frontend/package-lock.json
 
       - name: Install dependencies
         run: npm install
-        working-directory: Projeto-Genesis
+        working-directory: frontend
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
-        working-directory: Projeto-Genesis
+        working-directory: frontend
 
       - name: Run tests
         run: npm run test:run
-        working-directory: Projeto-Genesis
+        working-directory: frontend
