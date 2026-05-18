@@ -1,0 +1,16 @@
+services:
+  backend:
+    volumes:
+      - ./projeto_genesis:/app
+
+  frontend:
+    build:
+      context: ./Projeto-Genesis
+      target: dev
+    ports:
+      - "3000:5173"
+    volumes:
+      - ./Projeto-Genesis:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:8000/api
