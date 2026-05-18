@@ -17,7 +17,9 @@ export default function ModoEmergencia({ navegar }) {
   const { isFavorited, addToFavorites, removeFromFavorites } = useFavorites()
 
   useEffect(() => {
-    localStorage.setItem('genesis_emergency_start', Date.now().toString())
+    if (!localStorage.getItem('genesis_emergency_start')) {
+      localStorage.setItem('genesis_emergency_start', Date.now().toString())
+    }
     fetchFluxogramas()
       .then(data => setFluxogramas(data.resultados || data))
       .catch(err => console.error('Erro ao carregar:', err))
