@@ -72,10 +72,6 @@ function AppContent() {
         <ModoEmergenciaShell tela={tela} protocoloId={protocoloId} navegar={navegar} />
       )}
       <div className="mobile-frame">
-        <div className="header">
-          <span className="user-info">{user.username}</span>
-          <button onClick={handleLogout} className="logout-btn">Sair</button>
-        </div>
         {tela === 'home' && <Home navegar={navegar} />}
         {tela === 'emergencia' && <ModoEmergencia navegar={navegar} />}
         {(tela === 'dengue' || tela === 'sedacao') && protocoloId && (
