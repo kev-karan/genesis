@@ -47,18 +47,37 @@ class HomePage:
 
     def click_emergencia_button(self):
         """Clica no botão 'Modo Emergência'."""
+        # Tenta múltiplos seletores
+        try:
+            # Tenta por aria-label
+            btn = self.driver.find_element(By.CSS_SELECTOR, 'button[aria-label*="Emergência"], button[aria-label*="emergencia"]')
+            btn.click()
+            return
+        except:
+            pass
+
+        # Tenta por texto
         buttons = self.driver.find_elements(By.TAG_NAME, 'button')
         for btn in buttons:
-            if 'Modo Emergência' in btn.text or 'Emergência' in btn.text:
+            text = btn.text.strip()
+            if any(word in text.lower() for word in ['emergência', 'emergencia', 'emergência']):
                 if 'disabled' not in btn.get_attribute('class'):
                     btn.click()
                     return
+
         raise Exception("Botão Modo Emergência não encontrado ou desabilitado")
 
     def is_emergencia_button_enabled(self):
         """Verifica se botão emergência está habilitado."""
+        try:
+            btn = self.driver.find_element(By.CSS_SELECTOR, 'button[aria-label*="Emergência"], button[aria-label*="emergencia"]')
+            return btn.is_enabled()
+        except:
+            pass
+
         buttons = self.driver.find_elements(By.TAG_NAME, 'button')
         for btn in buttons:
-            if 'Modo Emergência' in btn.text:
+            text = btn.text.strip()
+            if any(word in text.lower() for word in ['emergência', 'emergencia']):
                 return 'disabled' not in btn.get_attribute('class')
         return False
