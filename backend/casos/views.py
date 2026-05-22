@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 
-from .models import CasoClinico, Questao, PassoRaciocinio
+from .models import CasoClinico, Questao, PassoRaciocinio, RespostaUsuario
 from .serializers import (
     CasoClinicoListSerializer,
     CasoClinicoDetailSerializer,
@@ -50,6 +50,13 @@ def responder_caso(request, id):
 
     resposta_correta_texto = questao.resposta_esperada.strip().lower()
     correto = resposta_usuario == resposta_correta_texto
+
+    RespostaUsuario.objects.create(
+        usuario=request.user,
+        questao=questao,
+        resposta=serializer.validated_data['resposta'],
+        correta=correto,
+    )
 
     return Response({
         'correto': correto,
