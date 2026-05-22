@@ -23,6 +23,7 @@ jobs:
         run: python backend/manage.py test
         env:
           DATABASE_URL: ""
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
   frontend:
     runs-on: ubuntu-latest
