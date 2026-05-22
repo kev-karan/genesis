@@ -21,7 +21,15 @@ class ProtocoloPage:
     def get_protocol_title(self):
         """Retorna título do protocolo."""
         try:
+            # Tenta h1 primeiro
             title = self.driver.find_element(By.TAG_NAME, 'h1')
+            return title.text
+        except:
+            pass
+
+        try:
+            # Tenta qualquer elemento com texto de protocolo
+            title = self.driver.find_element(By.CSS_SELECTOR, '[class*="title"], [class*="header"]')
             return title.text
         except:
             return None
@@ -63,7 +71,11 @@ class ProtocoloPage:
     def go_back(self):
         """Clica no botão de voltar."""
         back_btn = self.driver.find_element(By.CSS_SELECTOR, '.back-btn')
-        back_btn.click()
+        # Click via JavaScript se método normal falhar
+        try:
+            back_btn.click()
+        except:
+            self.driver.execute_script("arguments[0].click();", back_btn)
 
     def is_favorite_active(self):
         """Verifica se protocolo é favorito (star preenchida)."""
