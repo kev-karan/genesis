@@ -9,7 +9,7 @@ from .models import CasoClinico, Questao, PassoRaciocinio
 from .serializers import (
     CasoClinicoListSerializer,
     CasoClinicoDetailSerializer,
-    PassoRaciocnioSerializer,
+    PassoRaciocinioSerializer,
     ResponderSerializer
 )
 
@@ -58,6 +58,6 @@ def responder_caso(request, id):
 @permission_classes([IsAuthenticated])
 def raciocinio_caso(request, id):
     passos = PassoRaciocinio.objects.filter(questao__caso_clinico_id=id).order_by('ordem')
-    serializer = PassoRaciocnioSerializer(passos, many=True)
+    serializer = PassoRaciocinioSerializer(passos, many=True)
     return Response(serializer.data)
 # Create your views here.
