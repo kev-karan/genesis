@@ -48,7 +48,11 @@ def responder_caso(request, id):
         return Response({'correto': None, 'mensagem': 'Questão sem resposta esperada definida.'})
 
     resposta_correta_texto = questao.resposta_esperada.strip().lower()
-    correto = resposta_usuario == resposta_correta_texto
+
+    try:
+        correto = abs(float(resposta_usuario.replace(',', '.')) - float(resposta_correta_texto.replace(',', '.'))) < 0.1
+    except ValueError:
+        correto = resposta_usuario == resposta_correta_texto
 
     RespostaUsuario.objects.create(
         usuario=request.user,
@@ -72,4 +76,3 @@ def raciocinio_caso(request, id):
     passos = PassoRaciocinio.objects.filter(questao__caso_clinico_id=id).order_by('ordem')
     serializer = PassoRaciocinioSerializer(passos, many=True)
     return Response(serializer.data)
-# Create your views here.
