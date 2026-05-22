@@ -12,7 +12,7 @@ from pages.login_page import LoginPage
 from pages.cadastro_page import CadastroPage
 from pages.home_page import HomePage
 
-load_dotenv(dotenv_path="../.env")
+load_dotenv()
 
 BASE_URL = os.getenv("E2E_BASE_URL", "http://localhost:3000")
 TEST_EMAIL = os.getenv("E2E_TEST_EMAIL", "teste_e2e@genesis.com")

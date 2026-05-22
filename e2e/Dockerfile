@@ -2,17 +2,13 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-# Instala Firefox, geckodriver e dependências
+# Instala Firefox e dependências para headless
 RUN apt-get update && apt-get install -y \
     firefox-esr \
-    wget \
+    libxt6 \
+    libdbus-1-3 \
+    --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
-
-# Instala geckodriver manualmente (evita rate limit do GitHub)
-RUN wget -q https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-linux64.tar.gz -O /tmp/geckodriver.tar.gz \
-    && tar -xzf /tmp/geckodriver.tar.gz -C /usr/local/bin/ \
-    && chmod +x /usr/local/bin/geckodriver \
-    && rm /tmp/geckodriver.tar.gz
 
 # Copia requirements e instala
 COPY requirements.txt .

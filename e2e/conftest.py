@@ -3,11 +3,11 @@ import pytest
 import requests
 from dotenv import load_dotenv
 from selenium import webdriver
-from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
+from webdriver_manager.firefox import GeckoDriverManager
 from pages.login_page import LoginPage
 
-load_dotenv(dotenv_path="../.env")
+load_dotenv()
 
 BASE_URL = os.getenv("E2E_BASE_URL", "http://localhost:3000")
 API_BASE_URL = os.getenv("E2E_API_URL", "http://localhost:8000/api")
@@ -50,7 +50,7 @@ def driver():
     options.add_argument("--height=1024")
 
     drv = webdriver.Firefox(
-        service=Service("/usr/local/bin/geckodriver"),
+        service_args=[],
         options=options
     )
 
