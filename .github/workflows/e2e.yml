@@ -32,6 +32,9 @@ jobs:
             echo "Frontend OK"
           '
 
+      - name: Seed test data
+        run: docker compose -f e2e/docker-compose-e2e.yml exec -T backend python manage.py loaddata fluxogramas/fixtures/protocolos.json
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
