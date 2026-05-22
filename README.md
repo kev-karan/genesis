@@ -107,10 +107,10 @@ Cada sprint tem duração de **2 semanas**. As histórias épicas são desenvolv
 
 ### ⚙️ Pipeline de CI/CD
 Apresentação da automação de build, testes e deploy contínuo.
-* 📺 [Assistir demonstração do CI/CD (YouTube/Drive)](URL)
+* 📺 [Assistir demonstração do CI/CD](URL)
 
 ### 🧪 Testes End-to-End (E2E)
 Execução dos cenários de teste automatizados simulando a jornada do usuário.
-* 📺 [Assistir execução dos testes E2E (YouTube/Drive)](URL)
+* 📺 [Assistir execução dos testes E2E](URL)
 
 </details>
