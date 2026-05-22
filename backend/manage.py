@@ -8,6 +8,8 @@ def main():
     """Run administrative tasks."""
     from dotenv import load_dotenv
     load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
+    if 'test' in sys.argv:
+        os.environ.pop('DATABASE_URL', None)
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'arca_genesis.settings')
     try:
         from django.core.management import execute_from_command_line
