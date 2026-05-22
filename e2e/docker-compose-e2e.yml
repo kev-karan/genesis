@@ -24,6 +24,12 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/", "||", "exit", "1"]
+      interval: 5s
+      timeout: 10s
+      retries: 30
+      start_period: 15s
 
   frontend:
     build:
@@ -34,16 +40,11 @@ services:
     environment:
       - VITE_API_URL=http://backend:8000/api
     depends_on:
-      - backend
-
-  e2e:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    depends_on:
-      - frontend
-    environment:
-      - E2E_BASE_URL=http://frontend:3000
-      - E2E_API_URL=http://backend:8000/api
-      - E2E_TEST_EMAIL=teste_e2e@genesis.com
-      - E2E_TEST_PASSWORD=senha_teste_123
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/", "||", "exit", "1"]
+      interval: 5s
+      timeout: 10s
+      retries: 30
+      start_period: 10s
