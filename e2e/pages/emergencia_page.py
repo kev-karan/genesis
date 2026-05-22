@@ -45,8 +45,22 @@ class EmergenciaPage:
 
     def toggle_favorite_on_card(self, card_element):
         """Clica no ícone de favorito (estrela) de um card."""
-        star = card_element.find_element(By.CSS_SELECTOR, '[class*="star"], [class*="favorite"]')
-        star.click()
+        # Tenta múltiplos seletores
+        try:
+            # Tenta por classe que contenha star ou favorite
+            star = card_element.find_element(By.CSS_SELECTOR, '[class*="star"], [class*="favorite"], svg[class*="icon"]')
+            star.click()
+            return
+        except:
+            pass
+
+        try:
+            # Tenta por ícone SVG genérico
+            star = card_element.find_element(By.CSS_SELECTOR, 'svg, button[type="button"]')
+            star.click()
+            return
+        except:
+            raise Exception("Star/favorite button não encontrado no card")
 
     def get_timer_text(self):
         """Retorna texto do timer (desktop sidebar)."""
