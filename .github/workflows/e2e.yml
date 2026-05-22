@@ -16,6 +16,20 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Create .env file
+        run: |
+          cat > .env << EOF
+          DEBUG=True
+          SECRET_KEY=test-secret-key-ci
+          DATABASE_URL=postgresql://genesis:genesis@postgres:5432/genesis
+          ALLOWED_HOSTS=localhost,127.0.0.1
+          FRONTEND_URL=http://localhost:3000
+          E2E_BASE_URL=http://localhost:3000
+          E2E_API_URL=http://localhost:8000/api
+          E2E_TEST_EMAIL=teste_e2e@genesis.com
+          E2E_TEST_PASSWORD=senha_teste_123
+          EOF
+
       - name: Build Docker images
         run: docker compose build
 
