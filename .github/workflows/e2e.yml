@@ -1,0 +1,94 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build E2E image
+        run: docker build -t genesis-e2e e2e/
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm ci
+
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm run build
+
+      - name: Set up backend
+        run: |
+          cd backend
+          pip install -r requirements.txt
+
+      - name: Start backend
+        run: |
+          cd backend
+          python manage.py migrate
+          python manage.py runserver 0.0.0.0:8000 &
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+          DEBUG: 'True'
+
+      - name: Start frontend
+        run: |
+          cd frontend
+          npm run preview &
+        env:
+          VITE_API_URL: http://localhost:8000/api
+
+      - name: Wait for services
+        run: |
+          timeout 60 bash -c 'until curl -f http://localhost:3000 2>/dev/null; do sleep 1; done'
+          timeout 60 bash -c 'until curl -f http://localhost:8000/api/ 2>/dev/null; do sleep 1; done'
+
+      - name: Run E2E tests
+        run: |
+          docker run --rm --network host \
+            -e E2E_BASE_URL=http://localhost:3000 \
+            -e E2E_API_URL=http://localhost:8000/api \
+            -e E2E_TEST_EMAIL=teste_e2e@genesis.com \
+            -e E2E_TEST_PASSWORD=senha_teste_123 \
+            genesis-e2e pytest tests/ -v --html=report.html --self-contained-html
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: e2e-report
+          path: e2e/report.html
+          retention-days: 30
