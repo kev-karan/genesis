@@ -73,3 +73,44 @@ Cada sprint tem duração de **2 semanas**. As histórias épicas são desenvolv
 | [<img src="https://github.com/perriniadrielly-http.png" width=115><br><sub>Adrielly Perrini</sub>](https://github.com/perriniadrielly-http) | [<img src="https://github.com/beatrizloyola.png" width=115><br><sub>Beatriz Loyola</sub>](https://github.com/beatrizloyola) | [<img src="https://github.com/celinaacav-png.png" width=115><br><sub>Celina Cavalcanti</sub>](https://github.com/celinaacav-png) | [<img src="https://github.com/DanDdC.png" width=115><br><sub>Daniel Donnaire</sub>](https://github.com/DanDdC) | [<img src="https://github.com/juliatenoriocalado.png" width=115><br><sub>Julia Calado</sub>](https://github.com/juliatenoriocalado) |
 | :---: | :---: | :---: | :---: | :---: |
 | [<img src="https://github.com/kev-karan.png" width=115><br><sub>Kelwin Karan</sub>](https://github.com/kev-karan) | [<img src="https://github.com/Luiza029.png" width=115><br><sub>Luiza Costa</sub>](https://github.com/Luiza029) | [<img src="https://github.com/pedrovcb.png" width=115><br><sub>Pedro Bedor</sub>](https://github.com/pedrovcb) | [<img src="https://github.com/RafaCarrilho.png" width=115><br><sub>Rafael Carrilho</sub>](https://github.com/RafaCarrilho) | [<img src="https://github.com/vitoriaduran.png" width=115><br><sub>Vtóriai Gabrielle</sub>](https://github.com/vitoriaduran) |
+
+---
+<details>
+<summary>🚀 <b>Clique para expandir os detalhes da Entrega (SR2)</b></summary>
+
+<br />
+
+## 🔗 Central de Links do Projeto
+
+| Recurso | Link de Acesso |
+| :--- | :--- |
+| **🎨 Protótipo Figma** | [![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)]([SUBSTITUA_PELO_LINK](https://www.figma.com/design/0CKf1YBE9cuDFhuE1TDcLO/GENESIS?node-id=109-141&t=jd230mV5uaztR4Mk-0)) | 
+| **🚀 Deploy** | [![Railway](https://img.shields.io/badge/Railway-131313?style=for-the-badge&logo=railway&logoColor=white)](URL) |
+| **📋 BDD das Histórias** | [![Google Docs](https://img.shields.io/badge/Google_Docs-4285F4?style=for-the-badge&logo=google-docs&logoColor=white)](URL) | 
+| **👥 Programação em par** | [![Google Docs](https://img.shields.io/badge/Google_Docs-4285F4?style=for-the-badge&logo=google-docs&logoColor=white)](URL) | 
+
+
+---
+
+## 📊 Prints
+[Print do Jira]
+[Print do Issues]
+
+---
+
+## 🔑 Instruções de Acesso
+
+
+---
+
+## 🎥 Demonstrações em Vídeo (Screencasts)
+
+### ⚙️ Pipeline de CI/CD
+Apresentação da automação de build, testes e deploy contínuo.
+* 📺 [Assistir demonstração do CI/CD (YouTube/Drive)](URL)
+
+### 🧪 Testes End-to-End (E2E)
+Execução dos cenários de teste automatizados simulando a jornada do usuário.
+* 📺 [Assistir execução dos testes E2E (YouTube/Drive)](URL)
+
+</details>
