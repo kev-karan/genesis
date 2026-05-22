@@ -3,6 +3,7 @@ import pytest
 import requests
 from dotenv import load_dotenv
 from selenium import webdriver
+from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.firefox import GeckoDriverManager
 from pages.login_page import LoginPage
@@ -18,27 +19,35 @@ TEST_PASSWORD = os.getenv("E2E_TEST_PASSWORD", "senha_teste_123")
 @pytest.fixture(scope="session", autouse=True)
 def setup_test_user():
     """Cria user de teste se não existir."""
-    try:
-        # Tenta cadastrar user de teste
-        response = requests.post(
-            f"{API_BASE_URL}/auth/cadastro/",
-            json={
-                "email": TEST_EMAIL,
-                "password": TEST_PASSWORD,
-                "confirmPassword": TEST_PASSWORD
-            },
-            timeout=5
-        )
-        if response.status_code == 201:
-            print(f"\nUser teste criado: {TEST_EMAIL}")
-        elif response.status_code == 400:
-            # User já existe
-            print(f"\nUser teste já existe: {TEST_EMAIL}")
-        else:
-            print(f"\nAviso ao criar user: {response.status_code}")
-    except requests.exceptions.RequestException as e:
-        print(f"\nNao conseguiu criar user teste: {e}")
-        print("Verifique se backend esta rodando em " + API_BASE_URL)
+    import time
+    max_retries = 30
+    retry_delay = 2
+
+    for attempt in range(max_retries):
+        try:
+            response = requests.post(
+                f"{API_BASE_URL}/auth/cadastro/",
+                json={
+                    "email": TEST_EMAIL,
+                    "password": TEST_PASSWORD,
+                    "confirmPassword": TEST_PASSWORD
+                },
+                timeout=5
+            )
+            if response.status_code == 201:
+                print(f"\nUser teste criado: {TEST_EMAIL}")
+            elif response.status_code == 400:
+                print(f"\nUser teste já existe: {TEST_EMAIL}")
+            else:
+                print(f"\nAviso ao criar user: {response.status_code}")
+            break
+        except requests.exceptions.RequestException as e:
+            if attempt == max_retries - 1:
+                print(f"\nNao conseguiu criar user teste após {max_retries} tentativas")
+                print(f"Erro: {e}")
+                print("Backend em " + API_BASE_URL)
+                return
+            time.sleep(retry_delay)
 
 
 @pytest.fixture(scope="session")
@@ -49,10 +58,8 @@ def driver():
     options.add_argument("--width=1280")
     options.add_argument("--height=1024")
 
-    drv = webdriver.Firefox(
-        service_args=[],
-        options=options
-    )
+    service = Service(GeckoDriverManager().install())
+    drv = webdriver.Firefox(service=service, options=options)
 
     drv.implicitly_wait(10)
     yield drv
@@ -71,7 +78,7 @@ def logged_in(driver):
 
     # Espera Home carregar
     WebDriverWait(driver, 10).until(
-        lambda d: "http://localhost:3000" in d.current_url
+        lambda d: "3000" in d.current_url
     )
 
     yield driver
