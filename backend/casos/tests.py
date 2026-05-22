@@ -60,6 +60,34 @@ class ResponderCasoTestCase(TestCase):
         }, format='json')
         self.assertTrue(RespostaUsuario.objects.filter(usuario=self.user, questao=self.questao).exists())
 
+    def test_resposta_numerica_correta(self):
+        questao_num = Questao.objects.create(
+            caso_clinico=self.caso,
+            enunciado='Calcule o IMC',
+            resposta_esperada='24.2',
+            ordem=2,
+        )
+        for resposta in ['24.2', '24,2', '24.20', ' 24.2 ']:
+            RespostaUsuario.objects.filter(usuario=self.user, questao=questao_num).delete()
+            response = self.client.post(f'/api/casos/{self.caso.id}/responder/', {
+                'questao_id': questao_num.id,
+                'resposta': resposta,
+            }, format='json')
+            self.assertTrue(response.data['correto'], f"Falhou para '{resposta}'")
+
+    def test_resposta_numerica_errada(self):
+        questao_num = Questao.objects.create(
+            caso_clinico=self.caso,
+            enunciado='Calcule o IMC',
+            resposta_esperada='24.2',
+            ordem=2,
+        )
+        response = self.client.post(f'/api/casos/{self.caso.id}/responder/', {
+            'questao_id': questao_num.id,
+            'resposta': '30.0',
+        }, format='json')
+        self.assertFalse(response.data['correto'])
+
     def test_resposta_esperada_nula(self):
         questao_sem_resposta = Questao.objects.create(
             caso_clinico=self.caso,
