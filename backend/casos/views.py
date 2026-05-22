@@ -44,8 +44,11 @@ def responder_caso(request, id):
     resposta_usuario = str(serializer.validated_data['resposta']).strip().lower()
 
     questao = get_object_or_404(Questao, id=questao_id, caso_clinico=caso)
-    resposta_correta_texto = str(questao.resposta_esperada).strip().lower()
 
+    if not questao.resposta_esperada:
+        return Response({'correto': None, 'mensagem': 'Questão sem resposta esperada definida.'})
+
+    resposta_correta_texto = questao.resposta_esperada.strip().lower()
     correto = resposta_usuario == resposta_correta_texto
 
     return Response({
