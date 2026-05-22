@@ -67,6 +67,9 @@ def responder_caso(request, id):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def raciocinio_caso(request, id):
+    if not RespostaUsuario.objects.filter(questao__caso_clinico_id=id, usuario=request.user).exists():
+        return Response({'erro': 'Responda o caso antes de acessar o raciocínio.'}, status=status.HTTP_403_FORBIDDEN)
+
     passos = PassoRaciocinio.objects.filter(questao__caso_clinico_id=id).order_by('ordem')
     serializer = PassoRaciocinioSerializer(passos, many=True)
     return Response(serializer.data)
