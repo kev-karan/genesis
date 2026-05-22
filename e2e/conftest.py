@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
-from webdriver_manager.firefox import GeckoDriverManager
 from pages.login_page import LoginPage
 
 load_dotenv(dotenv_path="../.env")
@@ -51,7 +50,7 @@ def driver():
     options.add_argument("--height=1024")
 
     drv = webdriver.Firefox(
-        service=Service(GeckoDriverManager().install()),
+        service=Service("/usr/local/bin/geckodriver"),
         options=options
     )
 
