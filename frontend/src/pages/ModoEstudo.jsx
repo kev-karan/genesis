@@ -11,7 +11,7 @@ const NIVEL_BG    = { facil: 'rgba(43,168,128,0.12)', medio: 'rgba(213,139,2,0.1
 
 const FLUXOGRAMA_ICON = {
   1: { image: DengueIcon,  color: '#1B5DCA' },
-  2: { image: SedacaoIcon, color: '#504FA8' },
+  2: { image: SedacaoIcon, color: '#1B5DCA' },
 }
 
 export default function ModoEstudo({ navegar }) {
