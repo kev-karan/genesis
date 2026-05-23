@@ -287,7 +287,7 @@ export default function Home({ navegar }) {
             <span className="quick-label">Calculadora de Doses</span>
           </button>
 
-          <button className="quick-btn" disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>
+          <button className="quick-btn" onClick={() => navegar('estudo')}>
             <div className="quick-icon">
               <img src={EstudoIcon} alt='Icon Modo Estudo'
               style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
