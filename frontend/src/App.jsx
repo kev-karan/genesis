@@ -9,6 +9,7 @@ import ModoEmergencia from './pages/ModoEmergencia'
 import Protocolo from './pages/Protocolo'
 import CalculadoraDose from './pages/CalculadoraDose/CalculadoraDose'
 import ModoEmergenciaShell from './pages/ModoEmergenciaShell'
+import ModoEstudo from './pages/ModoEstudo'
 import DesktopTopBar from './components/DesktopTopBar'
 import './App.css'
 
@@ -20,16 +21,20 @@ const PROTOCOLOS = {
 function AppContent() {
   const [tela, setTela] = useState('home')
   const [protocoloId, setProtocoloId] = useState(null)
+  const [casoId, setCasoId] = useState(null)
   const [mostrarCadastro, setMostrarCadastro] = useState(false)
   const [authMessage, setAuthMessage] = useState('')
   const { user, logout } = useAuth()
 
-  const navegar = (destino) => {
+  const navegar = (destino, id = null) => {
     if (destino === 'home') {
       localStorage.removeItem('genesis_emergency_start')
     }
     if (PROTOCOLOS[destino] !== undefined) {
       setProtocoloId(PROTOCOLOS[destino])
+    }
+    if (destino === 'estudo-caso' && id !== null) {
+      setCasoId(id)
     }
     setTela(destino)
   }
@@ -78,6 +83,7 @@ function AppContent() {
           <Protocolo protocoloId={protocoloId} navegar={navegar} />
         )}
         {tela === 'calculadora' && <CalculadoraDose navegar={navegar} />}
+        {tela === 'estudo' && <ModoEstudo navegar={navegar} />}
       </div>
     </div>
   )
