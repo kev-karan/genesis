@@ -38,8 +38,9 @@ class CasoClinico(models.Model):
 
 class Questao(models.Model):
     TIPO_CHOICES = [
-        ('aberta', 'Aberta'),
+        ('binaria', 'Binária'),
         ('multipla_escolha', 'Múltipla escolha'),
+        ('numerica', 'Numérica'),
     ]
 
     caso_clinico = models.ForeignKey(
@@ -53,7 +54,7 @@ class Questao(models.Model):
     tipo = models.CharField(
         max_length=30,
         choices=TIPO_CHOICES,
-        default='aberta'
+        default='binaria'
     )
 
     ordem = models.PositiveIntegerField(default=1)
@@ -68,6 +69,42 @@ class Questao(models.Model):
 
     def __str__(self):
         return f"{self.caso_clinico.titulo} - Questão {self.ordem}"
+
+
+class OpcaoResposta(models.Model):
+    questao = models.ForeignKey(
+        Questao,
+        on_delete=models.CASCADE,
+        related_name='opcoes'
+    )
+
+    texto = models.CharField(max_length=500)
+    correta = models.BooleanField(default=False)
+    ordem = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        ordering = ['ordem']
+
+    def __str__(self):
+        return f"{self.questao} - Opção {self.ordem}"
+
+
+class TelaResultado(models.Model):
+    caso_clinico = models.ForeignKey(
+        CasoClinico,
+        on_delete=models.CASCADE,
+        related_name='telas_resultado'
+    )
+
+    titulo = models.CharField(max_length=200)
+    conteudo = models.TextField()
+    ordem = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        ordering = ['ordem']
+
+    def __str__(self):
+        return f"{self.caso_clinico.titulo} - Resultado {self.ordem}"
 
 
 class PassoRaciocinio(models.Model):
