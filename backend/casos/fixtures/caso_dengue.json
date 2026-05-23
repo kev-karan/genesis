@@ -3,7 +3,7 @@
     "model": "casos.casoclinico",
     "pk": 2,
     "fields": {
-      "titulo": "Caso Clínico - Dengue",
+      "titulo": "Dengue",
       "descricao": "Caso de dengue pediátrica para avaliação de classificação clínica e conduta.",
       "contexto": "Paciente feminina, 8 anos, 25 kg, dá entrada no pronto-socorro com febre há 4 dias (39°C), cefaleia, dor retroorbital e mialgia. Ao exame físico: petéquias no tronco, PA 90/60 mmHg. Exames laboratoriais: plaquetas 85.000/mm³, hematócrito 42% (valor basal 38%). Ausência de sangramento espontâneo e alteração de consciência.",
       "fluxograma": 1,
