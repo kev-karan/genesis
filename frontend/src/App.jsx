@@ -10,6 +10,7 @@ import Protocolo from './pages/Protocolo'
 import CalculadoraDose from './pages/CalculadoraDose/CalculadoraDose'
 import ModoEmergenciaShell from './pages/ModoEmergenciaShell'
 import ModoEstudo from './pages/ModoEstudo'
+import EstudoProtocolo from './pages/EstudoProtocolo'
 import DesktopTopBar from './components/DesktopTopBar'
 import './App.css'
 
@@ -84,6 +85,7 @@ function AppContent() {
         )}
         {tela === 'calculadora' && <CalculadoraDose navegar={navegar} />}
         {tela === 'estudo' && <ModoEstudo navegar={navegar} />}
+        {tela === 'estudo-caso' && casoId && <EstudoProtocolo casoId={casoId} navegar={navegar} />}
       </div>
     </div>
   )
