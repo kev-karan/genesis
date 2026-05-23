@@ -25,10 +25,9 @@ export default function BottomNav({ navegar, active }) {
       </button>
 
       <button
-        className="nav-btn"
+        className={`nav-btn ${active === 'estudo' ? 'active' : ''}`}
+        onClick={() => navegar('estudo')}
         aria-label="Modo Estudo"
-        disabled
-        style={{ opacity: 0.5, cursor: 'not-allowed' }}
       >
         <img src={EstudoIconNav} alt='Icon Estudo'
          style={{ width: '25px', height: '25px', objectFit: 'contain' }} />
