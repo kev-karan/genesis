@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 
-from .models import CasoClinico, Questao, PassoRaciocinio, RespostaUsuario
+from .models import CasoClinico, Questao, OpcaoResposta, PassoRaciocinio, RespostaUsuario
 from .serializers import (
     CasoClinicoListSerializer,
     CasoClinicoDetailSerializer,
@@ -40,31 +40,51 @@ def responder_caso(request, id):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     questao_id = serializer.validated_data['questao_id']
-    resposta_usuario = str(serializer.validated_data['resposta']).strip().lower()
-
     questao = get_object_or_404(Questao, id=questao_id, caso_clinico=caso)
 
-    if not questao.resposta_esperada:
-        return Response({'correto': None, 'mensagem': 'Questão sem resposta esperada definida.'})
+    if questao.tipo == 'multipla_escolha':
+        opcao_id = serializer.validated_data.get('opcao_id')
+        if opcao_id is None:
+            return Response({'erro': 'Campo opcao_id obrigatório para questões de múltipla escolha.'}, status=status.HTTP_400_BAD_REQUEST)
+        opcao = get_object_or_404(OpcaoResposta, id=opcao_id, questao=questao)
+        correto = opcao.correta
+        resposta_texto = str(opcao_id)
+        opcao_correta = questao.opcoes.filter(correta=True).first()
+        resposta_correta = opcao_correta.texto if opcao_correta else None
+    else:
+        resposta_texto = serializer.validated_data.get('resposta', '').strip()
+        if not resposta_texto:
+            return Response({'erro': 'Campo resposta obrigatório.'}, status=status.HTTP_400_BAD_REQUEST)
 
-    resposta_correta_texto = questao.resposta_esperada.strip().lower()
+        if not questao.resposta_esperada:
+            return Response({'correto': None, 'mensagem': 'Questão sem resposta esperada definida.'})
 
-    try:
-        correto = abs(float(resposta_usuario.replace(',', '.')) - float(resposta_correta_texto.replace(',', '.'))) < 0.1
-    except ValueError:
-        correto = resposta_usuario == resposta_correta_texto
+        resposta_correta = questao.resposta_esperada
+
+        if questao.tipo == 'numerica':
+            try:
+                correto = abs(float(resposta_texto.replace(',', '.')) - float(resposta_correta.replace(',', '.'))) < 0.1
+            except ValueError:
+                return Response({'erro': 'Resposta deve ser um número.'}, status=status.HTTP_400_BAD_REQUEST)
+        else:  # binaria
+            correto = resposta_texto.lower() == resposta_correta.strip().lower()
 
     RespostaUsuario.objects.create(
         usuario=request.user,
         questao=questao,
-        resposta=serializer.validated_data['resposta'],
+        resposta=resposta_texto,
         correta=correto,
     )
 
+    if correto:
+        mensagem = questao.feedback_correto or 'Resposta correta!'
+    else:
+        mensagem = questao.feedback_incorreto or 'Resposta incorreta, tente novamente.'
+
     return Response({
         'correto': correto,
-        'resposta_correta': questao.resposta_esperada,
-        'mensagem': 'Resposta correta!' if correto else 'Resposta incorreta, tente novamente.'
+        'resposta_correta': resposta_correta,
+        'mensagem': mensagem,
     })
 
 @api_view(['GET'])

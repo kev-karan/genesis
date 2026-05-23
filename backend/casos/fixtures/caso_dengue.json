@@ -1,0 +1,161 @@
+[
+  {
+    "model": "casos.casoclinico",
+    "pk": 2,
+    "fields": {
+      "titulo": "Caso Clínico - Dengue",
+      "descricao": "Caso de dengue pediátrica para avaliação de classificação clínica e conduta.",
+      "contexto": "Paciente feminina, 8 anos, 25 kg, dá entrada no pronto-socorro com febre há 4 dias (39°C), cefaleia, dor retroorbital e mialgia. Ao exame físico: petéquias no tronco, PA 90/60 mmHg. Exames laboratoriais: plaquetas 85.000/mm³, hematócrito 42% (valor basal 38%). Ausência de sangramento espontâneo e alteração de consciência.",
+      "fluxograma": null,
+      "nivel": "medio",
+      "ativo": true,
+      "criado_em": "2026-05-23T10:00:00Z",
+      "atualizado_em": "2026-05-23T10:00:00Z"
+    }
+  },
+  {
+    "model": "casos.questao",
+    "pk": 4,
+    "fields": {
+      "caso_clinico": 2,
+      "enunciado": "Com base no contexto clínico e laboratorial, qual a classificação correta deste caso de dengue?",
+      "tipo": "multipla_escolha",
+      "ordem": 1,
+      "resposta_esperada": null,
+      "palavras_chave": ["dengue", "classificação", "sinais de alarme"],
+      "feedback_correto": "Correto. Plaquetopenia (<100.000/mm³), hemoconcentração (hematócrito 10,5% acima do basal) e hipotensão leve configuram dengue com sinais de alarme.",
+      "feedback_incorreto": "Revise os critérios de classificação. Plaquetopenia, hemoconcentração e hipotensão são sinais de alarme — não caracterizam dengue grave (que exige extravasamento grave, choque ou comprometimento de órgãos).",
+      "criado_em": "2026-05-23T10:00:00Z"
+    }
+  },
+  {
+    "model": "casos.questao",
+    "pk": 5,
+    "fields": {
+      "caso_clinico": 2,
+      "enunciado": "Este paciente tem indicação de internação hospitalar?",
+      "tipo": "binaria",
+      "ordem": 2,
+      "resposta_esperada": "sim",
+      "palavras_chave": ["internação", "hospitalização", "conduta"],
+      "feedback_correto": "Correto. Dengue com sinais de alarme tem indicação de internação para hidratação venosa e monitorização laboratorial.",
+      "feedback_incorreto": "Incorreto. Dengue com sinais de alarme requer internação hospitalar. Manejo ambulatorial é restrito à dengue sem sinais de alarme em pacientes de grupo A.",
+      "criado_em": "2026-05-23T10:00:00Z"
+    }
+  },
+  {
+    "model": "casos.questao",
+    "pk": 6,
+    "fields": {
+      "caso_clinico": 2,
+      "enunciado": "Qual o valor do hematócrito (%) registrado nos exames do paciente?",
+      "tipo": "numerica",
+      "ordem": 3,
+      "resposta_esperada": "42",
+      "palavras_chave": ["hematócrito", "hemoconcentração", "exame"],
+      "feedback_correto": "Correto. Hematócrito de 42% representa aumento de 10,5% em relação ao basal de 38% — hemoconcentração, sinal de alarme na dengue.",
+      "feedback_incorreto": "Verifique os dados laboratoriais no contexto do caso. O hematócrito registrado foi de 42%.",
+      "criado_em": "2026-05-23T10:00:00Z"
+    }
+  },
+  {
+    "model": "casos.opcaoresposta",
+    "pk": 1,
+    "fields": {
+      "questao": 4,
+      "texto": "Dengue sem sinais de alarme",
+      "correta": false,
+      "ordem": 1
+    }
+  },
+  {
+    "model": "casos.opcaoresposta",
+    "pk": 2,
+    "fields": {
+      "questao": 4,
+      "texto": "Dengue com sinais de alarme",
+      "correta": true,
+      "ordem": 2
+    }
+  },
+  {
+    "model": "casos.opcaoresposta",
+    "pk": 3,
+    "fields": {
+      "questao": 4,
+      "texto": "Dengue grave",
+      "correta": false,
+      "ordem": 3
+    }
+  },
+  {
+    "model": "casos.opcaoresposta",
+    "pk": 4,
+    "fields": {
+      "questao": 4,
+      "texto": "Febre viral inespecífica",
+      "correta": false,
+      "ordem": 4
+    }
+  },
+  {
+    "model": "casos.telaresultado",
+    "pk": 1,
+    "fields": {
+      "caso_clinico": 2,
+      "titulo": "Conduta no Dengue com Sinais de Alarme",
+      "conteudo": "Internação hospitalar obrigatória. Hidratação venosa com cristaloide (SF 0,9% ou Ringer Lactato) 10 ml/kg na 1ª hora, reavaliando a cada 1-2 horas. Monitorização: hematócrito e plaquetas a cada 2-4 horas. Critérios de alta: plaquetas em ascensão, hematócrito estável, ausência de febre por 48h e boa aceitação oral.",
+      "ordem": 1
+    }
+  },
+  {
+    "model": "casos.passoraciocinio",
+    "pk": 5,
+    "fields": {
+      "questao": 4,
+      "titulo": "Identificar sinais de alarme presentes",
+      "descricao": "No contexto: plaquetas 85.000/mm³ (< 100.000 = plaquetopenia), hematócrito 42% vs basal 38% (hemoconcentração) e PA 90/60 mmHg (hipotensão leve). Todos são sinais de alarme.",
+      "ordem": 1
+    }
+  },
+  {
+    "model": "casos.passoraciocinio",
+    "pk": 6,
+    "fields": {
+      "questao": 4,
+      "titulo": "Aplicar a classificação da dengue",
+      "descricao": "Dengue com sinais de alarme: presença de ≥1 sinal de alarme sem critérios de gravidade extrema (choque, sangramento grave, comprometimento de órgãos). Este caso tem três sinais de alarme.",
+      "ordem": 2
+    }
+  },
+  {
+    "model": "casos.passoraciocinio",
+    "pk": 7,
+    "fields": {
+      "questao": 5,
+      "titulo": "Critérios de internação na dengue",
+      "descricao": "Pela classificação do Ministério da Saúde, dengue com sinais de alarme (grupo C) tem indicação de internação hospitalar para hidratação venosa e monitorização rigorosa.",
+      "ordem": 1
+    }
+  },
+  {
+    "model": "casos.passoraciocinio",
+    "pk": 8,
+    "fields": {
+      "questao": 6,
+      "titulo": "Localizar o hematócrito no contexto",
+      "descricao": "O contexto informa hematócrito atual de 42% e valor basal de 38%.",
+      "ordem": 1
+    }
+  },
+  {
+    "model": "casos.passoraciocinio",
+    "pk": 9,
+    "fields": {
+      "questao": 6,
+      "titulo": "Interpretar a hemoconcentração",
+      "descricao": "Aumento de ≥10% do hematócrito em relação ao basal é critério de hemoconcentração. Aqui: (42 - 38) / 38 × 100 ≈ 10,5% — critério cumprido.",
+      "ordem": 2
+    }
+  }
+]

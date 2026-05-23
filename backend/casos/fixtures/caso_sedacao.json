@@ -19,10 +19,12 @@
     "fields": {
       "caso_clinico": 1,
       "enunciado": "Calcule o IMC do paciente considerando peso de 70 kg e altura de 1,70 m.",
-      "tipo": "aberta",
+      "tipo": "numerica",
       "ordem": 1,
       "resposta_esperada": "24.2",
       "palavras_chave": ["imc", "peso", "altura"],
+      "feedback_correto": "Correto. IMC = 70 / 1,70² ≈ 24,2 kg/m² — peso normal.",
+      "feedback_incorreto": "Use a fórmula IMC = peso / altura². Para este paciente: 70 / (1,70 × 1,70) ≈ 24,2.",
       "criado_em": "2026-05-22T17:57:00Z"
     }
   },
@@ -32,10 +34,12 @@
     "fields": {
       "caso_clinico": 1,
       "enunciado": "Considerando que o jejum iniciou às 00h e o procedimento será às 08h, quantas horas de jejum o paciente terá?",
-      "tipo": "aberta",
+      "tipo": "numerica",
       "ordem": 2,
       "resposta_esperada": "8",
       "palavras_chave": ["jejum", "tempo", "horas"],
+      "feedback_correto": "Correto. 00h até 08h = 8 horas de jejum.",
+      "feedback_incorreto": "Calcule a diferença entre o horário do procedimento (08h) e o início do jejum (00h).",
       "criado_em": "2026-05-22T17:57:00Z"
     }
   },
@@ -45,10 +49,12 @@
     "fields": {
       "caso_clinico": 1,
       "enunciado": "Se a frequência cardíaca inicial era 80 bpm e após sedação ficou em 72 bpm, qual foi a redução em bpm?",
-      "tipo": "aberta",
+      "tipo": "numerica",
       "ordem": 3,
       "resposta_esperada": "8",
       "palavras_chave": ["frequencia cardiaca", "bpm", "reducao"],
+      "feedback_correto": "Correto. 80 - 72 = 8 bpm de redução.",
+      "feedback_incorreto": "Subtraia a frequência após sedação da frequência inicial: 80 - 72.",
       "criado_em": "2026-05-22T17:57:00Z"
     }
   },

@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework.test import APIClient
 from rest_framework.authtoken.models import Token
 
-from .models import CasoClinico, Questao, RespostaUsuario
+from .models import CasoClinico, Questao, OpcaoResposta, RespostaUsuario
 
 
 class CasosURLTestCase(TestCase):
@@ -64,6 +64,7 @@ class ResponderCasoTestCase(TestCase):
         questao_num = Questao.objects.create(
             caso_clinico=self.caso,
             enunciado='Calcule o IMC',
+            tipo='numerica',
             resposta_esperada='24.2',
             ordem=2,
         )
@@ -79,6 +80,7 @@ class ResponderCasoTestCase(TestCase):
         questao_num = Questao.objects.create(
             caso_clinico=self.caso,
             enunciado='Calcule o IMC',
+            tipo='numerica',
             resposta_esperada='24.2',
             ordem=2,
         )
@@ -91,7 +93,8 @@ class ResponderCasoTestCase(TestCase):
     def test_resposta_esperada_nula(self):
         questao_sem_resposta = Questao.objects.create(
             caso_clinico=self.caso,
-            enunciado='Questão aberta',
+            enunciado='Questão sem gabarito',
+            tipo='binaria',
             resposta_esperada=None,
             ordem=2,
         )
@@ -101,6 +104,92 @@ class ResponderCasoTestCase(TestCase):
         }, format='json')
         self.assertEqual(response.status_code, 200)
         self.assertIsNone(response.data['correto'])
+
+    def test_multipla_escolha_correta(self):
+        questao_mc = Questao.objects.create(
+            caso_clinico=self.caso,
+            enunciado='Qual o tratamento?',
+            tipo='multipla_escolha',
+            ordem=2,
+        )
+        OpcaoResposta.objects.create(questao=questao_mc, texto='Ibuprofeno', correta=False, ordem=1)
+        opcao_certa = OpcaoResposta.objects.create(questao=questao_mc, texto='Paracetamol', correta=True, ordem=2)
+
+        response = self.client.post(f'/api/casos/{self.caso.id}/responder/', {
+            'questao_id': questao_mc.id,
+            'opcao_id': opcao_certa.id,
+        }, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.data['correto'])
+
+    def test_multipla_escolha_errada(self):
+        questao_mc = Questao.objects.create(
+            caso_clinico=self.caso,
+            enunciado='Qual o tratamento?',
+            tipo='multipla_escolha',
+            ordem=2,
+        )
+        opcao_errada = OpcaoResposta.objects.create(questao=questao_mc, texto='Ibuprofeno', correta=False, ordem=1)
+        OpcaoResposta.objects.create(questao=questao_mc, texto='Paracetamol', correta=True, ordem=2)
+
+        response = self.client.post(f'/api/casos/{self.caso.id}/responder/', {
+            'questao_id': questao_mc.id,
+            'opcao_id': opcao_errada.id,
+        }, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.data['correto'])
+
+    def test_feedback_contextual_correto(self):
+        questao_fb = Questao.objects.create(
+            caso_clinico=self.caso,
+            enunciado='Diagnóstico?',
+            tipo='binaria',
+            resposta_esperada='Dengue',
+            feedback_correto='Exato! Dengue grave com sinais de alarme.',
+            feedback_incorreto='Incorreto. Revise os critérios diagnósticos de Dengue.',
+            ordem=2,
+        )
+        response = self.client.post(f'/api/casos/{self.caso.id}/responder/', {
+            'questao_id': questao_fb.id,
+            'resposta': 'Dengue',
+        }, format='json')
+        self.assertEqual(response.data['mensagem'], 'Exato! Dengue grave com sinais de alarme.')
+
+    def test_feedback_contextual_incorreto(self):
+        questao_fb = Questao.objects.create(
+            caso_clinico=self.caso,
+            enunciado='Diagnóstico?',
+            tipo='binaria',
+            resposta_esperada='Dengue',
+            feedback_correto='Exato! Dengue grave com sinais de alarme.',
+            feedback_incorreto='Incorreto. Revise os critérios diagnósticos de Dengue.',
+            ordem=2,
+        )
+        response = self.client.post(f'/api/casos/{self.caso.id}/responder/', {
+            'questao_id': questao_fb.id,
+            'resposta': 'Malária',
+        }, format='json')
+        self.assertEqual(response.data['mensagem'], 'Incorreto. Revise os critérios diagnósticos de Dengue.')
+
+    def test_feedback_generico_quando_ausente(self):
+        response = self.client.post(f'/api/casos/{self.caso.id}/responder/', {
+            'questao_id': self.questao.id,
+            'resposta': 'errado',
+        }, format='json')
+        self.assertEqual(response.data['mensagem'], 'Resposta incorreta, tente novamente.')
+
+    def test_multipla_escolha_sem_opcao_id(self):
+        questao_mc = Questao.objects.create(
+            caso_clinico=self.caso,
+            enunciado='Qual o tratamento?',
+            tipo='multipla_escolha',
+            ordem=2,
+        )
+        response = self.client.post(f'/api/casos/{self.caso.id}/responder/', {
+            'questao_id': questao_mc.id,
+            'resposta': 'Paracetamol',
+        }, format='json')
+        self.assertEqual(response.status_code, 400)
 
 
 class RaciocinioCasoTestCase(TestCase):
