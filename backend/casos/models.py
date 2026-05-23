@@ -60,6 +60,8 @@ class Questao(models.Model):
     ordem = models.PositiveIntegerField(default=1)
     resposta_esperada = models.TextField(blank=True, null=True)
     palavras_chave = models.JSONField(default=list, blank=True)
+    feedback_correto = models.TextField(blank=True, null=True)
+    feedback_incorreto = models.TextField(blank=True, null=True)
 
     criado_em = models.DateTimeField(auto_now_add=True)
 

@@ -139,6 +139,45 @@ class ResponderCasoTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response.data['correto'])
 
+    def test_feedback_contextual_correto(self):
+        questao_fb = Questao.objects.create(
+            caso_clinico=self.caso,
+            enunciado='Diagnóstico?',
+            tipo='binaria',
+            resposta_esperada='Dengue',
+            feedback_correto='Exato! Dengue grave com sinais de alarme.',
+            feedback_incorreto='Incorreto. Revise os critérios diagnósticos de Dengue.',
+            ordem=2,
+        )
+        response = self.client.post(f'/api/casos/{self.caso.id}/responder/', {
+            'questao_id': questao_fb.id,
+            'resposta': 'Dengue',
+        }, format='json')
+        self.assertEqual(response.data['mensagem'], 'Exato! Dengue grave com sinais de alarme.')
+
+    def test_feedback_contextual_incorreto(self):
+        questao_fb = Questao.objects.create(
+            caso_clinico=self.caso,
+            enunciado='Diagnóstico?',
+            tipo='binaria',
+            resposta_esperada='Dengue',
+            feedback_correto='Exato! Dengue grave com sinais de alarme.',
+            feedback_incorreto='Incorreto. Revise os critérios diagnósticos de Dengue.',
+            ordem=2,
+        )
+        response = self.client.post(f'/api/casos/{self.caso.id}/responder/', {
+            'questao_id': questao_fb.id,
+            'resposta': 'Malária',
+        }, format='json')
+        self.assertEqual(response.data['mensagem'], 'Incorreto. Revise os critérios diagnósticos de Dengue.')
+
+    def test_feedback_generico_quando_ausente(self):
+        response = self.client.post(f'/api/casos/{self.caso.id}/responder/', {
+            'questao_id': self.questao.id,
+            'resposta': 'errado',
+        }, format='json')
+        self.assertEqual(response.data['mensagem'], 'Resposta incorreta, tente novamente.')
+
     def test_multipla_escolha_sem_opcao_id(self):
         questao_mc = Questao.objects.create(
             caso_clinico=self.caso,

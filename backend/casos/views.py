@@ -76,10 +76,15 @@ def responder_caso(request, id):
         correta=correto,
     )
 
+    if correto:
+        mensagem = questao.feedback_correto or 'Resposta correta!'
+    else:
+        mensagem = questao.feedback_incorreto or 'Resposta incorreta, tente novamente.'
+
     return Response({
         'correto': correto,
         'resposta_correta': resposta_correta,
-        'mensagem': 'Resposta correta!' if correto else 'Resposta incorreta, tente novamente.'
+        'mensagem': mensagem,
     })
 
 @api_view(['GET'])
