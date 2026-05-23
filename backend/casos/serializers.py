@@ -27,7 +27,7 @@ class CasoClinicoDetailSerializer(serializers.ModelSerializer):
 class CasoClinicoListSerializer(serializers.ModelSerializer):
     class Meta:
         model = CasoClinico
-        fields = ['id', 'titulo', 'descricao', 'nivel']
+        fields = ['id', 'titulo', 'descricao', 'nivel', 'fluxograma']
 
 
 class PassoRaciocinioSerializer(serializers.ModelSerializer):

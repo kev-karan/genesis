@@ -2,18 +2,16 @@ import { useState, useEffect } from 'react'
 import TopBar from '../components/TopBar'
 import BottomNav from '../components/BottomNav'
 import { fetchCasos } from '../api/casos'
+import DengueIcon from '../assets/DengueIcon.png'
+import SedacaoIcon from '../assets/SedacaoIcon.png'
 
 const NIVEL_LABEL = { facil: 'Fácil', medio: 'Médio', dificil: 'Difícil' }
 const NIVEL_COLOR = { facil: '#2BA880', medio: '#D58B02', dificil: '#D94F4F' }
 const NIVEL_BG    = { facil: 'rgba(43,168,128,0.12)', medio: 'rgba(213,139,2,0.12)', dificil: 'rgba(217,79,79,0.12)' }
 
-function BookIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-    </svg>
-  )
+const FLUXOGRAMA_ICON = {
+  1: { image: DengueIcon,  color: '#1B5DCA' },
+  2: { image: SedacaoIcon, color: '#504FA8' },
 }
 
 export default function ModoEstudo({ navegar }) {
@@ -52,8 +50,11 @@ export default function ModoEstudo({ navegar }) {
                 onClick={() => navegar('estudo-caso', caso.id)}
                 style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px', width: '100%' }}
               >
-                <div className="protocol-icon">
-                  <BookIcon />
+                <div className="protocol-icon" style={{ background: FLUXOGRAMA_ICON[caso.fluxograma]?.color }}>
+                  {FLUXOGRAMA_ICON[caso.fluxograma]
+                    ? <img src={FLUXOGRAMA_ICON[caso.fluxograma].image} alt={caso.titulo} style={{ width: 28, height: 28, objectFit: 'contain' }} />
+                    : <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                  }
                 </div>
                 <div style={{ flex: 1, textAlign: 'left', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span className="protocol-name">{caso.titulo}</span>
