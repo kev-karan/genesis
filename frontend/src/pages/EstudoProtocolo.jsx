@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import TopBar from '../components/TopBar'
 import BottomNav from '../components/BottomNav'
 import { useFluxograma } from '../hooks/useFluxograma'
+import { useFavorites } from '../hooks/useFavorites'
 import { fetchCaso } from '../api/casos'
 
 // Constantes
@@ -233,8 +234,19 @@ export default function EstudoProtocolo({ casoId, navegar }) {
   }, [casoId])
 
   const { fluxo, loading: fluxoLoading } = useFluxograma(caso?.fluxograma ?? null)
+  const { isFavorited, addToFavorites, removeFromFavorites } = useFavorites()
 
   const loading = casoLoading || (caso?.fluxograma && fluxoLoading)
+
+  const handleToggleFavorite = async () => {
+    if (!caso?.fluxograma) return
+    try {
+      if (isFavorited(caso.fluxograma)) await removeFromFavorites(caso.fluxograma)
+      else await addToFavorites(caso.fluxograma)
+    } catch (err) {
+      console.error(err)
+    }
+  }
 
   if (loading) return (
     <div className="screen proto-mobile">
@@ -273,12 +285,20 @@ export default function EstudoProtocolo({ casoId, navegar }) {
           </div>
         )}
       </div>
+      {fluxo && caso?.fluxograma && (
+        <div className="fab-group" style={{ position: 'absolute', right: '20px', bottom: '100px', zIndex: 999 }}>
+          <button className="fab" title="Favoritar" onClick={handleToggleFavorite}
+            style={{ fontSize: '20px', color: isFavorited(caso.fluxograma) ? '#1B6FD8' : '#999' }}>
+            {isFavorited(caso.fluxograma) ? '★' : '☆'}
+          </button>
+        </div>
+      )}
       <style>{`
         .card-protocolo { color:white; border-radius:16px; padding:16px 44px 16px 20px; font-size:13px; line-height:1.5; box-shadow:0 4px 12px rgba(0,0,0,0.08); white-space:pre-line; cursor:pointer; position:relative; }
         .pill-btn { color:white; border:none; border-radius:24px; padding:8px 24px; font-size:13px; font-weight:600; box-shadow:0 4px 8px rgba(0,0,0,0.1); }
         .arrow { position:absolute; right:16px; top:50%; transform:translateY(-50%); transition:transform 0.3s ease; }
         .arrow.open { transform:translateY(-50%) rotate(180deg); }
-        .nested-content { padding-left:24px; animation ele deve ser alinhado à :slideIn 0.3s ease-out; }
+        .nested-content { padding-left:24px; animation:slideIn 0.3s ease-out; }
         @keyframes slideIn { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
         @keyframes fadeDown { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
       `}</style>

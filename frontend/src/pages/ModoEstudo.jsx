@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import TopBar from '../components/TopBar'
 import BottomNav from '../components/BottomNav'
 import { fetchCasos } from '../api/casos'
+import { useFavorites } from '../hooks/useFavorites'
 import DengueIcon from '../assets/DengueIcon.png'
 import SedacaoIcon from '../assets/SedacaoIcon.png'
 
@@ -17,6 +18,16 @@ const FLUXOGRAMA_ICON = {
 export default function ModoEstudo({ navegar }) {
   const [casos, setCasos] = useState([])
   const [loading, setLoading] = useState(true)
+  const { isFavorited, addToFavorites, removeFromFavorites } = useFavorites()
+
+  const handleToggleFavorite = async (fluxogramaId) => {
+    try {
+      if (isFavorited(fluxogramaId)) await removeFromFavorites(fluxogramaId)
+      else await addToFavorites(fluxogramaId)
+    } catch (err) {
+      console.error(err)
+    }
+  }
 
   useEffect(() => {
     fetchCasos()
@@ -43,7 +54,7 @@ export default function ModoEstudo({ navegar }) {
           <p style={{ textAlign: 'center', color: '#999' }}>Carregando...</p>
         ) : (
           <div className="protocol-list">
-            {casos.map((caso) => (
+            {[...casos.filter(c => isFavorited(c.fluxograma)), ...casos.filter(c => !isFavorited(c.fluxograma))].map((caso) => (
               <button
                 key={caso.id}
                 className="protocol-card"
@@ -72,6 +83,14 @@ export default function ModoEstudo({ navegar }) {
                     </span>
                   )}
                 </div>
+                {caso.fluxograma && (
+                  <div
+                    onClick={e => { e.stopPropagation(); handleToggleFavorite(caso.fluxograma) }}
+                    style={{ padding: '8px', display: 'flex', alignItems: 'center', fontSize: '20px', color: isFavorited(caso.fluxograma) ? '#1B6FD8' : '#999', transition: 'color 0.2s' }}
+                  >
+                    {isFavorited(caso.fluxograma) ? '★' : '☆'}
+                  </div>
+                )}
               </button>
             ))}
           </div>
