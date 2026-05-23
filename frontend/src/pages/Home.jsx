@@ -22,8 +22,10 @@ function IcoHierarchyLg() {
 function IcoCalcLg() {
   return (
     <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M10.5 20.5L3.5 13.5a5 5 0 0 1 7.07-7.07l7 7a5 5 0 0 1-7.07 7.07z"/>
-      <line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/>
+      <g transform="translate(1.5, -1.5)">
+        <path d="M10.5 20.5L3.5 13.5a5 5 0 0 1 7.07-7.07l7 7a5 5 0 0 1-7.07 7.07z"/>
+        <line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/>
+      </g>
     </svg>
   )
 }
@@ -273,8 +275,10 @@ export default function Home({ navegar }) {
           <button className="quick-btn" disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>
             <div className="quick-icon">
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M10.5 20.5L3.5 13.5a5 5 0 0 1 7.07-7.07l7 7a5 5 0 0 1-7.07 7.07z"/>
-                <line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/>
+                <g transform="translate(1.5, -1.5)">
+                  <path d="M10.5 20.5L3.5 13.5a5 5 0 0 1 7.07-7.07l7 7a5 5 0 0 1-7.07 7.07z"/>
+                  <line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/>
+                </g>
               </svg>
             </div>
             <span className="quick-label">Calculadora de Doses</span>
