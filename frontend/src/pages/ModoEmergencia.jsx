@@ -7,8 +7,8 @@ import { fetchFluxogramas } from '../api/fluxogramas'
 import { useFavorites } from '../hooks/useFavorites'
 
 const protocoloMap = {
-  1: { nome: 'Protocolo Dengue',  image: DengueIcon,  destino: 'dengue' },
-  2: { nome: 'Protocolo Sedação', image: SedacaoIcon, destino: 'sedacao' },
+  1: { nome: 'Dengue',  image: DengueIcon,  destino: 'dengue' },
+  2: { nome: 'Sedação', image: SedacaoIcon, destino: 'sedacao' },
 }
 
 export default function ModoEmergencia({ navegar }) {
