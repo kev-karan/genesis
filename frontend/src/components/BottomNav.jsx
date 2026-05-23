@@ -44,7 +44,8 @@ export default function BottomNav({ navegar, active }) {
     const el        = refMap[active]?.current
     const container = containerRef.current
     const pill      = pillRef.current
-    if (!el || !container || !pill) return
+    if (!pill) return
+    if (!el || !container) { pill.style.opacity = '0'; return }
 
     const cr = container.getBoundingClientRect()
     const er = el.getBoundingClientRect()
