@@ -12,6 +12,7 @@ import ModoEmergenciaShell from './pages/ModoEmergenciaShell'
 import ModoEstudo from './pages/ModoEstudo'
 import EstudoProtocolo from './pages/EstudoProtocolo'
 import DesktopTopBar from './components/DesktopTopBar'
+import BottomNav from './components/BottomNav'
 import './App.css'
 
 const PROTOCOLOS = {
@@ -71,6 +72,11 @@ function AppContent() {
 
   const isFluxogramaView = tela === 'emergencia' || tela === 'dengue' || tela === 'sedacao'
 
+  const activeNav = tela === 'calculadora' ? 'calculadora'
+    : (tela === 'estudo' || tela === 'estudo-caso' || tela === 'estudo-questoes') ? 'estudo'
+    : tela === 'home' ? 'home'
+    : null
+
   return (
     <div className="app-wrapper">
       <DesktopTopBar tela={tela} navegar={navegar} />
@@ -86,6 +92,7 @@ function AppContent() {
         {tela === 'calculadora' && <CalculadoraDose navegar={navegar} />}
         {tela === 'estudo' && <ModoEstudo navegar={navegar} />}
         {tela === 'estudo-caso' && casoId && <EstudoProtocolo casoId={casoId} navegar={navegar} />}
+        <BottomNav navegar={navegar} active={activeNav} />
       </div>
     </div>
   )

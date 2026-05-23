@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import TopBar from '../components/TopBar'
-import BottomNav from '../components/BottomNav'
 import { fetchCasos } from '../api/casos'
 import { useFavorites } from '../hooks/useFavorites'
 import DengueIcon from '../assets/DengueIcon.png'
@@ -96,7 +95,6 @@ export default function ModoEstudo({ navegar }) {
           </div>
         )}
       </div>
-      <BottomNav navegar={navegar} active="estudo" />
     </div>
   )
 }

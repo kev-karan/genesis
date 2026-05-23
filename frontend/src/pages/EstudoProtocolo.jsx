@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
 import TopBar from '../components/TopBar'
-import BottomNav from '../components/BottomNav'
 import { useFluxograma } from '../hooks/useFluxograma'
 import { useFavorites } from '../hooks/useFavorites'
 import { fetchCaso } from '../api/casos'
@@ -252,7 +251,6 @@ export default function EstudoProtocolo({ casoId, navegar }) {
     <div className="screen proto-mobile">
       <TopBar />
       <div className="content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>Carregando...</div>
-      <BottomNav navegar={navegar} active="estudo" />
     </div>
   )
 
@@ -260,7 +258,6 @@ export default function EstudoProtocolo({ casoId, navegar }) {
     <div className="screen proto-mobile">
       <TopBar />
       <div className="content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#d32f2f' }}>Erro: {casoError}</div>
-      <BottomNav navegar={navegar} active="estudo" />
     </div>
   )
 
@@ -302,7 +299,6 @@ export default function EstudoProtocolo({ casoId, navegar }) {
         @keyframes slideIn { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
         @keyframes fadeDown { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
       `}</style>
-      <BottomNav navegar={navegar} active="estudo" />
     </div>
   )
 }

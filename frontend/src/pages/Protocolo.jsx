@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
 import TopBar from '../components/TopBar'
-import BottomNav from '../components/BottomNav'
 import { useFavorites } from '../hooks/useFavorites'
 import { useFluxograma } from '../hooks/useFluxograma'
 
@@ -160,7 +159,6 @@ export default function Protocolo({ protocoloId, navegar }) {
     <div className="screen proto-mobile">
       <TopBar />
       <div className="content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>Carregando...</div>
-      <BottomNav navegar={navegar} active="emergencia" />
     </div>
   )
 
@@ -168,7 +166,6 @@ export default function Protocolo({ protocoloId, navegar }) {
     <div className="screen proto-mobile">
       <TopBar />
       <div className="content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>Erro ao carregar: {error}</div>
-      <BottomNav navegar={navegar} active="emergencia" />
     </div>
   )
 
@@ -216,7 +213,6 @@ export default function Protocolo({ protocoloId, navegar }) {
         @keyframes slideIn { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
         @keyframes fadeDown { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
       `}</style>
-      <BottomNav navegar={navegar} active="emergencia" />
     </div>
   )
 }

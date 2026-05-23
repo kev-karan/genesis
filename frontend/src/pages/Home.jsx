@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import TopBar from '../components/TopBar'
-import BottomNav from '../components/BottomNav'
 import GenesisLogo from '../assets/GenesisLogo.png'
 import EmergenciaIcon from '../assets/Emergencia.png'
 import CalculadoraIcon from '../assets/Calculadora.png'
@@ -298,7 +297,6 @@ export default function Home({ navegar }) {
 
       </div>
 
-      <BottomNav navegar={navegar} active="home" />
     </div>
     </>
   )

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import TopBar from '../components/TopBar'
-import BottomNav from '../components/BottomNav'
 import DengueIcon from '../assets/DengueIcon.png'
 import SedacaoIcon from '../assets/SedacaoIcon.png'
 import { fetchFluxogramas } from '../api/fluxogramas'
@@ -83,7 +82,6 @@ export default function ModoEmergencia({ navegar }) {
           </div>
         )}
       </div>
-      <BottomNav navegar={navegar} active="emergencia" />
     </div>
   )
 }
