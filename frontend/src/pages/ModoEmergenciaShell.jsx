@@ -7,8 +7,8 @@ import { useFavorites } from '../hooks/useFavorites'
 import { useFluxograma } from '../hooks/useFluxograma'
 
 const PROTOCOLO_MAP = {
-  1: { label: 'Protocolo Dengue',  image: DengueIcon,  destino: 'dengue',  color: '#1B5DCA' },
-  2: { label: 'Protocolo Sedação', image: SedacaoIcon, destino: 'sedacao', color: '#504FA8' },
+  1: { label: 'Dengue',  image: DengueIcon,  destino: 'dengue',  color: '#1B5DCA' },
+  2: { label: 'Sedação', image: SedacaoIcon, destino: 'sedacao', color: '#504FA8' },
 }
 
 // ---- Icons ----

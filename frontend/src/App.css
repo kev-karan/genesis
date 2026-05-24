@@ -228,6 +228,19 @@ body {
   height: 44px;
   border-radius: 12px;
   transition: background 0.2s;
+  position: relative;
+  z-index: 1;
+}
+
+.bn-pill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: white;
+  border-radius: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: left 0.32s cubic-bezier(0.4,0,0.2,1), width 0.32s cubic-bezier(0.4,0,0.2,1);
 }
 
 .nav-btn:hover {

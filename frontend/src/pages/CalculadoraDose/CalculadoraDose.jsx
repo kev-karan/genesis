@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ChevronLeft, Star, User, Droplet, ChevronDown, Home, ClipboardList, Pill } from 'lucide-react';
+import { ChevronLeft, Star, User, Droplet, ChevronDown } from 'lucide-react';
 import "./CalculadoraDose.css";
 
 const CalculadoraDose = ({ navegar }) => {
@@ -117,11 +117,6 @@ const CalculadoraDose = ({ navegar }) => {
                     </div>
                 </div>
 
-                <footer className="app-footer">
-                    <Home color="white" size={24} />
-                    <Pill color="white" size={24} />
-                    <ClipboardList color="white" size={24} />
-                </footer>
             </div>
         </div>
     );

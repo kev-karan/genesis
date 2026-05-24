@@ -9,7 +9,10 @@ import ModoEmergencia from './pages/ModoEmergencia'
 import Protocolo from './pages/Protocolo'
 import CalculadoraDose from './pages/CalculadoraDose/CalculadoraDose'
 import ModoEmergenciaShell from './pages/ModoEmergenciaShell'
+import ModoEstudo from './pages/ModoEstudo'
+import EstudoProtocolo from './pages/EstudoProtocolo'
 import DesktopTopBar from './components/DesktopTopBar'
+import BottomNav from './components/BottomNav'
 import './App.css'
 
 const PROTOCOLOS = {
@@ -20,16 +23,20 @@ const PROTOCOLOS = {
 function AppContent() {
   const [tela, setTela] = useState('home')
   const [protocoloId, setProtocoloId] = useState(null)
+  const [casoId, setCasoId] = useState(null)
   const [mostrarCadastro, setMostrarCadastro] = useState(false)
   const [authMessage, setAuthMessage] = useState('')
   const { user, logout } = useAuth()
 
-  const navegar = (destino) => {
+  const navegar = (destino, id = null) => {
     if (destino === 'home') {
       localStorage.removeItem('genesis_emergency_start')
     }
     if (PROTOCOLOS[destino] !== undefined) {
       setProtocoloId(PROTOCOLOS[destino])
+    }
+    if (destino === 'estudo-caso' && id !== null) {
+      setCasoId(id)
     }
     setTela(destino)
   }
@@ -65,6 +72,11 @@ function AppContent() {
 
   const isFluxogramaView = tela === 'emergencia' || tela === 'dengue' || tela === 'sedacao'
 
+  const activeNav = tela === 'calculadora' ? 'calculadora'
+    : (tela === 'estudo' || tela === 'estudo-caso' || tela === 'estudo-questoes') ? 'estudo'
+    : tela === 'home' ? 'home'
+    : null
+
   return (
     <div className="app-wrapper">
       <DesktopTopBar tela={tela} navegar={navegar} />
@@ -78,6 +90,9 @@ function AppContent() {
           <Protocolo protocoloId={protocoloId} navegar={navegar} />
         )}
         {tela === 'calculadora' && <CalculadoraDose navegar={navegar} />}
+        {tela === 'estudo' && <ModoEstudo navegar={navegar} />}
+        {tela === 'estudo-caso' && casoId && <EstudoProtocolo casoId={casoId} navegar={navegar} />}
+        <BottomNav navegar={navegar} active={activeNav} />
       </div>
     </div>
   )
