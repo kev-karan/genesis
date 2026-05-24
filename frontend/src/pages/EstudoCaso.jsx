@@ -130,6 +130,7 @@ export default function EstudoCaso({ casoId, navegar }) {
   const [resultado, setResultado] = useState(null)
   const [submetendo, setSubmetendo] = useState(false)
   const [concluido, setConcluido] = useState(false)
+  const [introVista, setIntroVista] = useState(false)
 
   useEffect(() => {
     fetchCaso(casoId)
@@ -144,6 +145,35 @@ export default function EstudoCaso({ casoId, navegar }) {
   if (loading) return <div className="med-step med-step--center"><p>Carregando...</p></div>
   if (error) return <div className="med-step med-step--center"><p className="med-feedback med-feedback--error">{error}</p></div>
   if (!caso) return null
+
+  if (!introVista) return (
+    <>
+      <div className="med-topbar">
+        <button className="med-back-btn" onClick={() => navegar('estudo-caso', casoId)} aria-label="Voltar">
+          ← Voltar
+        </button>
+        <span className="med-step-badge">Caso Clínico</span>
+      </div>
+      <div className="med-content">
+        <div className="med-step">
+          <h3 className="med-section-title">{caso.titulo}</h3>
+          {caso.contexto && (
+            <div className="med-card med-card--blue">
+              <p className="med-small">{caso.contexto}</p>
+            </div>
+          )}
+          {caso.descricao && (
+            <div className="med-card med-card--yellow">
+              <p>{caso.descricao}</p>
+            </div>
+          )}
+          <button className="med-btn med-btn--primary" onClick={() => setIntroVista(true)}>
+            Iniciar questões
+          </button>
+        </div>
+      </div>
+    </>
+  )
 
   const questoes = caso.questoes
   const questao = questoes[questionIndex]
