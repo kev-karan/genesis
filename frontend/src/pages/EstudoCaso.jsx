@@ -15,7 +15,7 @@ const Feedback = ({ resultado }) => {
   return (
     <div className="med-step" style={{ gap: 8 }}>
       {resultado.correto ? (
-        <p className="med-acerto">✓ Correto!</p>
+        <div className="med-feedback med-feedback--success">✓ Correto!</div>
       ) : (
         <div className="med-feedback med-feedback--error">
           ✗ Incorreto. Resposta correta: <strong>{resultado.resposta_correta}</strong>

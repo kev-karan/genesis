@@ -625,6 +625,12 @@ body {
   color: #92400e;
   border-left: 3px solid #f59e0b;
 }
+.med-feedback--success {
+  background: #f0fdf4;
+  color: #15803d;
+  border-left: 3px solid #22c55e;
+  font-weight: 600;
+}
 
 .med-acerto {
   font-size: 15px;
