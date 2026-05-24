@@ -8,9 +8,12 @@ export function fetchCaso(id) {
   return apiCall(`/casos/${id}/`)
 }
 
-export function responderCaso(id, questaoId, resposta) {
+export function responderCaso(id, questaoId, { resposta, opcaoId } = {}) {
+  const body = { questao_id: questaoId }
+  if (opcaoId != null) body.opcao_id = opcaoId
+  if (resposta != null) body.resposta = resposta
   return apiCall(`/casos/${id}/responder/`, {
     method: 'POST',
-    body: JSON.stringify({ questao_id: questaoId, resposta }),
+    body: JSON.stringify(body),
   })
 }
