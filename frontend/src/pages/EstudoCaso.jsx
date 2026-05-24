@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { fetchCaso, responderCaso } from '../api/casos'
-import './ModoEstudo/ModoEstudo.css'
 
 const TopBar = ({ index, total, onBack }) => (
   <div className="med-topbar">
@@ -91,6 +90,8 @@ const QuestaoNumerica = ({ selecionado, resultado, onChange, onSubmit }) => (
         border: '2px solid #c8d8ea',
         fontSize: 14,
         boxSizing: 'border-box',
+        background: '#ffffff',
+        color: '#1a2b4a',
       }}
     />
     {!resultado && (
@@ -142,12 +143,12 @@ export default function EstudoCaso({ casoId, navegar }) {
       .finally(() => setLoading(false))
   }, [casoId])
 
-  if (loading) return <div className="med-step med-step--center"><p>Carregando...</p></div>
-  if (error) return <div className="med-step med-step--center"><p className="med-feedback med-feedback--error">{error}</p></div>
+  if (loading) return <div className="screen"><div className="med-content"><div className="med-step med-step--center"><p>Carregando...</p></div></div></div>
+  if (error) return <div className="screen"><div className="med-content"><div className="med-step med-step--center"><p className="med-feedback med-feedback--error">{error}</p></div></div></div>
   if (!caso) return null
 
   if (!introVista) return (
-    <>
+    <div className="screen">
       <div className="med-topbar">
         <button className="med-back-btn" onClick={() => navegar('estudo-caso', casoId)} aria-label="Voltar">
           ← Voltar
@@ -172,7 +173,7 @@ export default function EstudoCaso({ casoId, navegar }) {
           </button>
         </div>
       </div>
-    </>
+    </div>
   )
 
   const questoes = caso.questoes
@@ -229,7 +230,7 @@ export default function EstudoCaso({ casoId, navegar }) {
 
   if (concluido) {
     return (
-      <>
+      <div className="screen">
         <div className="med-topbar">
           <span />
           <span className="med-step-badge">Concluído</span>
@@ -237,12 +238,12 @@ export default function EstudoCaso({ casoId, navegar }) {
         <div className="med-content">
           <Conclusao caso={caso} navegar={navegar} />
         </div>
-      </>
+      </div>
     )
   }
 
   return (
-    <>
+    <div className="screen">
       <TopBar index={questionIndex} total={questoes.length} onBack={handleBack} />
       <div className="med-content">
         <div className="med-step">
@@ -293,6 +294,6 @@ export default function EstudoCaso({ casoId, navegar }) {
           )}
         </div>
       </div>
-    </>
+    </div>
   )
 }
