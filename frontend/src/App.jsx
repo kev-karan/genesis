@@ -11,6 +11,7 @@ import CalculadoraDose from './pages/CalculadoraDose/CalculadoraDose'
 import ModoEmergenciaShell from './pages/ModoEmergenciaShell'
 import ModoEstudo from './pages/ModoEstudo'
 import EstudoProtocolo from './pages/EstudoProtocolo'
+import ModoEstudoDengue from './pages/ModoEstudo/Dengue'
 import DesktopTopBar from './components/DesktopTopBar'
 import BottomNav from './components/BottomNav'
 import './App.css'
@@ -73,7 +74,7 @@ function AppContent() {
   const isFluxogramaView = tela === 'emergencia' || tela === 'dengue' || tela === 'sedacao'
 
   const activeNav = tela === 'calculadora' ? 'calculadora'
-    : (tela === 'estudo' || tela === 'estudo-caso' || tela === 'estudo-questoes') ? 'estudo'
+    : (tela === 'estudo' || tela === 'estudo-caso' || tela === 'estudo-questoes' || tela === 'estudo-dengue') ? 'estudo'
     : tela === 'home' ? 'home'
     : null
 
@@ -92,6 +93,7 @@ function AppContent() {
         {tela === 'calculadora' && <CalculadoraDose navegar={navegar} />}
         {tela === 'estudo' && <ModoEstudo navegar={navegar} />}
         {tela === 'estudo-caso' && casoId && <EstudoProtocolo casoId={casoId} navegar={navegar} />}
+        {tela === 'estudo-dengue' && <ModoEstudoDengue navegar={navegar} />}
         <BottomNav navegar={navegar} active={activeNav} />
       </div>
     </div>
