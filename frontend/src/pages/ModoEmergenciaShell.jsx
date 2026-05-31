@@ -305,9 +305,16 @@ export default function DesktopFluxogramasShell({ tela, protocoloId, navegar }) 
                     return (
                       <button key={i} className="pd-sb-item pd-sb-item-btn"
                         onClick={() => meta && navegar(meta.destino)}>
-                        <DrugIcon color={meta?.color ?? '#5B91C0'} />
-                        <p className="pd-sb-item-label">{item.titulo}</p>
-                        <p className="pd-sb-item-time">{formatAcesso(item.ultimo_acesso)}</p>
+                        <div style={{ width: 32, height: 32, borderRadius: 6, background: meta?.color ?? '#2A569F', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          {meta?.image
+                            ? <img src={meta.image} alt={item.titulo} style={{ width: 20, height: 20, objectFit: 'contain' }} />
+                            : <DrugIcon color="white" />
+                          }
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <p className="pd-sb-item-label">{item.titulo}</p>
+                          <p className="pd-sb-item-time">{formatAcesso(item.ultimo_acesso)}</p>
+                        </div>
                       </button>
                     )
                   })}
@@ -329,7 +336,9 @@ export default function DesktopFluxogramasShell({ tela, protocoloId, navegar }) 
                     if (!meta) return null
                     return (
                       <button key={i} className="pd-sb-item pd-sb-item-btn" onClick={() => navegar(meta.destino)}>
-                        <DrugIcon color={meta.color} />
+                        <div style={{ width: 32, height: 32, borderRadius: 6, background: meta.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <img src={meta.image} alt={meta.label} style={{ width: 20, height: 20, objectFit: 'contain' }} />
+                        </div>
                         <p className="pd-sb-item-label" style={{ flex: 1 }}>{meta.label}</p>
                         <IcoStar filled />
                       </button>
@@ -348,7 +357,7 @@ export default function DesktopFluxogramasShell({ tela, protocoloId, navegar }) 
               </div>
             </div>
             <div className="pd-emergencia-body">
-              <div>
+              <div style={{ width: 120 }}>
                 <p className="pd-emergencia-label">Tempo ativo</p>
                 <p className="pd-emergencia-timer">{elapsed}</p>
               </div>

@@ -35,6 +35,7 @@ function IcoPill() {
 
 function getActiveSection(tela) {
   if (['emergencia', 'dengue', 'sedacao'].includes(tela)) return 'emergencia'
+  if (['estudo', 'estudo-caso', 'estudo-questoes'].includes(tela)) return 'estudo'
   if (tela === 'calculadora') return 'calculadora'
   return 'home'
 }
@@ -85,7 +86,7 @@ export default function DesktopTopBar({ tela, navegar }) {
   const NAV = [
     { id: 'home',       label: 'INÍCIO',             icon: <IcoHome />,      onClick: () => navegar('home'),       disabled: false },
     { id: 'emergencia', label: 'MODO DE EMERGÊNCIA',  icon: <IcoHierarchy />, onClick: () => navegar('emergencia'), disabled: false },
-    { id: 'estudo',     label: 'MODO DE ESTUDO',      icon: <IcoBook />,      onClick: () => {},                    disabled: true  },
+    { id: 'estudo',     label: 'MODO DE ESTUDO',      icon: <IcoBook />,      onClick: () => navegar('estudo'),      disabled: false },
     { id: 'calculadora',label: 'CALCULADORA',         icon: <IcoPill />,      onClick: () => {},                    disabled: true  },
   ]
 
