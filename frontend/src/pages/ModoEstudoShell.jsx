@@ -1,9 +1,17 @@
 import { useState, useEffect, useRef } from 'react'
 import { fetchCasos, fetchCaso, responderCaso } from '../api/casos'
+import { listAcessosRecentes, registrarAcesso } from '../api/acessos'
 import { useFavorites } from '../hooks/useFavorites'
 import { useFluxograma } from '../hooks/useFluxograma'
 import DengueIcon from '../assets/DengueIcon.png'
 import SedacaoIcon from '../assets/SedacaoIcon.png'
+
+function formatAcesso(isoString) {
+  const date = new Date(isoString)
+  const ddmmaaaa = date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })
+  const hhmm = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+  return `${ddmmaaaa}, ${hhmm}`
+}
 
 // ---- Constants ----
 const NIVEL_BADGE = {
@@ -515,6 +523,7 @@ export default function ModoEstudoShell({ tela, casoId, navegar }) {
   const [casosLoading, setCasosLoading] = useState(true)
   const [casoAtivo, setCasoAtivo] = useState(null)
   const [casoLoading, setCasoLoading] = useState(false)
+  const [recentes, setRecentes] = useState([])
 
   const [questionIndex, setQuestionIndex] = useState(0)
   const [selecionado, setSelecionado] = useState(null)
@@ -536,6 +545,10 @@ export default function ModoEstudoShell({ tela, casoId, navegar }) {
   }, [])
 
   useEffect(() => {
+    listAcessosRecentes().then(setRecentes).catch(() => {})
+  }, [tela])
+
+  useEffect(() => {
     if (!casoId) return
     setCasoLoading(true)
     setCasoAtivo(null)
@@ -550,6 +563,7 @@ export default function ModoEstudoShell({ tela, casoId, navegar }) {
       .then(data => {
         const sorted = { ...data, questoes: [...data.questoes].sort((a, b) => a.ordem - b.ordem) }
         setCasoAtivo(sorted)
+        if (data.fluxograma) registrarAcesso(data.fluxograma).catch(() => {})
       })
       .catch(() => {})
       .finally(() => setCasoLoading(false))
@@ -693,6 +707,40 @@ export default function ModoEstudoShell({ tela, casoId, navegar }) {
             />
           )}
           {isQuestoes && casoAtivo && <SbContextCard caso={casoAtivo} />}
+
+          {/* Recentes */}
+          <div className="pd-card pd-sb-card">
+            <div className="pd-sb-header">
+              <div className="pd-sb-header-left">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#002646" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span className="pd-sb-title">Últimos Acessados</span>
+              </div>
+            </div>
+            <div className="pd-sb-list">
+              {recentes.length === 0
+                ? <p style={{ fontSize: 12, color: '#999', padding: '10px 14px' }}>Nenhum acesso ainda</p>
+                : recentes.map((item, i) => {
+                    const iconMeta = FLUXOGRAMA_ICON[item.fluxograma_id]
+                    const caso = casos.find(c => c.fluxograma === item.fluxograma_id)
+                    return (
+                      <button key={i} className="pd-sb-item pd-sb-item-btn"
+                        onClick={() => caso && navegar('estudo-caso', caso.id)}>
+                        <div style={{ width: 32, height: 32, borderRadius: 6, background: iconMeta?.color || '#2A569F', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          {iconMeta
+                            ? <img src={iconMeta.image} alt={item.titulo} style={{ width: 20, height: 20, objectFit: 'contain' }} />
+                            : <IcoBook size={16} />
+                          }
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <p className="pd-sb-item-label">{caso?.titulo ?? item.titulo}</p>
+                          <p className="pd-sb-item-time">{formatAcesso(item.ultimo_acesso)}</p>
+                        </div>
+                      </button>
+                    )
+                  })
+              }
+            </div>
+          </div>
 
           {/* Favorites */}
           <div className="pd-card pd-sb-card">
