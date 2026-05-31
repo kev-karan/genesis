@@ -21,7 +21,7 @@ const NIVEL_BADGE = {
 }
 const FLUXOGRAMA_ICON = {
   1: { image: DengueIcon,  color: '#1B5DCA' },
-  2: { image: SedacaoIcon, color: '#1B5DCA' },
+  2: { image: SedacaoIcon, color: '#504FA8' },
 }
 const LINE_COLOR_TREE   = '#8FA8C1'
 const LINE_COLOR_GRUPOS = '#A8C4DF'
