@@ -50,8 +50,8 @@ function DesktopHome({ navegar }) {
       label: 'Fluxogramas\nModo Estudo',
       color: '#5B91C0',
       icon: <IcoBook />,
-      action: null,
-      disabled: true,
+      action: () => navegar('estudo'),
+      disabled: false,
     },
   ]
 

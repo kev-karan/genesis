@@ -9,6 +9,7 @@ import ModoEmergencia from './pages/ModoEmergencia'
 import Protocolo from './pages/Protocolo'
 import CalculadoraDose from './pages/CalculadoraDose/CalculadoraDose'
 import ModoEmergenciaShell from './pages/ModoEmergenciaShell'
+import ModoEstudoShell from './pages/ModoEstudoShell'
 import ModoEstudo from './pages/ModoEstudo'
 import EstudoProtocolo from './pages/EstudoProtocolo'
 import EstudoCaso from './pages/EstudoCaso'
@@ -72,6 +73,7 @@ function AppContent() {
   }
 
   const isFluxogramaView = tela === 'emergencia' || tela === 'dengue' || tela === 'sedacao'
+  const isEstudoView = tela === 'estudo' || tela === 'estudo-caso' || tela === 'estudo-questoes'
 
   const activeNav = tela === 'calculadora' ? 'calculadora'
     : (tela === 'estudo' || tela === 'estudo-caso' || tela === 'estudo-questoes') ? 'estudo'
@@ -83,6 +85,9 @@ function AppContent() {
       <DesktopTopBar tela={tela} navegar={navegar} />
       {isFluxogramaView && (
         <ModoEmergenciaShell tela={tela} protocoloId={protocoloId} navegar={navegar} />
+      )}
+      {isEstudoView && (
+        <ModoEstudoShell tela={tela} casoId={casoId} navegar={navegar} />
       )}
       <div className="mobile-frame">
         {tela === 'home' && <Home navegar={navegar} />}
