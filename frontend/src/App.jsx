@@ -31,9 +31,11 @@ function AppContent() {
   const { user, logout } = useAuth()
 
   const navegar = (destino, id = null) => {
-    if (destino === 'home') {
-      localStorage.removeItem('genesis_emergency_start')
-    }
+    const emergenciaTelas = ['emergencia', 'dengue', 'sedacao']
+    const saindoEmergencia = emergenciaTelas.includes(tela) && !emergenciaTelas.includes(destino)
+    const entrandoEmergencia = !emergenciaTelas.includes(tela) && emergenciaTelas.includes(destino)
+    if (saindoEmergencia) localStorage.removeItem('genesis_emergency_start')
+    if (entrandoEmergencia) localStorage.setItem('genesis_emergency_start', Date.now().toString())
     if (PROTOCOLOS[destino] !== undefined) {
       setProtocoloId(PROTOCOLOS[destino])
     }

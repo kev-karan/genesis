@@ -357,7 +357,7 @@ export default function DesktopFluxogramasShell({ tela, protocoloId, navegar }) 
               </div>
             </div>
             <div className="pd-emergencia-body">
-              <div>
+              <div style={{ width: 120 }}>
                 <p className="pd-emergencia-label">Tempo ativo</p>
                 <p className="pd-emergencia-timer">{elapsed}</p>
               </div>

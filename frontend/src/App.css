@@ -1520,7 +1520,7 @@ body {
   min-height: 100px;
 }
 .pd-emergencia-label { font-size: 14px; color: #002646; margin: 0 0 2px; text-align: center; }
-.pd-emergencia-timer { font-size: 23px; font-weight: 700; color: #2BA880; margin: 2px 0 6px; text-align: center; }
+.pd-emergencia-timer { font-size: 23px; font-weight: 700; color: #2BA880; margin: 2px 0 6px; text-align: center; font-variant-numeric: tabular-nums; }
 
 /* Quick info */
 .pd-info-list { padding: 6px 14px 14px; }
