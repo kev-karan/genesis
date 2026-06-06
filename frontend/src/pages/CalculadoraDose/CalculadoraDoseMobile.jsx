@@ -46,17 +46,18 @@ const CalculadoraDoseMobile = ({ navegar }) => {
         setResultado(null);
     };
 
+    const norm = (s) => parseFloat(String(s).replace(',', '.'));
     const calcular = () => {
-        const dose = parseFloat(dosePrescrita);
-        const conc = parseFloat(concentracao);
-        const vol = parseFloat(volumeDesejado);
+        const dose = norm(dosePrescrita);
+        const conc = norm(concentracao);
+        const vol = norm(volumeDesejado);
         if (!dose || !conc || !vol || conc === 0) return;
         setResultado({
             volume: (dose * vol) / conc,
             dosePrescrita: dose,
             concentracao: conc,
             volumeDesejado: vol,
-            peso: parseFloat(peso) || null,
+            peso: norm(peso) || null,
         });
     };
 
@@ -119,28 +120,28 @@ const CalculadoraDoseMobile = ({ navegar }) => {
                     <div className="cm-field">
                         <label className="cm-label">Dose prescrita</label>
                         <div className="cm-input-row">
-                            <input className="cm-input" type="number" placeholder="Ex: 500" value={dosePrescrita} onChange={e => setDosePrescrita(e.target.value)} min="0" />
+                            <input className="cm-input" type="text" inputMode="decimal" placeholder="Ex: 500" value={dosePrescrita} onChange={e => setDosePrescrita(e.target.value.replace(/[^0-9.,]/g, ''))} />
                             <span className="cm-unit">mg</span>
                         </div>
                     </div>
                     <div className="cm-field">
                         <label className="cm-label">Concentração desejada</label>
                         <div className="cm-input-row">
-                            <input className="cm-input" type="number" placeholder="Ex: 250" value={concentracao} onChange={e => setConcentracao(e.target.value)} min="0" />
+                            <input className="cm-input" type="text" inputMode="decimal" placeholder="Ex: 250" value={concentracao} onChange={e => setConcentracao(e.target.value.replace(/[^0-9.,]/g, ''))} />
                             <span className="cm-unit">mL</span>
                         </div>
                     </div>
                     <div className="cm-field">
                         <label className="cm-label">Volume desejado</label>
                         <div className="cm-input-row">
-                            <input className="cm-input" type="number" placeholder="Ex: 10" value={volumeDesejado} onChange={e => setVolumeDesejado(e.target.value)} min="0" />
+                            <input className="cm-input" type="text" inputMode="decimal" placeholder="Ex: 10" value={volumeDesejado} onChange={e => setVolumeDesejado(e.target.value.replace(/[^0-9.,]/g, ''))} />
                             <span className="cm-unit">mL</span>
                         </div>
                     </div>
                     <div className="cm-field">
                         <label className="cm-label">Peso do paciente</label>
                         <div className="cm-input-row">
-                            <input className="cm-input" type="number" placeholder="Ex: 70" value={peso} onChange={e => setPeso(e.target.value)} min="0" />
+                            <input className="cm-input" type="text" inputMode="decimal" placeholder="Ex: 70" value={peso} onChange={e => setPeso(e.target.value.replace(/[^0-9.,]/g, ''))} />
                             <span className="cm-unit">Kg</span>
                         </div>
                     </div>

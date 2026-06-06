@@ -49,9 +49,10 @@ const InputField = ({ label, value, onChange, placeholder, unit }) => (
       onBlur={e => e.currentTarget.style.borderColor = '#e5e7eb'}
     >
       <input
-        type="number" min="0"
+        type="text"
+        inputMode="decimal"
         value={value}
-        onChange={e => onChange(e.target.value)}
+        onChange={e => onChange(e.target.value.replace(/[^0-9.,]/g, ''))}
         placeholder={placeholder}
         style={{ flex: 1, border: 'none', outline: 'none', padding: '10px 14px', fontSize: 15, color: '#111827', background: 'transparent', minWidth: 0, fontFamily: 'DM Sans, sans-serif' }}
       />
@@ -101,11 +102,12 @@ function CalculadoraForm({ med, onBack, onResult }) {
   const [peso,   setPeso]   = useState('')
   const [result, setResult] = useState(null)
 
+  const norm = (s) => parseFloat(s.replace(',', '.'))
   const calcular = () => {
-    const d = parseFloat(dose), c = parseFloat(conc), v = parseFloat(vol)
+    const d = norm(dose), c = norm(conc), v = norm(vol)
     if (!d || !c || !v || c === 0) return
     const volume = (d * v) / c
-    const r = { medicamento: med.label, dosePrescrita: d, concentracao: c, volumeDesejado: v, peso: parseFloat(peso) || null, volume, timestamp: new Date().toISOString() }
+    const r = { medicamento: med.label, dosePrescrita: d, concentracao: c, volumeDesejado: v, peso: norm(peso) || null, volume, timestamp: new Date().toISOString() }
     setResult(r)
     onResult(r)
   }
