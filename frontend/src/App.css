@@ -54,6 +54,13 @@ body {
   min-height: 100vh;
 }
 
+@media (max-width: 768px) {
+  .app-wrapper {
+    height: 100dvh;
+    overflow: hidden;
+  }
+}
+
 .mobile-frame {
   flex: 1;
   display: flex;
