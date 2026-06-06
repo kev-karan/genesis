@@ -1,142 +1,207 @@
-:root {
-  --primaria: #5B91C0;
-  --secundaria: #2a569f;
-  --fundo: #FFFFFF;
-  --texto: #002646;
-  --verde-card: #e2fbe5;
-  --verde-texto: #27AE60;
-  --vermelho-alerta: #FFDADA;
-  --vermelho-texto: #C0392B;
-  --cinza-borda: #E0E0E0;
+.calculadora-page {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px;
+    overflow-y: auto;
+    background: #F3F6FA;
 }
 
-.body-container {
-  background-color: #f0f2f5;
-  display: flex;
-  justify-content: center;
-  min-height: 100vh;
-  margin: 0;
+
+.calculadora-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    width: 100%;
+    max-width: 1000px;
+    align-items: start;
 }
 
-.telefone-tela {
-  width: 100%;
-  max-width: 400px;
-  background-color: var(--fundo); 
-  color: var(--texto); 
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  min-height: 100vh;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+.calc-card {
+    background: #fff;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 20px;
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
 }
 
-.app-header {
-  background-color: var(--secundaria);
-  padding: 15px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: white;
+.calc-section-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
 }
 
-.app-container {
-  padding: 20px;
-  flex: 1;
+.calc-fields-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 24px;
 }
 
-.instrucao {
-  text-align: center;
-  color: var(--secundaria);
-  font-weight: bold;
-  margin-bottom: 30px;
+.calc-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-.icones, .icon-circle {
-  width: 45px;
-  height: 45px;
-  background-color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  margin-right: 15px;
+.calc-label {
+    font-size: 14px;
+    color: #374151;
+    font-weight: 500;
 }
 
-.input-linha {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+.calc-input-row {
+    display: flex;
+    align-items: stretch;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+    transition: border-color 0.15s;
 }
 
-.container-input {
-  display: flex;
-  align-items: center;
-  border: 1px solid var(--cinza-borda);
-  border-radius: 10px;
-  overflow: hidden;
-  background: white;
+.calc-input-row:focus-within {
+    border-color: #3467B0;
 }
 
-.step-btn {
-  background: none;
-  border: none;
-  padding: 10px 15px;
-  font-size: 20px;
-  color: var(--secundaria);
-  cursor: pointer;
+.calc-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 10px 14px;
+    font-size: 15px;
+    color: #111827;
+    background: transparent;
+    min-width: 0;
 }
 
-.input-peso, .input-field {
-  width: 60px;
-  border: none;
-  text-align: center;
-  font-size: 18px;
-  font-weight: bold;
-  color: var(--texto) !important; 
-  outline: none;
+.calc-input::placeholder {
+    color: #9ca3af;
 }
 
-.resultado-card {
-  border-radius: 20px;
-  padding: 25px;
-  text-align: center;
-  margin-bottom: 15px;
-  margin-top: 10px;
+.calc-input::-webkit-outer-spin-button,
+.calc-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
-.result-value {
-  font-size: 35px;
-  font-weight: 900;
-  margin: 5px 0;
+.calc-input[type=number] {
+    -moz-appearance: textfield;
 }
 
-.app-footer {
-  background-color: var(--secundaria);
-  padding: 15px;
-  display: flex;
-  justify-content: space-around;
-  margin-top: auto;
+.unit-badge {
+    background: #3467B0;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    border-radius: 0 8px 8px 0;
 }
 
-input.input-peso, 
-input.input-field {
-  -webkit-appearance: none !important;
-  -moz-appearance: textfield !important;
-  appearance: none !important;
-  background-color: white !important; 
-  color: var(--texto) !important;      
-  border: none !important;
-  text-align: center;
-  font-size: 18px;
-  font-weight: bold;
-  width: 60px;
-  outline: none;
+.calc-btn {
+    background: #2a569f;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background 0.15s;
+    margin-top: auto;
 }
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none !important;
-  margin: 0 !important;
+.calc-btn:hover {
+    background: #1e3f7a;
+}
+
+.resultado-volume-card {
+    background: #d1fae5;
+    border-radius: 16px;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.resultado-label {
+    font-size: 14px;
+    color: #065f46;
+    font-weight: 500;
+}
+
+.resultado-valor {
+    font-size: 36px;
+    font-weight: 900;
+    color: #047857;
+    line-height: 1;
+}
+
+.resultado-unidade {
+    font-size: 24px;
+    font-weight: 700;
+    color: #047857;
+}
+
+.resumo-card {
+    background: #f9fafb;
+    border-radius: 16px;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.resumo-titulo {
+    font-size: 15px;
+    font-weight: 600;
+    color: #374151;
+    margin: 0 0 4px 0;
+}
+
+.resumo-linha {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #374151;
+}
+
+.resumo-linha span:last-child {
+    font-weight: 600;
+    color: #111827;
+}
+
+.resultado-placeholder {
+    color: #9ca3af;
+    font-size: 15px;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .calculadora-page {
+        padding: 20px 16px;
+        align-items: stretch;
+    }
+
+.calculadora-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .calc-fields-grid {
+        grid-template-columns: 1fr;
+    }
 }
