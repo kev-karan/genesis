@@ -156,7 +156,7 @@ export default function DesktopTopBar({ tela, navegar }) {
       </div>
 
       <div className="pd-topbar-right">
-        <button className="pd-nav-btn pd-user-btn"><IcoUser /></button>
+        <button className="pd-nav-btn pd-user-btn" onClick={() => navegar('conta')}><IcoUser /></button>
       </div>
     </div>
   )
