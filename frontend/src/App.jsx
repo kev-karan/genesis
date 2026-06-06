@@ -7,7 +7,7 @@ import Login from './pages/Login'
 import Cadastro from './pages/Cadastro'
 import ModoEmergencia from './pages/ModoEmergencia'
 import Protocolo from './pages/Protocolo'
-import CalculadoraDose from './pages/CalculadoraDose/CalculadoraDose'
+import CalculadoraShell from './pages/CalculadoraDose/CalculadoraShell'
 import CalculadoraDoseMobile from './pages/CalculadoraDose/CalculadoraDoseMobile'
 import ModoEmergenciaShell from './pages/ModoEmergenciaShell'
 import ModoEstudoShell from './pages/ModoEstudoShell'
@@ -137,11 +137,7 @@ function AppContent() {
       {isEstudoView && (
         <ModoEstudoShell tela={tela} casoId={casoId} navegar={navegar} />
       )}
-      {isCalculadoraView && (
-        <div className="proto-desktop">
-          <CalculadoraDose navegar={navegar} />
-        </div>
-      )}
+      {isCalculadoraView && <CalculadoraShell navegar={navegar} />}
       <div className="mobile-frame">
         {tela === 'home' && <Home navegar={navegar} />}
         {tela === 'emergencia' && <ModoEmergencia navegar={navegar} />}
