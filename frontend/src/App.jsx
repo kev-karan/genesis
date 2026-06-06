@@ -8,6 +8,7 @@ import Cadastro from './pages/Cadastro'
 import ModoEmergencia from './pages/ModoEmergencia'
 import Protocolo from './pages/Protocolo'
 import CalculadoraDose from './pages/CalculadoraDose/CalculadoraDose'
+import CalculadoraDoseMobile from './pages/CalculadoraDose/CalculadoraDoseMobile'
 import ModoEmergenciaShell from './pages/ModoEmergenciaShell'
 import ModoEstudoShell from './pages/ModoEstudoShell'
 import ModoEstudo from './pages/ModoEstudo'
@@ -114,6 +115,7 @@ function AppContent() {
 
   const isFluxogramaView = tela === 'emergencia' || tela === 'dengue' || tela === 'sedacao'
   const isEstudoView = tela === 'estudo' || tela === 'estudo-caso' || tela === 'estudo-questoes'
+  const isCalculadoraView = tela === 'calculadora'
 
   const activeNav = tela === 'calculadora' ? 'calculadora'
     : (tela === 'estudo' || tela === 'estudo-caso' || tela === 'estudo-questoes') ? 'estudo'
@@ -135,13 +137,18 @@ function AppContent() {
       {isEstudoView && (
         <ModoEstudoShell tela={tela} casoId={casoId} navegar={navegar} />
       )}
+      {isCalculadoraView && (
+        <div className="proto-desktop">
+          <CalculadoraDose navegar={navegar} />
+        </div>
+      )}
       <div className="mobile-frame">
         {tela === 'home' && <Home navegar={navegar} />}
         {tela === 'emergencia' && <ModoEmergencia navegar={navegar} />}
         {(tela === 'dengue' || tela === 'sedacao') && protocoloId && (
           <Protocolo protocoloId={protocoloId} navegar={navegar} />
         )}
-        {tela === 'calculadora' && <CalculadoraDose navegar={navegar} />}
+        {tela === 'calculadora' && <CalculadoraDoseMobile navegar={navegar} />}
         {tela === 'estudo' && <ModoEstudo navegar={navegar} />}
         {tela === 'estudo-caso' && casoId && <EstudoProtocolo casoId={casoId} navegar={navegar} />}
         {tela === 'estudo-questoes' && casoId && <EstudoCaso casoId={casoId} navegar={navegar} />}
