@@ -1,13 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TopBar from '../../components/TopBar';
 import './CalculadoraDoseMobile.css';
 
+const FAVS_KEY = 'calc_favs';
+
+const MEDICAMENTOS = [
+    { id: 'amoxicilina',  label: 'Amoxicilina',  color: '#1B5DCA' },
+    { id: 'ibuprofeno',   label: 'Ibuprofeno',    color: '#504FA8' },
+    { id: 'paracetamol',  label: 'Paracetamol',   color: '#2BA880' },
+    { id: 'dipirona',     label: 'Dipirona',       color: '#D58B02' },
+    { id: 'amicacina',    label: 'Amicacina',      color: '#D94F4F' },
+    { id: 'gentamicina',  label: 'Gentamicina',    color: '#7C3AED' },
+];
+
+function IcoPill({ color = 'white' }) {
+    return (
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M10.5 20.5L3.5 13.5a5 5 0 0 1 7.07-7.07l7 7a5 5 0 0 1-7.07 7.07z"/>
+            <line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/>
+        </svg>
+    );
+}
+
 const CalculadoraDoseMobile = ({ navegar }) => {
+    const [selectedMed, setSelectedMed] = useState(null);
+    const [favs, setFavs] = useState(() => JSON.parse(localStorage.getItem(FAVS_KEY) || '[]'));
+
+    const toggleFav = (id) => {
+        const updated = favs.includes(id) ? favs.filter(f => f !== id) : [...favs, id];
+        setFavs(updated);
+        localStorage.setItem(FAVS_KEY, JSON.stringify(updated));
+    };
     const [dosePrescrita, setDosePrescrita] = useState('');
     const [concentracao, setConcentracao] = useState('');
     const [volumeDesejado, setVolumeDesejado] = useState('');
     const [peso, setPeso] = useState('');
     const [resultado, setResultado] = useState(null);
+
+    const selectMed = (med) => {
+        setSelectedMed(med);
+        setDosePrescrita('');
+        setConcentracao('');
+        setVolumeDesejado('');
+        setPeso('');
+        setResultado(null);
+    };
 
     const calcular = () => {
         const dose = parseFloat(dosePrescrita);
@@ -23,18 +60,58 @@ const CalculadoraDoseMobile = ({ navegar }) => {
         });
     };
 
+    if (!selectedMed) {
+        return (
+            <div className="screen proto-mobile">
+                <TopBar />
+                <div className="content">
+                    <button className="back-btn" onClick={() => navegar('home')}>
+                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Voltar
+                    </button>
+                    <div className="section-header">
+                        <h1 className="page-title">Calculadora</h1>
+                        <p className="page-subtitle">Selecione o medicamento que deseja calcular</p>
+                    </div>
+                    <div className="protocol-list" style={{ paddingBottom: 32 }}>
+                        {[...MEDICAMENTOS.filter(m => favs.includes(m.id)), ...MEDICAMENTOS.filter(m => !favs.includes(m.id))].map(med => (
+                            <button
+                                key={med.id}
+                                className="protocol-card"
+                                onClick={() => selectMed(med)}
+                            >
+                                <div className="protocol-icon" style={{ background: med.color }}>
+                                    <IcoPill />
+                                </div>
+                                <span className="protocol-name" style={{ flex: 1 }}>{med.label}</span>
+                                <div
+                                    onClick={e => { e.stopPropagation(); toggleFav(med.id); }}
+                                    style={{ padding: '8px', display: 'flex', alignItems: 'center', fontSize: '20px', color: favs.includes(med.id) ? '#F5A623' : '#ccc', transition: 'color 0.2s' }}
+                                >
+                                    {favs.includes(med.id) ? '★' : '☆'}
+                                </div>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="screen proto-mobile">
             <TopBar />
             <div className="content">
-                <button className="back-btn" onClick={() => navegar('home')}>
+                <button className="back-btn" onClick={() => setSelectedMed(null)}>
                     <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                     </svg>
-                    Voltar
+                    Todos os medicamentos
                 </button>
                 <div className="section-header">
-                    <h1 className="page-title">Calculadora</h1>
+                    <h1 className="page-title">{selectedMed.label}</h1>
                     <p className="page-subtitle">Calcule volumes e doses para administração</p>
                 </div>
 
