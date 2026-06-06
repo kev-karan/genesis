@@ -9,22 +9,11 @@ function IcoHome({ color }) {
   )
 }
 
-function IcoCalc({ color }) {
+function IcoUser({ color }) {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <g transform="translate(1.5, -1.5)">
-        <path d="M10.5 20.5L3.5 13.5a5 5 0 0 1 7.07-7.07l7 7a5 5 0 0 1-7.07 7.07z"/>
-        <line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/>
-      </g>
-    </svg>
-  )
-}
-
-function IcoEstudo({ color }) {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
     </svg>
   )
 }
@@ -36,11 +25,10 @@ export default function BottomNav({ navegar, active }) {
   const containerRef = useRef(null)
   const pillRef      = useRef(null)
   const homeRef      = useRef(null)
-  const estudoRef    = useRef(null)
+  const contaRef     = useRef(null)
   const isFirst      = useRef(true)
 
-  const calcRef = useRef(null)
-  const refMap = { home: homeRef, estudo: estudoRef, calculadora: calcRef }
+  const refMap = { home: homeRef, conta: contaRef }
 
   useLayoutEffect(() => {
     const el        = refMap[active]?.current
@@ -79,21 +67,12 @@ export default function BottomNav({ navegar, active }) {
         </button>
 
         <button
-          ref={calcRef}
+          ref={contaRef}
           className="nav-btn"
-          aria-label="Calculadora"
-          onClick={() => navegar('calculadora')}
+          onClick={() => navegar('conta')}
+          aria-label="Minha Conta"
         >
-          <IcoCalc color={active === 'calculadora' ? ACTIVE_COLOR : INACTIVE_COLOR} />
-        </button>
-
-        <button
-          ref={estudoRef}
-          className="nav-btn"
-          onClick={() => navegar('estudo')}
-          aria-label="Modo Estudo"
-        >
-          <IcoEstudo color={active === 'estudo' ? ACTIVE_COLOR : INACTIVE_COLOR} />
+          <IcoUser color={active === 'conta' ? ACTIVE_COLOR : INACTIVE_COLOR} />
         </button>
       </div>
     </nav>

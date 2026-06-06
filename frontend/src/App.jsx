@@ -8,6 +8,8 @@ import Cadastro from './pages/Cadastro'
 import ModoEmergencia from './pages/ModoEmergencia'
 import Protocolo from './pages/Protocolo'
 import CalculadoraShell from './pages/CalculadoraDose/CalculadoraShell'
+import MinhaConta from './pages/MinhaConta'
+import MinhaContaMobile from './pages/MinhaContaMobile'
 import CalculadoraDoseMobile from './pages/CalculadoraDose/CalculadoraDoseMobile'
 import ModoEmergenciaShell from './pages/ModoEmergenciaShell'
 import ModoEstudoShell from './pages/ModoEstudoShell'
@@ -116,10 +118,10 @@ function AppContent() {
   const isFluxogramaView = tela === 'emergencia' || tela === 'dengue' || tela === 'sedacao'
   const isEstudoView = tela === 'estudo' || tela === 'estudo-caso' || tela === 'estudo-questoes'
   const isCalculadoraView = tela === 'calculadora'
+  const isContaView = tela === 'conta'
 
-  const activeNav = tela === 'calculadora' ? 'calculadora'
-    : (tela === 'estudo' || tela === 'estudo-caso' || tela === 'estudo-questoes') ? 'estudo'
-    : tela === 'home' ? 'home'
+  const activeNav = tela === 'home' ? 'home'
+    : tela === 'conta' ? 'conta'
     : null
 
   return (
@@ -138,6 +140,7 @@ function AppContent() {
         <ModoEstudoShell tela={tela} casoId={casoId} navegar={navegar} />
       )}
       {isCalculadoraView && <CalculadoraShell navegar={navegar} />}
+      {isContaView && <MinhaConta navegar={navegar} />}
       <div className="mobile-frame">
         {tela === 'home' && <Home navegar={navegar} />}
         {tela === 'emergencia' && <ModoEmergencia navegar={navegar} />}
@@ -145,6 +148,7 @@ function AppContent() {
           <Protocolo protocoloId={protocoloId} navegar={navegar} />
         )}
         {tela === 'calculadora' && <CalculadoraDoseMobile navegar={navegar} />}
+        {tela === 'conta' && <MinhaContaMobile navegar={navegar} />}
         {tela === 'estudo' && <ModoEstudo navegar={navegar} />}
         {tela === 'estudo-caso' && casoId && <EstudoProtocolo casoId={casoId} navegar={navegar} />}
         {tela === 'estudo-questoes' && casoId && <EstudoCaso casoId={casoId} navegar={navegar} />}
