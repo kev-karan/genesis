@@ -34,22 +34,13 @@ export default function MinhaContaMobile({ navegar }) {
           <p className="page-subtitle">Gerencie suas informações</p>
         </div>
 
-        <div className="protocol-card" style={{ marginBottom: 12 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}>
-            <div style={{ width: 48, height: 48, borderRadius: '50%', background: '#EEF4FB', border: '2px solid #c8d8ea', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <IcoUser size={22} color="#2A569F" />
-            </div>
-            <div style={{ minWidth: 0 }}>
-              <p style={{ margin: 0, fontSize: 15, fontWeight: 700, color: '#002646', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.email ?? '—'}</p>
-              <p style={{ margin: 0, fontSize: 12, color: '#6B7A8D' }}>Residente de Medicina Pediátrica</p>
-            </div>
+        <div className="protocol-card" style={{ marginBottom: 12, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, paddingTop: 24, paddingBottom: 24 }}>
+          <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#EEF4FB', border: '2px solid #c8d8ea', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <IcoUser size={28} color="#2A569F" />
           </div>
-
-          <div style={{ borderTop: '1px solid #e5e7eb', paddingTop: 16, fontSize: 14 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
-              <span style={{ color: '#6B7A8D', flexShrink: 0 }}>Email</span>
-              <span style={{ fontWeight: 600, color: '#002646', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.email ?? '—'}</span>
-            </div>
+          <div style={{ textAlign: 'center' }}>
+            <p style={{ margin: 0, fontSize: 15, fontWeight: 700, color: '#002646', overflowWrap: 'break-word', wordBreak: 'break-all' }}>{user?.email ?? '—'}</p>
+            <p style={{ margin: '4px 0 0', fontSize: 12, color: '#6B7A8D' }}>Residente de Medicina Pediátrica</p>
           </div>
         </div>
 
