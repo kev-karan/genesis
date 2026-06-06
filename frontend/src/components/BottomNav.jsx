@@ -82,10 +82,9 @@ export default function BottomNav({ navegar, active }) {
           ref={calcRef}
           className="nav-btn"
           aria-label="Calculadora"
-          disabled
-          style={{ opacity: 0.4, cursor: 'not-allowed' }}
+          onClick={() => navegar('calculadora')}
         >
-          <IcoCalc color={INACTIVE_COLOR} />
+          <IcoCalc color={active === 'calculadora' ? ACTIVE_COLOR : INACTIVE_COLOR} />
         </button>
 
         <button

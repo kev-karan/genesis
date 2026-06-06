@@ -43,8 +43,8 @@ function DesktopHome({ navegar }) {
       label: 'Calculadora\nde Doses',
       color: '#504FA8',
       icon: <IcoCalcLg />,
-      action: null,
-      disabled: true,
+      action: () => navegar('calculadora'),
+      disabled: false,
     },
     {
       label: 'Fluxogramas\nModo Estudo',
@@ -272,7 +272,7 @@ export default function Home({ navegar }) {
             <span className="quick-label">Modo Emergência</span>
           </button>
 
-          <button className="quick-btn" disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>
+          <button className="quick-btn" onClick={() => navegar('calculadora')}>
             <div className="quick-icon">
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <g transform="translate(1.5, -1.5)">
