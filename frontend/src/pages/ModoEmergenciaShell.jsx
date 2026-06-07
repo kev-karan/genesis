@@ -47,18 +47,34 @@ function formatAcesso(isoString) {
 // Toggle Responsividade (1500px)
 function ToggleSidebarCard({ title, icon, children }) {
   const [expanded, setExpanded] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 1500)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+
   return (
     <div className={`pd-card pd-sb-card pd-sb-toggle ${expanded ? 'is-expanded' : ''}`}>
-      <button className="pd-sb-header" onClick={() => setExpanded(e => !e)} aria-expanded={expanded}>
+      <button
+        className="pd-sb-header"
+        onClick={() => isMobile && setExpanded(e => !e)}
+        aria-expanded={isMobile ? expanded : true}
+        style={{ cursor: isMobile ? 'pointer' : 'default' }}
+      >
         <div className="pd-sb-header-left">
           {icon}
           <span className="pd-sb-title">{title}</span>
         </div>
-        <div className={`pd-sb-toggle-arrow ${expanded ? 'is-expanded' : ''}`}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#002646" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
+        {isMobile && (
+          <div className={`pd-sb-toggle-arrow ${expanded ? 'is-expanded' : ''}`}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#002646" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        )}
       </button>
       <div className="pd-sb-toggle-content">
         {children}
