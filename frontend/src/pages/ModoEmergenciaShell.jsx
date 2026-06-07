@@ -48,6 +48,13 @@ function formatAcesso(isoString) {
 function ToggleSidebarCard({ title, icon, children }) {
   const [expanded, setExpanded] = useState(() => window.innerWidth > 1500)
 
+  useEffect(() => {
+    const handleResize = () => setExpanded(window.innerWidth > 1500)
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
   return (
     <div className={`pd-card pd-sb-card pd-sb-toggle ${expanded ? 'is-expanded' : ''}`}>
       <button
