@@ -1560,19 +1560,7 @@ body {
 
 /* Toggle responsividade */
 
-.pd-sb-toggle .pd-sb-toggle-arrow {
-  display: none;
-}
-
-.pd-sb-toggle .pd-sb-toggle-content {
-  display: block;
-  max-height: 1000px;
-  overflow: hidden;
-  transition: max-height 0.35s ease, opacity 0.25s ease;
-  opacity: 1;
-}
-
-/* Fix barra cinza fora do toggle*/ 
+/* Fix barra cinza fora do toggle */
 .pd-sb-toggle .pd-sb-header {
   background: #FBFCFF;
   border: none;
@@ -1582,37 +1570,37 @@ body {
   width: 100%;
   text-align: left;
   padding: 12px 14px;
+  cursor: pointer;
+}
+
+.pd-sb-toggle .pd-sb-toggle-arrow {
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.pd-sb-toggle.is-expanded .pd-sb-toggle-arrow {
+  transform: rotate(180deg);
+}
+
+.pd-sb-toggle .pd-sb-toggle-content {
+  overflow: hidden;
+  transition: max-height 0.35s ease, opacity 0.25s ease;
+}
+
+.pd-sb-toggle:not(.is-expanded) .pd-sb-toggle-content {
+  max-height: 0;
+  opacity: 0;
+}
+
+.pd-sb-toggle.is-expanded .pd-sb-toggle-content {
+  max-height: 500px;
+  opacity: 1;
 }
 
 @media (max-width: 1500px) {
-  .pd-sb-toggle .pd-sb-toggle-arrow {
-    display: flex;
-    align-items: center;
-    transition: transform 0.2s ease;
-  }
-
-  .pd-sb-toggle.is-expanded .pd-sb-toggle-arrow {
-    transform: rotate(180deg);
-  }
-
-  .pd-sb-toggle .pd-sb-header {
-    cursor: pointer;
-  }
-
   .pd-sb-toggle {
     flex: none !important;
-  }
-
-  .pd-sb-toggle:not(.is-expanded) .pd-sb-toggle-content {
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
-  }
-
-  .pd-sb-toggle.is-expanded .pd-sb-toggle-content {
-    max-height: 500px;
-    opacity: 1;
-    overflow: hidden;
   }
 }
 
