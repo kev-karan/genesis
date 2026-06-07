@@ -13,6 +13,41 @@ function formatAcesso(isoString) {
   return `${ddmmaaaa}, ${hhmm}`
 }
 
+// Toggle Responsividade (1500px)
+function ToggleSidebarCard({ title, icon, children }) {
+  const [expanded, setExpanded] = useState(() => window.innerWidth > 1500)
+
+  useEffect(() => {
+    const handleResize = () => setExpanded(window.innerWidth > 1500)
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  return (
+    <div className={`pd-card pd-sb-card pd-sb-toggle ${expanded ? 'is-expanded' : ''}`}>
+      <button
+        className="pd-sb-header"
+        onClick={() => setExpanded(e => !e)}
+        aria-expanded={expanded}
+      >
+        <div className="pd-sb-header-left">
+          {icon}
+          <span className="pd-sb-title">{title}</span>
+        </div>
+        <div className={`pd-sb-toggle-arrow ${expanded ? 'is-expanded' : ''}`}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#002646" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </button>
+      <div className="pd-sb-toggle-content">
+        {children}
+      </div>
+    </div>
+  )
+}
+
 // ---- Constants ----
 const NIVEL_BADGE = {
   facil:   { label: 'Básico',  color: '#2BA880', bg: '#DCFDDA' },
@@ -708,70 +743,61 @@ export default function ModoEstudoShell({ tela, casoId, navegar }) {
           )}
           {isQuestoes && casoAtivo && <SbContextCard caso={casoAtivo} />}
 
-          {/* Recentes */}
-          <div className="pd-card pd-sb-card">
-            <div className="pd-sb-header">
-              <div className="pd-sb-header-left">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#002646" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                <span className="pd-sb-title">Últimos Acessados</span>
-              </div>
-            </div>
-            <div className="pd-sb-list">
-              {recentes.length === 0
-                ? <p style={{ fontSize: 12, color: '#999', padding: '10px 14px' }}>Nenhum acesso ainda</p>
-                : recentes.map((item, i) => {
-                    const iconMeta = FLUXOGRAMA_ICON[item.fluxograma_id]
-                    const caso = casos.find(c => c.fluxograma === item.fluxograma_id)
-                    return (
-                      <button key={i} className="pd-sb-item pd-sb-item-btn"
-                        onClick={() => caso && navegar('estudo-caso', caso.id)}>
-                        <div style={{ width: 32, height: 32, borderRadius: 6, background: iconMeta?.color || '#2A569F', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                          {iconMeta
-                            ? <img src={iconMeta.image} alt={item.titulo} style={{ width: 20, height: 20, objectFit: 'contain' }} />
-                            : <IcoBook size={16} />
-                          }
-                        </div>
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <p className="pd-sb-item-label">{caso?.titulo ?? item.titulo}</p>
-                          <p className="pd-sb-item-time">{formatAcesso(item.ultimo_acesso)}</p>
-                        </div>
-                      </button>
-                    )
-                  })
-              }
-            </div>
-          </div>
+          {/* Recentes e Favoritos — visíveis apenas no hub */}
+          {isHub && (
+            <>
+              <ToggleSidebarCard title="Últimos Acessados" icon={<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#002646" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>}>
+                <div className="pd-sb-list">
+                  {recentes.length === 0
+                    ? <p style={{ fontSize: 12, color: '#999', padding: '10px 14px' }}>Nenhum acesso ainda</p>
+                    : recentes.map((item, i) => {
+                        const iconMeta = FLUXOGRAMA_ICON[item.fluxograma_id]
+                        const caso = casos.find(c => c.fluxograma === item.fluxograma_id)
+                        return (
+                          <button key={i} className="pd-sb-item pd-sb-item-btn"
+                            onClick={() => caso && navegar('estudo-caso', caso.id)}>
+                            <div style={{ width: 32, height: 32, borderRadius: 6, background: iconMeta?.color || '#2A569F', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                              {iconMeta
+                                ? <img src={iconMeta.image} alt={item.titulo} style={{ width: 20, height: 20, objectFit: 'contain' }} />
+                                : <IcoBook size={16} />
+                              }
+                            </div>
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <p className="pd-sb-item-label">{caso?.titulo ?? item.titulo}</p>
+                              <p className="pd-sb-item-time">{formatAcesso(item.ultimo_acesso)}</p>
+                            </div>
+                          </button>
+                        )
+                      })
+                  }
+                </div>
+              </ToggleSidebarCard>
 
-          {/* Favorites */}
-          <div className="pd-card pd-sb-card">
-            <div className="pd-sb-header">
-              <div className="pd-sb-header-left">
-                <IcoStar filled />
-                <span className="pd-sb-title">Favoritos</span>
-              </div>
-            </div>
-            <div className="pd-sb-list">
-              {favoritos.length === 0
-                ? <p style={{ fontSize: 12, color: '#999', padding: '10px 14px' }}>Nenhum favorito ainda</p>
-                : favoritos.map((caso, i) => {
-                    const iconMeta = FLUXOGRAMA_ICON[caso.fluxograma]
-                    return (
-                      <button key={i} className="pd-sb-item pd-sb-item-btn"
-                        onClick={() => navegar('estudo-caso', caso.id)}>
-                        <div style={{ width: 32, height: 32, borderRadius: 6, background: iconMeta?.color || '#2A569F', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                          {iconMeta
-                            ? <img src={iconMeta.image} alt={caso.titulo} style={{ width: 20, height: 20, objectFit: 'contain' }} />
-                            : <IcoBook size={16} />
-                          }
-                        </div>
-                        <p className="pd-sb-item-label" style={{ flex: 1 }}>{caso.titulo}</p>
-                        <IcoStar filled />
-                      </button>
-                    )
-                  })
-              }
-            </div>
-          </div>
+              <ToggleSidebarCard title="Favoritos" icon={<IcoStar filled />}>
+                <div className="pd-sb-list">
+                  {favoritos.length === 0
+                    ? <p style={{ fontSize: 12, color: '#999', padding: '10px 14px' }}>Nenhum favorito ainda</p>
+                    : favoritos.map((caso, i) => {
+                        const iconMeta = FLUXOGRAMA_ICON[caso.fluxograma]
+                        return (
+                          <button key={i} className="pd-sb-item pd-sb-item-btn"
+                            onClick={() => navegar('estudo-caso', caso.id)}>
+                            <div style={{ width: 32, height: 32, borderRadius: 6, background: iconMeta?.color || '#2A569F', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                              {iconMeta
+                                ? <img src={iconMeta.image} alt={caso.titulo} style={{ width: 20, height: 20, objectFit: 'contain' }} />
+                                : <IcoBook size={16} />
+                              }
+                            </div>
+                            <p className="pd-sb-item-label" style={{ flex: 1 }}>{caso.titulo}</p>
+                            <IcoStar filled />
+                          </button>
+                        )
+                      })
+                  }
+                </div>
+              </ToggleSidebarCard>
+            </>
+          )}
 
           {/* Quick actions */}
           <div className="pd-card pd-acoes-card">
