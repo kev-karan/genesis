@@ -59,6 +59,11 @@ class FluxogramaListTestCase(TestCase):
         data = response.json()
         self.assertEqual(len(data['resultados']), 0)
 
+    def test_sem_autenticacao_pode_listar(self):
+        response = APIClient().get('/api/fluxogramas/')
+
+        self.assertEqual(response.status_code, 200)
+
 
 class FluxogramaDetailTestCase(TestCase):
     def setUp(self):
@@ -83,3 +88,17 @@ class FluxogramaDetailTestCase(TestCase):
         response = self.client.get('/api/fluxogramas/99999/')
 
         self.assertEqual(response.status_code, 404)
+
+    def test_sem_autenticacao_pode_ver_detalhe(self):
+        response = APIClient().get(f'/api/fluxogramas/{self.fluxo.id}/')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_conteudo_json_preservado(self):
+        conteudo = {'passos': [{'id': 1, 'texto': 'Avaliar', 'filhos': []}], 'meta': {'versao': 2}}
+        fluxo = Fluxograma.objects.create(titulo='Teste JSON', descricao='', conteudo=conteudo)
+
+        response = APIClient().get(f'/api/fluxogramas/{fluxo.id}/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['conteudo'], conteudo)

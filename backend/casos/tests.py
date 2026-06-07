@@ -107,6 +107,25 @@ class CasosListDetailTestCase(AuthenticatedAPITestCase):
 
         self.assertEqual(response.status_code, 404)
 
+    def test_questao_tem_campos_obrigatorios(self):
+        questao_mc = Questao.objects.create(
+            caso_clinico=self.caso,
+            enunciado='Qual o tratamento de escolha?',
+            tipo='multipla_escolha',
+            ordem=2,
+        )
+        OpcaoResposta.objects.create(questao=questao_mc, texto='Ibuprofeno', correta=False, ordem=1)
+        OpcaoResposta.objects.create(questao=questao_mc, texto='Paracetamol', correta=True, ordem=2)
+
+        response = self.client.get(f'/api/casos/{self.caso.id}/')
+
+        self.assertEqual(response.status_code, 200)
+        questao_data = next(q for q in response.data['questoes'] if q['tipo'] == 'multipla_escolha')
+        self.assertIn('tipo', questao_data)
+        self.assertIn('enunciado', questao_data)
+        self.assertIn('opcoes', questao_data)
+        self.assertEqual(len(questao_data['opcoes']), 2)
+
 
 @override_settings(PASSWORD_HASHERS=FAST_PASSWORD_HASHERS)
 class ResponderCasoTestCase(AuthenticatedAPITestCase):
@@ -426,3 +445,14 @@ class RaciocinioCasoTestCase(AuthenticatedAPITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0]['titulo'], 'Primeiro passo')
+
+    def test_raciocinio_passos_ordenados(self):
+        PassoRaciocinio.objects.create(questao=self.questao, titulo='Terceiro passo', descricao='C', ordem=3)
+        PassoRaciocinio.objects.create(questao=self.questao, titulo='Segundo passo', descricao='B', ordem=2)
+        RespostaUsuario.objects.create(usuario=self.user, questao=self.questao, resposta='dengue', correta=True)
+
+        response = self.client.get(f'/api/casos/{self.caso.id}/raciocinio/')
+
+        self.assertEqual(response.status_code, 200)
+        ordens = [p['ordem'] for p in response.data]
+        self.assertEqual(ordens, sorted(ordens))

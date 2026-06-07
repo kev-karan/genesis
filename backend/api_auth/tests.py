@@ -170,3 +170,29 @@ class LogoutTestCase(TestCase):
         response = self.client.post('/api/auth/logout/')
 
         self.assertEqual(response.status_code, 401)
+
+
+@override_settings(PASSWORD_HASHERS=FAST_PASSWORD_HASHERS)
+class MeTestCase(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create_user(
+            username='me@example.com',
+            email='me@example.com',
+            password='senha123',
+        )
+        self.token = Token.objects.create(user=self.user)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.token.key}')
+
+    def test_me_retorna_dados_usuario(self):
+        response = self.client.get('/api/auth/me/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['email'], 'me@example.com')
+        self.assertEqual(response.data['username'], 'me@example.com')
+        self.assertIn('user_id', response.data)
+
+    def test_me_sem_autenticacao_retorna_401(self):
+        response = APIClient().get('/api/auth/me/')
+
+        self.assertEqual(response.status_code, 401)

@@ -36,6 +36,15 @@ def logout(request):
     request.user.auth_token.delete()
     return Response({'status': 'Logout realizado'})
 
+
+@api_view(['GET'])
+def me(request):
+    return Response({
+        'user_id': request.user.id,
+        'username': request.user.username,
+        'email': request.user.email,
+    })
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def cadastro(request):
