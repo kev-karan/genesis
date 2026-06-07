@@ -1,18 +1,15 @@
 import { useState, useEffect } from 'react'
+import { fetchMedicamentos, fetchMedicamento, calcularDose } from '../../api/calculadora'
 
 const RECENTS_KEY = 'calc_recents'
 const FAVS_KEY    = 'calc_favs'
 
-const MEDICAMENTOS = [
-  { id: 'amoxicilina',  label: 'Amoxicilina',  color: '#1B5DCA' },
-  { id: 'ibuprofeno',   label: 'Ibuprofeno',    color: '#504FA8' },
-  { id: 'paracetamol',  label: 'Paracetamol',   color: '#2BA880' },
-  { id: 'dipirona',     label: 'Dipirona',       color: '#D58B02' },
-  { id: 'amicacina',    label: 'Amicacina',      color: '#D94F4F' },
-  { id: 'gentamicina',  label: 'Gentamicina',    color: '#7C3AED' },
-]
+const PALETTE = ['#1B5DCA', '#504FA8', '#2BA880', '#D58B02', '#D94F4F', '#7C3AED']
+const medColor = (id) => PALETTE[id % PALETTE.length]
 
-// ---- Icons ----
+const fmt = (n) => Number(n) % 1 === 0 ? Number(n) : Number(n).toFixed(2)
+const UNIDADE = { ml: 'mL', gotas: 'gotas' }
+
 function IcoPill({ size = 22, color = 'currentColor' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -41,34 +38,52 @@ function formatTime(isoString) {
   return `${dd}, ${hh}`
 }
 
-const InputField = ({ label, value, onChange, placeholder, unit }) => (
-  <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-    <label style={{ fontSize: 13, fontWeight: 500, color: '#374151' }}>{label}</label>
-    <div style={{ display: 'flex', alignItems: 'stretch', border: '1.5px solid #e5e7eb', borderRadius: 10, overflow: 'hidden', background: 'white', transition: 'border-color 0.15s' }}
-      onFocus={e => e.currentTarget.style.borderColor = '#3467B0'}
-      onBlur={e => e.currentTarget.style.borderColor = '#e5e7eb'}
+function SelectCard({ selected, onClick, children }) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        width: '100%',
+        textAlign: 'left',
+        background: selected ? '#eff6ff' : 'white',
+        border: `2px solid ${selected ? '#2a569f' : '#e5e7eb'}`,
+        borderRadius: 10,
+        padding: '12px 16px',
+        cursor: 'pointer',
+        transition: 'border-color 0.15s, background 0.15s',
+        fontFamily: 'DM Sans, sans-serif',
+      }}
     >
-      <input
-        type="text"
-        inputMode="decimal"
-        value={value}
-        onChange={e => onChange(e.target.value.replace(/[^0-9.,]/g, ''))}
-        placeholder={placeholder}
-        style={{ flex: 1, border: 'none', outline: 'none', padding: '10px 14px', fontSize: 15, color: '#111827', background: 'transparent', minWidth: 0, fontFamily: 'DM Sans, sans-serif' }}
-      />
-      <span style={{ background: '#2a569f', color: 'white', fontSize: 13, fontWeight: 600, padding: '0 16px', display: 'flex', alignItems: 'center', borderRadius: '0 8px 8px 0', whiteSpace: 'nowrap' }}>{unit}</span>
-    </div>
-  </div>
-)
+      {children}
+    </button>
+  )
+}
 
-// ---- Hub: medication picker ----
-function MedicamentosHub({ onSelect, favs, onToggleFav }) {
-  const favList = MEDICAMENTOS.filter(m => favs.includes(m.id))
-  const outros  = MEDICAMENTOS.filter(m => !favs.includes(m.id))
+function MedicamentosHub({ medicamentos, loading, error, onSelect, favs, onToggleFav }) {
+  if (loading) {
+    return (
+      <div className="pd-card" style={{ padding: 24 }}>
+        <p style={{ color: '#6B7A8D', fontSize: 14, margin: 0 }}>Carregando medicamentos...</p>
+      </div>
+    )
+  }
+  if (error) {
+    return (
+      <div className="pd-card" style={{ padding: 24 }}>
+        <p style={{ color: '#D94F4F', fontSize: 14, margin: 0 }}>{error}</p>
+      </div>
+    )
+  }
+
+  const favList = medicamentos.filter(m => favs.includes(m.id))
+  const outros  = medicamentos.filter(m => !favs.includes(m.id))
   const ordered = [...favList, ...outros]
 
   return (
     <div className="pd-card" style={{ padding: 24, flex: 'none' }}>
+      {ordered.length === 0 && (
+        <p style={{ color: '#6B7A8D', fontSize: 14, margin: 0 }}>Nenhum medicamento cadastrado.</p>
+      )}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 12 }}>
         {ordered.map(med => (
           <button
@@ -77,10 +92,17 @@ function MedicamentosHub({ onSelect, favs, onToggleFav }) {
             onClick={() => onSelect(med)}
             style={{ display: 'flex', alignItems: 'center', gap: 12, textAlign: 'left' }}
           >
-            <div className="protocol-icon" style={{ background: med.color }}>
+            <div className="protocol-icon" style={{ background: medColor(med.id) }}>
               <IcoPill size={22} color="white" />
             </div>
-            <span className="protocol-name" style={{ flex: 1 }}>{med.label}</span>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <span className="protocol-name">{med.nome}</span>
+              {med.principio_ativo && (
+                <p style={{ margin: '2px 0 0', fontSize: 11, color: '#6B7A8D', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {med.principio_ativo}
+                </p>
+              )}
+            </div>
             <div
               onClick={e => { e.stopPropagation(); onToggleFav(med.id) }}
               style={{ padding: 8, display: 'flex', alignItems: 'center' }}
@@ -94,22 +116,61 @@ function MedicamentosHub({ onSelect, favs, onToggleFav }) {
   )
 }
 
-// ---- Calculator form + result ----
 function CalculadoraForm({ med, onBack, onResult }) {
-  const [dose,   setDose]   = useState('')
-  const [conc,   setConc]   = useState('')
-  const [vol,    setVol]    = useState('')
-  const [peso,   setPeso]   = useState('')
-  const [result, setResult] = useState(null)
+  const [detalhe, setDetalhe]                       = useState(null)
+  const [loadingDetalhe, setLoadingDetalhe]         = useState(true)
+  const [errorDetalhe, setErrorDetalhe]             = useState(null)
+  const [selectedDoseRef, setSelectedDoseRef]       = useState(null)
+  const [selectedApresentacao, setSelectedApresentacao] = useState(null)
+  const [peso, setPeso]                             = useState('')
+  const [resultado, setResultado]                   = useState(null)
+  const [loadingCalculo, setLoadingCalculo]         = useState(false)
+  const [errorCalculo, setErrorCalculo]             = useState(null)
 
-  const norm = (s) => parseFloat(s.replace(',', '.'))
-  const calcular = () => {
-    const d = norm(dose), c = norm(conc), v = norm(vol)
-    if (!d || !c || !v || c === 0) return
-    const volume = (d * v) / c
-    const r = { medicamento: med.label, dosePrescrita: d, concentracao: c, volumeDesejado: v, peso: norm(peso) || null, volume, timestamp: new Date().toISOString() }
-    setResult(r)
-    onResult(r)
+  useEffect(() => {
+    setLoadingDetalhe(true)
+    setErrorDetalhe(null)
+    setDetalhe(null)
+    setSelectedDoseRef(null)
+    setSelectedApresentacao(null)
+    setResultado(null)
+    fetchMedicamento(med.id)
+      .then(data => {
+        setDetalhe(data)
+        if (data.doses_referencia.length === 1) setSelectedDoseRef(data.doses_referencia[0])
+        if (data.apresentacoes.length === 1)    setSelectedApresentacao(data.apresentacoes[0])
+      })
+      .catch(e => setErrorDetalhe(e.message))
+      .finally(() => setLoadingDetalhe(false))
+  }, [med.id])
+
+  const pesoNum     = parseFloat(peso.replace(',', '.'))
+  const podeCalcular = selectedDoseRef && selectedApresentacao && pesoNum > 0
+
+  const calcular = async () => {
+    setLoadingCalculo(true)
+    setErrorCalculo(null)
+    try {
+      const r = await calcularDose({
+        peso_kg: pesoNum,
+        dose_referencia_id: selectedDoseRef.id,
+        apresentacao_id: selectedApresentacao.id,
+      })
+      setResultado(r)
+      onResult({
+        medicamento_id: med.id,
+        medicamento_nome: med.nome,
+        peso_kg: pesoNum,
+        dose_final_mg: r.dose_final_mg,
+        volume: r.volume,
+        unidade_volume: r.unidade_volume,
+        timestamp: new Date().toISOString(),
+      })
+    } catch (e) {
+      setErrorCalculo(e.message)
+    } finally {
+      setLoadingCalculo(false)
+    }
   }
 
   return (
@@ -122,68 +183,157 @@ function CalculadoraForm({ med, onBack, onResult }) {
       </button>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28 }}>
-        <div style={{ width: 42, height: 42, borderRadius: 10, background: med.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ width: 42, height: 42, borderRadius: 10, background: medColor(med.id), display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <IcoPill size={20} color="white" />
         </div>
         <div>
-          <p style={{ margin: 0, fontSize: 18, fontWeight: 700, color: '#002646' }}>{med.label}</p>
-          <p style={{ margin: 0, fontSize: 13, color: '#6B7A8D' }}>Dados para o cálculo</p>
+          <p style={{ margin: 0, fontSize: 18, fontWeight: 700, color: '#002646' }}>{med.nome}</p>
+          {med.principio_ativo && (
+            <p style={{ margin: 0, fontSize: 13, color: '#6B7A8D' }}>{med.principio_ativo}</p>
+          )}
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 24px', marginBottom: 24 }}>
-        <InputField label="Dose prescrita"       value={dose} onChange={setDose} placeholder="Ex: 500" unit="mg" />
-        <InputField label="Concentração desejada" value={conc} onChange={setConc} placeholder="Ex: 250" unit="mL" />
-        <InputField label="Volume desejado"       value={vol}  onChange={setVol}  placeholder="Ex: 10"  unit="mL" />
-        <InputField label="Peso do paciente"      value={peso} onChange={setPeso} placeholder="Ex: 70"  unit="Kg" />
-      </div>
+      {loadingDetalhe && <p style={{ color: '#6B7A8D', fontSize: 14 }}>Carregando dados do medicamento...</p>}
+      {errorDetalhe  && <p style={{ color: '#D94F4F', fontSize: 14 }}>{errorDetalhe}</p>}
 
-      <button
-        onClick={calcular}
-        style={{ width: '100%', background: '#2a569f', color: 'white', border: 'none', borderRadius: 12, padding: '14px 24px', fontSize: 16, fontWeight: 600, cursor: 'pointer', transition: 'opacity 0.15s', fontFamily: 'DM Sans, sans-serif' }}
-        onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
-        onMouseLeave={e => e.currentTarget.style.opacity = '1'}
-      >
-        Calcular dose
-      </button>
+      {detalhe && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
 
-      {result && (
-        <div style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <div style={{ background: '#d1fae5', borderRadius: 16, padding: '20px 24px' }}>
-            <p style={{ margin: '0 0 6px', fontSize: 14, color: '#065f46', fontWeight: 500 }}>Volume a administrar</p>
-            <p style={{ margin: 0, fontSize: 36, fontWeight: 900, color: '#047857', lineHeight: 1 }}>
-              {result.volume % 1 === 0 ? result.volume : result.volume.toFixed(2)}
-              <span style={{ fontSize: 24, fontWeight: 700 }}> mL</span>
-            </p>
-          </div>
-          <div style={{ background: '#f9fafb', borderRadius: 16, padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-            <p style={{ margin: '0 0 4px', fontSize: 14, fontWeight: 600, color: '#374151' }}>Resumo do cálculo</p>
-            {[
-              ['Dose prescrita',       `${result.dosePrescrita}mg`],
-              ['Concentração desejada',`${result.concentracao}mL`],
-              ['Volume desejado',      `${result.volumeDesejado}mL`],
-              ...(result.peso ? [['Peso do paciente', `${result.peso}Kg`]] : []),
-            ].map(([k, v]) => (
-              <div key={k} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14, color: '#374151' }}>
-                <span>{k}</span><span style={{ fontWeight: 600, color: '#111827' }}>{v}</span>
+          {detalhe.doses_referencia.length > 0 && (
+            <div>
+              <p style={{ margin: '0 0 10px', fontSize: 13, fontWeight: 600, color: '#374151' }}>Dose de referência</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {detalhe.doses_referencia.map(d => (
+                  <SelectCard key={d.id} selected={selectedDoseRef?.id === d.id} onClick={() => { setSelectedDoseRef(d); setResultado(null) }}>
+                    <p style={{ margin: 0, fontSize: 15, fontWeight: 700, color: '#002646' }}>
+                      {d.dose_mg_por_kg} mg/kg
+                    </p>
+                    <div style={{ display: 'flex', gap: 12, marginTop: 4, flexWrap: 'wrap' }}>
+                      {d.dose_maxima_mg  && <span style={{ fontSize: 12, color: '#6B7A8D' }}>máx {d.dose_maxima_mg} mg</span>}
+                      {d.intervalo_horas && <span style={{ fontSize: 12, color: '#6B7A8D' }}>de {d.intervalo_horas}h em {d.intervalo_horas}h</span>}
+                      {d.fonte           && <span style={{ fontSize: 12, color: '#6B7A8D' }}>{d.fonte}</span>}
+                    </div>
+                  </SelectCard>
+                ))}
               </div>
-            ))}
+            </div>
+          )}
+
+          {detalhe.apresentacoes.length > 0 && (
+            <div>
+              <p style={{ margin: '0 0 10px', fontSize: 13, fontWeight: 600, color: '#374151' }}>Apresentação</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {detalhe.apresentacoes.map(a => (
+                  <SelectCard key={a.id} selected={selectedApresentacao?.id === a.id} onClick={() => { setSelectedApresentacao(a); setResultado(null) }}>
+                    <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#002646' }}>
+                      {a.nome || (a.apresentacao === 'gotas' ? 'Gotas' : 'Solução oral')}
+                    </p>
+                    <p style={{ margin: '2px 0 0', fontSize: 12, color: '#6B7A8D' }}>
+                      {a.concentracao_mg_por_ml} mg/mL
+                      {a.via_administracao && ` · ${a.via_administracao}`}
+                    </p>
+                  </SelectCard>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div>
+            <p style={{ margin: '0 0 10px', fontSize: 13, fontWeight: 600, color: '#374151' }}>Peso do paciente</p>
+            <div style={{ display: 'flex', alignItems: 'stretch', border: '1.5px solid #e5e7eb', borderRadius: 10, overflow: 'hidden', background: 'white', maxWidth: 200 }}>
+              <input
+                type="text"
+                inputMode="decimal"
+                value={peso}
+                onChange={e => { setPeso(e.target.value.replace(/[^0-9.,]/g, '')); setResultado(null) }}
+                placeholder="Ex: 70"
+                style={{ flex: 1, border: 'none', outline: 'none', padding: '10px 14px', fontSize: 15, color: '#111827', background: 'transparent', fontFamily: 'DM Sans, sans-serif' }}
+              />
+              <span style={{ background: '#2a569f', color: 'white', fontSize: 13, fontWeight: 600, padding: '0 16px', display: 'flex', alignItems: 'center', borderRadius: '0 8px 8px 0' }}>kg</span>
+            </div>
           </div>
+
+          {errorCalculo && (
+            <p style={{ color: '#D94F4F', fontSize: 14, margin: 0 }}>{errorCalculo}</p>
+          )}
+
+          <button
+            onClick={calcular}
+            disabled={!podeCalcular || loadingCalculo}
+            style={{
+              width: '100%',
+              background: podeCalcular && !loadingCalculo ? '#2a569f' : '#d1d5db',
+              color: 'white',
+              border: 'none',
+              borderRadius: 12,
+              padding: '14px 24px',
+              fontSize: 16,
+              fontWeight: 600,
+              cursor: podeCalcular && !loadingCalculo ? 'pointer' : 'default',
+              transition: 'background 0.15s',
+              fontFamily: 'DM Sans, sans-serif',
+            }}
+          >
+            {loadingCalculo ? 'Calculando...' : 'Calcular dose'}
+          </button>
+
+          {resultado && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {resultado.dose_limitada && (
+                <div style={{ background: '#fef3c7', border: '1px solid #f59e0b', borderRadius: 12, padding: '12px 16px', display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                  <span style={{ fontSize: 16, flexShrink: 0 }}>⚠️</span>
+                  <p style={{ margin: 0, fontSize: 13, color: '#92400e', fontWeight: 500 }}>
+                    Dose calculada ({fmt(resultado.dose_calculada_mg)} mg) excede a dose máxima. Administrar {fmt(resultado.dose_final_mg)} mg.
+                  </p>
+                </div>
+              )}
+              <div style={{ background: '#d1fae5', borderRadius: 16, padding: '20px 24px' }}>
+                <p style={{ margin: '0 0 6px', fontSize: 14, color: '#065f46', fontWeight: 500 }}>Volume a administrar</p>
+                <p style={{ margin: 0, fontSize: 36, fontWeight: 900, color: '#047857', lineHeight: 1 }}>
+                  {fmt(resultado.volume)}
+                  <span style={{ fontSize: 24, fontWeight: 700 }}> {UNIDADE[resultado.unidade_volume] ?? resultado.unidade_volume}</span>
+                </p>
+              </div>
+              <div style={{ background: '#f9fafb', borderRadius: 16, padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <p style={{ margin: '0 0 4px', fontSize: 14, fontWeight: 600, color: '#374151' }}>Resumo do cálculo</p>
+                {[
+                  ['Peso',                `${pesoNum} kg`],
+                  ['Dose calculada',      `${fmt(resultado.dose_calculada_mg)} mg`],
+                  ['Dose administrada',   `${fmt(resultado.dose_final_mg)} mg`],
+                  ['Concentração usada',  `${resultado.concentracao_usada_mg_por_ml} mg/mL`],
+                ].map(([k, v]) => (
+                  <div key={k} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14, color: '#374151' }}>
+                    <span>{k}</span><span style={{ fontWeight: 600, color: '#111827' }}>{v}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
   )
 }
 
-// ---- Main shell ----
 export default function CalculadoraShell({ navegar }) {
-  const [selectedMed, setSelectedMed] = useState(null)
-  const [recents, setRecents]         = useState([])
-  const [favs, setFavs]               = useState([])
+  const [medicamentos, setMedicamentos] = useState([])
+  const [loadingMeds, setLoadingMeds]   = useState(true)
+  const [errorMeds, setErrorMeds]       = useState(null)
+  const [selectedMed, setSelectedMed]   = useState(null)
+  const [recents, setRecents]           = useState([])
+  const [favs, setFavs]                 = useState([])
 
   useEffect(() => {
     setRecents(JSON.parse(localStorage.getItem(RECENTS_KEY) || '[]'))
     setFavs(JSON.parse(localStorage.getItem(FAVS_KEY) || '[]'))
+  }, [])
+
+  useEffect(() => {
+    fetchMedicamentos()
+      .then(setMedicamentos)
+      .catch(e => setErrorMeds(e.message))
+      .finally(() => setLoadingMeds(false))
   }, [])
 
   const handleResult = (r) => {
@@ -198,7 +348,9 @@ export default function CalculadoraShell({ navegar }) {
     localStorage.setItem(FAVS_KEY, JSON.stringify(updated))
   }
 
-  const subtitle = selectedMed ? selectedMed.label : 'Selecione o medicamento que deseja calcular'
+  const subtitle = selectedMed
+    ? selectedMed.nome
+    : 'Selecione o medicamento que deseja calcular'
 
   return (
     <div className="proto-desktop">
@@ -211,18 +363,26 @@ export default function CalculadoraShell({ navegar }) {
       </div>
 
       <div className="pd-body">
-        {/* Main */}
         <div className="pd-main">
           {!selectedMed ? (
-            <MedicamentosHub onSelect={setSelectedMed} favs={favs} onToggleFav={toggleFav} />
+            <MedicamentosHub
+              medicamentos={medicamentos}
+              loading={loadingMeds}
+              error={errorMeds}
+              onSelect={setSelectedMed}
+              favs={favs}
+              onToggleFav={toggleFav}
+            />
           ) : (
-            <CalculadoraForm med={selectedMed} onBack={() => setSelectedMed(null)} onResult={handleResult} />
+            <CalculadoraForm
+              med={selectedMed}
+              onBack={() => setSelectedMed(null)}
+              onResult={handleResult}
+            />
           )}
         </div>
 
-        {/* Sidebar */}
         <div className="pd-sidebar">
-          {/* Recents */}
           <div className="pd-card pd-sb-card">
             <div className="pd-sb-header">
               <div className="pd-sb-header-left">
@@ -233,28 +393,24 @@ export default function CalculadoraShell({ navegar }) {
             <div className="pd-sb-list">
               {recents.length === 0
                 ? <p style={{ fontSize: 12, color: '#999', padding: '10px 14px' }}>Nenhum cálculo ainda</p>
-                : recents.map((r, i) => {
-                    const med = MEDICAMENTOS.find(m => m.label === r.medicamento)
-                    return (
-                      <button key={i} className="pd-sb-item pd-sb-item-btn"
-                        onClick={() => med && setSelectedMed(med)}
-                        style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px' }}
-                      >
-                        <div style={{ width: 32, height: 32, borderRadius: 6, background: med?.color ?? '#2A569F', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                          <IcoPill size={16} color="white" />
-                        </div>
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <p className="pd-sb-item-label">{r.medicamento}</p>
-                          <p className="pd-sb-item-time">{formatTime(r.timestamp)}</p>
-                        </div>
-                      </button>
-                    )
-                  })
+                : recents.map((r, i) => (
+                    <button key={i} className="pd-sb-item pd-sb-item-btn"
+                      onClick={() => setSelectedMed({ id: r.medicamento_id, nome: r.medicamento_nome })}
+                      style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px' }}
+                    >
+                      <div style={{ width: 32, height: 32, borderRadius: 6, background: medColor(r.medicamento_id), display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <IcoPill size={16} color="white" />
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <p className="pd-sb-item-label">{r.medicamento_nome}</p>
+                        <p className="pd-sb-item-time">{formatTime(r.timestamp)}</p>
+                      </div>
+                    </button>
+                  ))
               }
             </div>
           </div>
 
-          {/* Favorites */}
           <div className="pd-card pd-sb-card">
             <div className="pd-sb-header">
               <div className="pd-sb-header-left">
@@ -265,15 +421,15 @@ export default function CalculadoraShell({ navegar }) {
             <div className="pd-sb-list">
               {favs.length === 0
                 ? <p style={{ fontSize: 12, color: '#999', padding: '10px 14px' }}>Nenhum favorito ainda</p>
-                : MEDICAMENTOS.filter(m => favs.includes(m.id)).map((med, i) => (
+                : medicamentos.filter(m => favs.includes(m.id)).map((med, i) => (
                     <button key={i} className="pd-sb-item pd-sb-item-btn"
                       onClick={() => setSelectedMed(med)}
                       style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px' }}
                     >
-                      <div style={{ width: 32, height: 32, borderRadius: 6, background: med.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <div style={{ width: 32, height: 32, borderRadius: 6, background: medColor(med.id), display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                         <IcoPill size={16} color="white" />
                       </div>
-                      <p className="pd-sb-item-label" style={{ flex: 1 }}>{med.label}</p>
+                      <p className="pd-sb-item-label" style={{ flex: 1 }}>{med.nome}</p>
                       <IcoStar filled />
                     </button>
                   ))
@@ -281,7 +437,6 @@ export default function CalculadoraShell({ navegar }) {
             </div>
           </div>
 
-          {/* Quick actions */}
           <div className="pd-card pd-acoes-card">
             <p className="pd-card-title">Ações Rápidas</p>
             <div className="pd-acoes-grid">
