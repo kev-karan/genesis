@@ -1566,6 +1566,14 @@ body {
 
 .pd-sb-toggle .pd-sb-toggle-content {
   display: block;
+  max-height: 1000px;
+  overflow: hidden;
+  transition: max-height 0.35s ease, opacity 0.25s ease;
+  opacity: 1;
+}
+
+.pd-sb-toggle {
+  flex: none !important;
 }
 
 @media (max-width: 1500px) {
@@ -1581,25 +1589,25 @@ body {
 
   .pd-sb-toggle .pd-sb-header {
     cursor: pointer;
-    background: none;
-    border: 0 solid transparent;
+    background: #FBFCFF;
+    border: none;
     border-bottom: 1px solid rgba(145,196,241,0.3);
     font-family: inherit;
     font-size: inherit;
     width: 100%;
-  }
-
-  .pd-sb-toggle:not(.is-expanded) {
-    flex: none !important;
+    text-align: left;
   }
 
   .pd-sb-toggle:not(.is-expanded) .pd-sb-toggle-content {
-    display: none;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
   }
 
   .pd-sb-toggle.is-expanded .pd-sb-toggle-content {
-    display: block;
-    animation: slideIn 0.25s ease-out;
+    max-height: 500px;
+    opacity: 1;
+    overflow: hidden;
   }
 }
 
