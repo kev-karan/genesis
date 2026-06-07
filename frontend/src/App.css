@@ -1598,10 +1598,9 @@ body {
   opacity: 1;
 }
 
-@media (max-width: 1500px) {
-  .pd-sb-toggle {
-    flex: none !important;
-  }
+/* Cards toggle nunca crescem além do conteúdo — em todas as telas e estados */
+.pd-sb-toggle {
+  flex: none !important;
 }
 
 /* =============== LOGIN =============== */
