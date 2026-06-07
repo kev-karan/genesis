@@ -1572,8 +1572,16 @@ body {
   opacity: 1;
 }
 
-.pd-sb-toggle {
-  flex: none !important;
+/* Fix barra cinza fora do toggle*/ 
+.pd-sb-toggle .pd-sb-header {
+  background: #FBFCFF;
+  border: none;
+  border-bottom: 1px solid rgba(145,196,241,0.3);
+  font-family: inherit;
+  font-size: inherit;
+  width: 100%;
+  text-align: left;
+  padding: 12px 14px;
 }
 
 @media (max-width: 1500px) {
@@ -1589,13 +1597,10 @@ body {
 
   .pd-sb-toggle .pd-sb-header {
     cursor: pointer;
-    background: #FBFCFF;
-    border: none;
-    border-bottom: 1px solid rgba(145,196,241,0.3);
-    font-family: inherit;
-    font-size: inherit;
-    width: 100%;
-    text-align: left;
+  }
+
+  .pd-sb-toggle {
+    flex: none !important;
   }
 
   .pd-sb-toggle:not(.is-expanded) .pd-sb-toggle-content {
