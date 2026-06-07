@@ -1,29 +1,35 @@
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.contrib.auth.models import User
 from rest_framework.test import APIClient
 from rest_framework.authtoken.models import Token
 from fluxogramas.models import Fluxograma
 from favoritos.models import Favorito
 
+FAST_PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
 
-class FavoritoListTestCase(TestCase):
+
+class AuthenticatedAPITestCase(TestCase):
+    def autenticar(self, username='testuser'):
+        user = User.objects.create_user(username=username, password='pass123')
+        token = Token.objects.create(user=user)
+        client = APIClient()
+        client.credentials(HTTP_AUTHORIZATION=f'Token {token.key}')
+        return client, user
+
+    def criar_fluxograma(self, titulo='Protocol A'):
+        return Fluxograma.objects.create(
+            titulo=titulo,
+            descricao=f'Description for {titulo}',
+            conteudo={'steps': []}
+        )
+
+
+@override_settings(PASSWORD_HASHERS=FAST_PASSWORD_HASHERS)
+class FavoritoListTestCase(AuthenticatedAPITestCase):
     def setUp(self):
-        self.client = APIClient()
-        self.user = User.objects.create_user(username='testuser', password='pass123')
-        self.token = Token.objects.create(user=self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.token.key}')
-
-        self.fluxo1 = Fluxograma.objects.create(
-            titulo='Protocol A',
-            descricao='Description A',
-            conteudo={'steps': []}
-        )
-        self.fluxo2 = Fluxograma.objects.create(
-            titulo='Protocol B',
-            descricao='Description B',
-            conteudo={'steps': []}
-        )
-
+        self.client, self.user = self.autenticar()
+        self.fluxo1 = self.criar_fluxograma('Protocol A')
+        self.fluxo2 = self.criar_fluxograma('Protocol B')
         Favorito.objects.create(usuario=self.user, fluxograma=self.fluxo1)
         Favorito.objects.create(usuario=self.user, fluxograma=self.fluxo2)
 
@@ -31,53 +37,48 @@ class FavoritoListTestCase(TestCase):
         response = self.client.get('/api/favoritos/meus-favoritos/')
 
         self.assertEqual(response.status_code, 200)
-        data = response.json()
-        self.assertEqual(len(data), 2)
-        self.assertEqual(data[0]['titulo'], 'Protocol A')
+        self.assertEqual(len(response.json()), 2)
+        self.assertEqual(response.json()[0]['titulo'], 'Protocol A')
+        self.assertIn('fluxograma_id', response.json()[0])
 
     def test_list_favorites_unauthenticated(self):
-        self.client.credentials()
-        response = self.client.get('/api/favoritos/meus-favoritos/')
+        response = APIClient().get('/api/favoritos/meus-favoritos/')
 
         self.assertEqual(response.status_code, 401)
 
     def test_list_favorites_empty(self):
-        user2 = User.objects.create_user(username='user2', password='pass123')
-        token2 = Token.objects.create(user=user2)
-        client2 = APIClient()
-        client2.credentials(HTTP_AUTHORIZATION=f'Token {token2.key}')
+        client2, _ = self.autenticar(username='user2')
 
         response = client2.get('/api/favoritos/meus-favoritos/')
 
         self.assertEqual(response.status_code, 200)
-        data = response.json()
-        self.assertEqual(len(data), 0)
+        self.assertEqual(len(response.json()), 0)
+
+    def test_usuario_nao_ve_favoritos_de_outro_usuario(self):
+        client2, _ = self.autenticar(username='user2')
+
+        response = client2.get('/api/favoritos/meus-favoritos/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), [])
 
 
-class FavoritoCreateTestCase(TestCase):
+@override_settings(PASSWORD_HASHERS=FAST_PASSWORD_HASHERS)
+class FavoritoCreateTestCase(AuthenticatedAPITestCase):
     def setUp(self):
-        self.client = APIClient()
-        self.user = User.objects.create_user(username='testuser', password='pass123')
-        self.token = Token.objects.create(user=self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.token.key}')
-
-        self.fluxo = Fluxograma.objects.create(
-            titulo='Protocol A',
-            descricao='Description A',
-            conteudo={'steps': []}
-        )
+        self.client, self.user = self.autenticar()
+        self.fluxo = self.criar_fluxograma('Protocol A')
 
     def test_favoritar_success(self):
         response = self.client.post(f'/api/favoritos/favoritar/{self.fluxo.id}/')
 
         self.assertEqual(response.status_code, 200)
-        data = response.json()
-        self.assertEqual(data['fluxograma_titulo'], 'Protocol A')
+        self.assertEqual(response.json()['fluxograma_titulo'], 'Protocol A')
+        self.assertEqual(response.json()['status'], 'favoritado com sucesso')
         self.assertTrue(Favorito.objects.filter(usuario=self.user, fluxograma=self.fluxo).exists())
 
     def test_favoritar_unauthenticated(self):
-        self.client.credentials()
-        response = self.client.post(f'/api/favoritos/favoritar/{self.fluxo.id}/')
+        response = APIClient().post(f'/api/favoritos/favoritar/{self.fluxo.id}/')
 
         self.assertEqual(response.status_code, 401)
 
@@ -86,49 +87,44 @@ class FavoritoCreateTestCase(TestCase):
 
         self.assertEqual(response.status_code, 404)
 
-    def test_favoritar_duplicate(self):
+    def test_favoritar_duplicate_does_not_create_two_records(self):
         Favorito.objects.create(usuario=self.user, fluxograma=self.fluxo)
 
         response = self.client.post(f'/api/favoritos/favoritar/{self.fluxo.id}/')
 
         self.assertEqual(response.status_code, 200)
-        # Should return the existing favorite, not create a new one
         count = Favorito.objects.filter(usuario=self.user, fluxograma=self.fluxo).count()
         self.assertEqual(count, 1)
 
 
-class FavoritoDeleteTestCase(TestCase):
+@override_settings(PASSWORD_HASHERS=FAST_PASSWORD_HASHERS)
+class FavoritoDeleteTestCase(AuthenticatedAPITestCase):
     def setUp(self):
-        self.client = APIClient()
-        self.user = User.objects.create_user(username='testuser', password='pass123')
-        self.token = Token.objects.create(user=self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.token.key}')
-
-        self.fluxo = Fluxograma.objects.create(
-            titulo='Protocol A',
-            descricao='Description A',
-            conteudo={'steps': []}
-        )
+        self.client, self.user = self.autenticar()
+        self.fluxo = self.criar_fluxograma('Protocol A')
         self.favorito = Favorito.objects.create(usuario=self.user, fluxograma=self.fluxo)
 
     def test_remover_favorito_success(self):
         response = self.client.delete(f'/api/favoritos/remover/{self.fluxo.id}/')
 
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['status'], 'removido com sucesso')
         self.assertFalse(Favorito.objects.filter(usuario=self.user, fluxograma=self.fluxo).exists())
 
     def test_remover_favorito_unauthenticated(self):
-        self.client.credentials()
-        response = self.client.delete(f'/api/favoritos/remover/{self.fluxo.id}/')
+        response = APIClient().delete(f'/api/favoritos/remover/{self.fluxo.id}/')
 
         self.assertEqual(response.status_code, 401)
 
     def test_remover_nonexistent_favorito(self):
-        fluxo2 = Fluxograma.objects.create(
-            titulo='Protocol B',
-            descricao='Description B',
-            conteudo={'steps': []}
-        )
+        fluxo2 = self.criar_fluxograma('Protocol B')
+
         response = self.client.delete(f'/api/favoritos/remover/{fluxo2.id}/')
+
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.json()['erro'], 'Favorito não encontrado')
+
+    def test_remover_fluxograma_inexistente(self):
+        response = self.client.delete('/api/favoritos/remover/99999/')
 
         self.assertEqual(response.status_code, 404)

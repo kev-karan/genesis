@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from 'react';
-import { getToken, removeToken, setToken } from '../api/client';
+import { getToken, removeToken, setToken, apiCall } from '../api/client';
 
 export const AuthContext = createContext();
 
@@ -12,16 +12,16 @@ export const AuthProvider = ({ children }) => {
     const storedToken = getToken();
     if (storedToken) {
       setTokenState(storedToken);
-      try {
-        const parsed = JSON.parse(atob(storedToken.split('.')[1]));
-        setUser(parsed);
-      } catch (e) {
-        removeToken();
-        setTokenState(null);
-        setUser(null);
-      }
+      apiCall('/auth/me/')
+        .then(data => setUser(data))
+        .catch(() => {
+          removeToken();
+          setTokenState(null);
+        })
+        .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   const login = (userData, token) => {

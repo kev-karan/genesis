@@ -28,9 +28,10 @@ describe('AuthContext', () => {
   })
 
   it('loads token from localStorage on mount', async () => {
-    const mockToken =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwibmFtZSI6IkpvaG4ifQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+    const mockToken = 'drf-opaque-token-123'
+    const mockUser = { user_id: 1, username: 'test@example.com', email: 'test@example.com' }
     clientApi.getToken.mockReturnValue(mockToken)
+    clientApi.apiCall.mockResolvedValue(mockUser)
 
     render(
       <AuthProvider>
@@ -43,10 +44,12 @@ describe('AuthContext', () => {
     })
 
     expect(screen.getByTestId('token')).toHaveTextContent(mockToken)
+    expect(screen.getByTestId('user')).toHaveTextContent('test@example.com')
   })
 
   it('handles invalid tokens gracefully', async () => {
     clientApi.getToken.mockReturnValue('invalid-token')
+    clientApi.apiCall.mockRejectedValue(new Error('401'))
 
     render(
       <AuthProvider>

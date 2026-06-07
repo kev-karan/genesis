@@ -1,10 +1,6 @@
 import { useState, useEffect } from 'react';
 import TopBar from '../components/TopBar'
-import BottomNav from '../components/BottomNav'
 import GenesisLogo from '../assets/GenesisLogo.png'
-import EmergenciaIcon from '../assets/Emergencia.png'
-import CalculadoraIcon from '../assets/Calculadora.png'
-import EstudoIcon from '../assets/Estudo.png'
 import { listAcessosRecentes, registrarAcesso } from '../api/acessos'
 
 
@@ -26,11 +22,10 @@ function IcoHierarchyLg() {
 function IcoCalcLg() {
   return (
     <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="4" y="2" width="16" height="20" rx="2"/>
-      <line x1="8" y1="6" x2="16" y2="6"/>
-      <line x1="8" y1="10" x2="8" y2="10" strokeWidth="3"/><line x1="12" y1="10" x2="12" y2="10" strokeWidth="3"/><line x1="16" y1="10" x2="16" y2="10" strokeWidth="3"/>
-      <line x1="8" y1="14" x2="8" y2="14" strokeWidth="3"/><line x1="12" y1="14" x2="12" y2="14" strokeWidth="3"/><line x1="16" y1="14" x2="16" y2="14" strokeWidth="3"/>
-      <line x1="8" y1="18" x2="13" y2="18"/>
+      <g transform="translate(1.5, -1.5)">
+        <path d="M10.5 20.5L3.5 13.5a5 5 0 0 1 7.07-7.07l7 7a5 5 0 0 1-7.07 7.07z"/>
+        <line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/>
+      </g>
     </svg>
   )
 }
@@ -48,15 +43,15 @@ function DesktopHome({ navegar }) {
       label: 'Calculadora\nde Doses',
       color: '#504FA8',
       icon: <IcoCalcLg />,
-      action: null,
-      disabled: true,
+      action: () => navegar('calculadora'),
+      disabled: false,
     },
     {
       label: 'Fluxogramas\nModo Estudo',
       color: '#5B91C0',
       icon: <IcoBook />,
-      action: null,
-      disabled: true,
+      action: () => navegar('estudo'),
+      disabled: false,
     },
   ]
 
@@ -265,32 +260,36 @@ export default function Home({ navegar }) {
         <div className="quick-grid" style={{ marginTop: '24px' }}>
           <button className="quick-btn" onClick={() => navegarComAcesso('emergencia')}>
             <div className="quick-icon">
-              <img src={EmergenciaIcon} alt='Icon Modo Emergência'
-              style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="8" y="2" width="8" height="5" rx="1"/>
+                <rect x="2" y="17" width="7" height="5" rx="1"/>
+                <rect x="15" y="17" width="7" height="5" rx="1"/>
+                <line x1="12" y1="7" x2="12" y2="12"/>
+                <line x1="12" y1="12" x2="5.5" y2="17"/>
+                <line x1="12" y1="12" x2="18.5" y2="17"/>
+              </svg>
             </div>
             <span className="quick-label">Modo Emergência</span>
           </button>
 
-          {/* <button className="quick-btn" onClick={() => navegar('calculadora')}>
+          <button className="quick-btn" onClick={() => navegar('calculadora')}>
             <div className="quick-icon">
-              <img src={CalculadoraIcon} alt='Icon Calculadora de Doses'
-              style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
-            </div>
-            <span className="quick-label">Calculadora de Doses</span>
-          </button> */}
-
-          <button className="quick-btn" disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>
-            <div className="quick-icon">
-              <img src={CalculadoraIcon} alt='Icon Calculadora de Doses'
-              style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <g transform="translate(1.5, -1.5)">
+                  <path d="M10.5 20.5L3.5 13.5a5 5 0 0 1 7.07-7.07l7 7a5 5 0 0 1-7.07 7.07z"/>
+                  <line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/>
+                </g>
+              </svg>
             </div>
             <span className="quick-label">Calculadora de Doses</span>
           </button>
 
-          <button className="quick-btn" disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>
+          <button className="quick-btn" onClick={() => navegar('estudo')}>
             <div className="quick-icon">
-              <img src={EstudoIcon} alt='Icon Modo Estudo'
-              style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+              </svg>
             </div>
             <span className="quick-label">Modo Estudo</span>
           </button>
@@ -298,7 +297,6 @@ export default function Home({ navegar }) {
 
       </div>
 
-      <BottomNav navegar={navegar} active="home" />
     </div>
     </>
   )

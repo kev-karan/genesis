@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react'
 import TopBar from '../components/TopBar'
-import BottomNav from '../components/BottomNav'
 import DengueIcon from '../assets/DengueIcon.png'
 import SedacaoIcon from '../assets/SedacaoIcon.png'
 import { fetchFluxogramas } from '../api/fluxogramas'
 import { useFavorites } from '../hooks/useFavorites'
 
 const protocoloMap = {
-  1: { nome: 'Protocolo Dengue',  image: DengueIcon,  destino: 'dengue' },
-  2: { nome: 'Protocolo Sedação', image: SedacaoIcon, destino: 'sedacao' },
+  1: { nome: 'Dengue',  image: DengueIcon,  destino: 'dengue' },
+  2: { nome: 'Sedação', image: SedacaoIcon, destino: 'sedacao' },
 }
 
 export default function ModoEmergencia({ navegar }) {
@@ -83,7 +82,6 @@ export default function ModoEmergencia({ navegar }) {
           </div>
         )}
       </div>
-      <BottomNav navegar={navegar} active="emergencia" />
     </div>
   )
 }

@@ -2,9 +2,9 @@ name: E2E Tests
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
   pull_request:
-    branches: [main, develop]
+    branches: [main]
 
 jobs:
   e2e:
@@ -16,43 +16,41 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Create .env file
-        run: |
-          cat > .env << EOF
-          DEBUG=True
-          SECRET_KEY=test-secret-key-ci
-          DATABASE_URL=postgresql://genesis:genesis@postgres:5432/genesis
-          ALLOWED_HOSTS=localhost,127.0.0.1
-          FRONTEND_URL=http://localhost:3000
-          E2E_BASE_URL=http://localhost:3000
-          E2E_API_URL=http://localhost:8000/api
-          E2E_TEST_EMAIL=teste_e2e@genesis.com
-          E2E_TEST_PASSWORD=senha_teste_123
-          EOF
-
-      - name: Build Docker images
-        run: docker compose build
-
-      - name: Build E2E image
-        run: docker build -t genesis-e2e e2e/
-
       - name: Start services
-        run: docker compose up -d
+        run: docker compose -f e2e/docker-compose-e2e.yml up -d --build
 
       - name: Wait for services
         run: |
-          timeout 60 bash -c 'until curl -f http://localhost:3000 2>/dev/null; do sleep 1; done'
-          timeout 60 bash -c 'until curl -f http://localhost:8000/api/ 2>/dev/null; do sleep 1; done'
+          timeout 180 bash -c '
+            until curl -s http://localhost:8000/ > /dev/null; do
+              echo "Aguardando backend..."; sleep 2
+            done
+            echo "Backend OK"
+            until curl -s http://localhost:3000/ > /dev/null; do
+              echo "Aguardando frontend..."; sleep 2
+            done
+            echo "Frontend OK"
+          '
+
+      - name: Seed test data
+        run: docker compose -f e2e/docker-compose-e2e.yml exec -T backend python manage.py loaddata fluxogramas/fixtures/protocolos.json
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: e2e/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r e2e/requirements.txt
 
       - name: Run E2E tests
-        run: |
-          docker run --rm --network host \
-            -v ${{ github.workspace }}/e2e:/app \
-            -e E2E_BASE_URL=http://localhost:3000 \
-            -e E2E_API_URL=http://localhost:8000/api \
-            -e E2E_TEST_EMAIL=teste_e2e@genesis.com \
-            -e E2E_TEST_PASSWORD=senha_teste_123 \
-            genesis-e2e pytest tests/ -v --html=report.html --self-contained-html
+        run: pytest e2e/tests -v --html=e2e/report.html --self-contained-html
+
+      - name: Show container logs on failure
+        if: failure()
+        run: docker compose -f e2e/docker-compose-e2e.yml logs --no-color
 
       - name: Upload test report
         if: always()
@@ -64,4 +62,4 @@ jobs:
 
       - name: Stop services
         if: always()
-        run: docker compose down
+        run: docker compose -f e2e/docker-compose-e2e.yml down

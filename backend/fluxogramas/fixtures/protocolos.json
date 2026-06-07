@@ -3,7 +3,7 @@
     "model": "fluxogramas.fluxograma",
     "pk": 1,
     "fields": {
-      "titulo": "Protocolo Dengue",
+      "titulo": "Dengue",
       "descricao": "Fluxograma de atendimento para casos de dengue",
       "data_criacao": "2026-05-09T14:00:00Z",
       "conteudo": {
@@ -61,7 +61,7 @@
     "model": "fluxogramas.fluxograma",
     "pk": 2,
     "fields": {
-      "titulo": "Protocolo Sedação",
+      "titulo": "Sedação",
       "descricao": "Algoritmo de conversão de sedativos analgésicos",
       "data_criacao": "2026-05-09T14:00:00Z",
       "conteudo": {
