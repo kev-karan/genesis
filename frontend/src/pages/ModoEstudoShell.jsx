@@ -13,6 +13,29 @@ function formatAcesso(isoString) {
   return `${ddmmaaaa}, ${hhmm}`
 }
 
+// Toggle Responsividade (1500px)
+function ToggleSidebarCard({ title, icon, children }) {
+  const [expanded, setExpanded] = useState(false)
+  return (
+    <div className={`pd-card pd-sb-card pd-sb-toggle ${expanded ? 'is-expanded' : ''}`}>
+      <button className="pd-sb-header" onClick={() => setExpanded(e => !e)} aria-expanded={expanded}>
+        <div className="pd-sb-header-left">
+          {icon}
+          <span className="pd-sb-title">{title}</span>
+        </div>
+        <div className={`pd-sb-toggle-arrow ${expanded ? 'is-expanded' : ''}`}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#002646" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </button>
+      <div className="pd-sb-toggle-content">
+        {children}
+      </div>
+    </div>
+  )
+}
+
 // ---- Constants ----
 const NIVEL_BADGE = {
   facil:   { label: 'Básico',  color: '#2BA880', bg: '#DCFDDA' },
@@ -709,13 +732,7 @@ export default function ModoEstudoShell({ tela, casoId, navegar }) {
           {isQuestoes && casoAtivo && <SbContextCard caso={casoAtivo} />}
 
           {/* Recentes */}
-          <div className="pd-card pd-sb-card">
-            <div className="pd-sb-header">
-              <div className="pd-sb-header-left">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#002646" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                <span className="pd-sb-title">Últimos Acessados</span>
-              </div>
-            </div>
+          <ToggleSidebarCard title="Últimos Acessados" icon={<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#002646" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>}>
             <div className="pd-sb-list">
               {recentes.length === 0
                 ? <p style={{ fontSize: 12, color: '#999', padding: '10px 14px' }}>Nenhum acesso ainda</p>
@@ -740,16 +757,10 @@ export default function ModoEstudoShell({ tela, casoId, navegar }) {
                   })
               }
             </div>
-          </div>
+          </ToggleSidebarCard>
 
           {/* Favorites */}
-          <div className="pd-card pd-sb-card">
-            <div className="pd-sb-header">
-              <div className="pd-sb-header-left">
-                <IcoStar filled />
-                <span className="pd-sb-title">Favoritos</span>
-              </div>
-            </div>
+          <ToggleSidebarCard title="Favoritos" icon={<IcoStar filled />}>
             <div className="pd-sb-list">
               {favoritos.length === 0
                 ? <p style={{ fontSize: 12, color: '#999', padding: '10px 14px' }}>Nenhum favorito ainda</p>
@@ -771,7 +782,7 @@ export default function ModoEstudoShell({ tela, casoId, navegar }) {
                   })
               }
             </div>
-          </div>
+          </ToggleSidebarCard>
 
           {/* Quick actions */}
           <div className="pd-card pd-acoes-card">
