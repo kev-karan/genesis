@@ -1558,6 +1558,51 @@ body {
   cursor: not-allowed;
 }
 
+/* Toggle responsividade */
+
+.pd-sb-toggle .pd-sb-toggle-arrow {
+  display: none;
+}
+
+.pd-sb-toggle .pd-sb-toggle-content {
+  display: block;
+}
+
+@media (max-width: 1500px) {
+  .pd-sb-toggle .pd-sb-toggle-arrow {
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s ease;
+  }
+
+  .pd-sb-toggle.is-expanded .pd-sb-toggle-arrow {
+    transform: rotate(180deg);
+  }
+
+  .pd-sb-toggle .pd-sb-header {
+    cursor: pointer;
+    background: none;
+    border: 0 solid transparent;
+    border-bottom: 1px solid rgba(145,196,241,0.3);
+    font-family: inherit;
+    font-size: inherit;
+    width: 100%;
+  }
+
+  .pd-sb-toggle:not(.is-expanded) {
+    flex: none !important;
+  }
+
+  .pd-sb-toggle:not(.is-expanded) .pd-sb-toggle-content {
+    display: none;
+  }
+
+  .pd-sb-toggle.is-expanded .pd-sb-toggle-content {
+    display: block;
+    animation: slideIn 0.25s ease-out;
+  }
+}
+
 /* =============== LOGIN =============== */
 
 /* Layout toggle */
