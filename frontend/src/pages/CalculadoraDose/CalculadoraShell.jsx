@@ -38,6 +38,41 @@ function formatTime(isoString) {
   return `${dd}, ${hh}`
 }
 
+// Toggle Responsividade (1500px)
+function ToggleSidebarCard({ title, icon, children }) {
+  const [expanded, setExpanded] = useState(() => window.innerWidth > 1500)
+
+  useEffect(() => {
+    const handleResize = () => setExpanded(window.innerWidth > 1500)
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  return (
+    <div className={`pd-card pd-sb-card pd-sb-toggle ${expanded ? 'is-expanded' : ''}`}>
+      <button
+        className="pd-sb-header"
+        onClick={() => setExpanded(e => !e)}
+        aria-expanded={expanded}
+      >
+        <div className="pd-sb-header-left">
+          {icon}
+          <span className="pd-sb-title">{title}</span>
+        </div>
+        <div className={`pd-sb-toggle-arrow ${expanded ? 'is-expanded' : ''}`}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#002646" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </button>
+      <div className="pd-sb-toggle-content">
+        {children}
+      </div>
+    </div>
+  )
+}
+
 function SelectCard({ selected, onClick, children }) {
   return (
     <button
@@ -383,13 +418,7 @@ export default function CalculadoraShell({ navegar }) {
         </div>
 
         <div className="pd-sidebar">
-          <div className="pd-card pd-sb-card">
-            <div className="pd-sb-header">
-              <div className="pd-sb-header-left">
-                <IcoClock size={17} />
-                <span className="pd-sb-title">Últimos Cálculos</span>
-              </div>
-            </div>
+          <ToggleSidebarCard title="Últimos Cálculos" icon={<IcoClock size={17} />}>
             <div className="pd-sb-list">
               {recents.length === 0
                 ? <p style={{ fontSize: 12, color: '#999', padding: '10px 14px' }}>Nenhum cálculo ainda</p>
@@ -409,15 +438,9 @@ export default function CalculadoraShell({ navegar }) {
                   ))
               }
             </div>
-          </div>
+          </ToggleSidebarCard>
 
-          <div className="pd-card pd-sb-card">
-            <div className="pd-sb-header">
-              <div className="pd-sb-header-left">
-                <IcoStar filled />
-                <span className="pd-sb-title">Favoritos</span>
-              </div>
-            </div>
+          <ToggleSidebarCard title="Favoritos" icon={<IcoStar filled />}>
             <div className="pd-sb-list">
               {favs.length === 0
                 ? <p style={{ fontSize: 12, color: '#999', padding: '10px 14px' }}>Nenhum favorito ainda</p>
@@ -435,7 +458,7 @@ export default function CalculadoraShell({ navegar }) {
                   ))
               }
             </div>
-          </div>
+          </ToggleSidebarCard>
 
           <div className="pd-card pd-acoes-card">
             <p className="pd-card-title">Ações Rápidas</p>
