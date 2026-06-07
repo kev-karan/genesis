@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'acessos',
     'favoritos',
     'casos',
+    'calculadora',
 ]
 
 MIDDLEWARE = [
