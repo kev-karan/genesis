@@ -96,7 +96,7 @@ if _db_url:
             'PASSWORD': _parsed.password,
             'HOST': _parsed.hostname,
             'PORT': _parsed.port or 5432,
-            'OPTIONS': {'sslmode': 'require'},
+            'OPTIONS': {'sslmode': 'disable'} if DEBUG else {'sslmode': 'require'},
         }
     }
 else:
