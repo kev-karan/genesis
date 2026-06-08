@@ -1,0 +1,198 @@
+[
+  {"model": "calculadora.dosereferencia", "pk": 1, "fields": {
+    "medicamento": 1,
+    "dose_mg_por_kg": "0.250000",
+    "dose_maxima_mg": "20.000",
+    "intervalo_horas": null,
+    "fonte": "",
+    "observacoes": "Sedação pré-procedimento oral. Dose: 0,25 a 0,5 mg/kg. Administrar 30 min antes do procedimento. Uso comum em odontologia e exames de imagem. Dose única. Antídoto: Flumazenil.",
+    "ativo": true,
+    "criado_em": "2026-06-08T10:00:00Z",
+    "atualizado_em": "2026-06-08T10:00:00Z"
+  }},
+  {"model": "calculadora.dosereferencia", "pk": 2, "fields": {
+    "medicamento": 1,
+    "dose_mg_por_kg": "0.050000",
+    "dose_maxima_mg": "6.000",
+    "intervalo_horas": null,
+    "fonte": "",
+    "observacoes": "Sedação pré-procedimento IV. Dose: 0,05 a 0,1 mg/kg. Administrar lentamente (2–3 min) para evitar depressão respiratória. Dose única. Antídoto: Flumazenil.",
+    "ativo": true,
+    "criado_em": "2026-06-08T10:00:00Z",
+    "atualizado_em": "2026-06-08T10:00:00Z"
+  }},
+  {"model": "calculadora.dosereferencia", "pk": 3, "fields": {
+    "medicamento": 1,
+    "dose_mg_por_kg": "0.060000",
+    "dose_maxima_mg": null,
+    "intervalo_horas": null,
+    "fonte": "",
+    "observacoes": "Sedação em UTI — infusão contínua IV. Dose: 0,06 a 0,12 mg/kg/h. Dose de ataque opcional: 0,05 a 0,2 mg/kg IV em bolus antes de iniciar a infusão. Antídoto: Flumazenil.",
+    "ativo": true,
+    "criado_em": "2026-06-08T10:00:00Z",
+    "atualizado_em": "2026-06-08T10:00:00Z"
+  }},
+  {"model": "calculadora.dosereferencia", "pk": 4, "fields": {
+    "medicamento": 1,
+    "dose_mg_por_kg": "0.150000",
+    "dose_maxima_mg": "10.000",
+    "intervalo_horas": null,
+    "fonte": "",
+    "observacoes": "Estado de mal epiléptico — IV bolus. Dose: 0,15 a 0,2 mg/kg. Pode repetir. Seguir com infusão contínua se refratário. Antídoto: Flumazenil.",
+    "ativo": true,
+    "criado_em": "2026-06-08T10:00:00Z",
+    "atualizado_em": "2026-06-08T10:00:00Z"
+  }},
+
+  {"model": "calculadora.dosereferencia", "pk": 5, "fields": {
+    "medicamento": 2,
+    "dose_mg_por_kg": "0.200000",
+    "dose_maxima_mg": "10.000",
+    "intervalo_horas": null,
+    "fonte": "",
+    "observacoes": "Crise convulsiva aguda — IV. Dose: 0,2 a 0,3 mg/kg. Injetar lentamente. Máximo total: 5 mg em menores de 5 anos e 10 mg em maiores de 5 anos. Repetir a cada 10–15 min se necessário. Antídoto: Flumazenil.",
+    "ativo": true,
+    "criado_em": "2026-06-08T10:00:00Z",
+    "atualizado_em": "2026-06-08T10:00:00Z"
+  }},
+  {"model": "calculadora.dosereferencia", "pk": 6, "fields": {
+    "medicamento": 2,
+    "dose_mg_por_kg": "0.200000",
+    "dose_maxima_mg": "20.000",
+    "intervalo_horas": null,
+    "fonte": "",
+    "observacoes": "Crise convulsiva aguda — via retal. Dose: 0,2 a 0,5 mg/kg. Usar solução injetável por via retal quando não houver acesso venoso. Dose única. Antídoto: Flumazenil.",
+    "ativo": true,
+    "criado_em": "2026-06-08T10:00:00Z",
+    "atualizado_em": "2026-06-08T10:00:00Z"
+  }},
+  {"model": "calculadora.dosereferencia", "pk": 7, "fields": {
+    "medicamento": 2,
+    "dose_mg_por_kg": "0.100000",
+    "dose_maxima_mg": "10.000",
+    "intervalo_horas": 6,
+    "fonte": "",
+    "observacoes": "Sedação e ansiedade — oral. Dose: 0,1 a 0,2 mg/kg. Intervalo: 6 a 8 horas. Fracionar conforme indicação clínica. Antídoto: Flumazenil.",
+    "ativo": true,
+    "criado_em": "2026-06-08T10:00:00Z",
+    "atualizado_em": "2026-06-08T10:00:00Z"
+  }},
+
+  {"model": "calculadora.dosereferencia", "pk": 8, "fields": {
+    "medicamento": 3,
+    "dose_mg_por_kg": "0.050000",
+    "dose_maxima_mg": "4.000",
+    "intervalo_horas": null,
+    "fonte": "",
+    "observacoes": "Estado de mal epiléptico — IV. Dose: 0,05 a 0,1 mg/kg. Repetir a cada 10–15 min se necessário. Preferido ao diazepam por maior duração de ação anticonvulsivante. Antídoto: Flumazenil.",
+    "ativo": true,
+    "criado_em": "2026-06-08T10:00:00Z",
+    "atualizado_em": "2026-06-08T10:00:00Z"
+  }},
+
+  {"model": "calculadora.dosereferencia", "pk": 9, "fields": {
+    "medicamento": 4,
+    "dose_mg_por_kg": "0.050000",
+    "dose_maxima_mg": "10.000",
+    "intervalo_horas": 2,
+    "fonte": "",
+    "observacoes": "Dor aguda severa — IV bolus. Dose: 0,05 a 0,1 mg/kg. Intervalo: 2 a 4 horas. Administrar lentamente. Monitorar saturação de O₂ e frequência respiratória. Antídoto: Naloxona.",
+    "ativo": true,
+    "criado_em": "2026-06-08T10:00:00Z",
+    "atualizado_em": "2026-06-08T10:00:00Z"
+  }},
+  {"model": "calculadora.dosereferencia", "pk": 10, "fields": {
+    "medicamento": 4,
+    "dose_mg_por_kg": "0.010000",
+    "dose_maxima_mg": null,
+    "intervalo_horas": null,
+    "fonte": "",
+    "observacoes": "Analgesia — infusão contínua IV. Dose: 0,01 a 0,04 mg/kg/h. Comum em pós-operatório de grande porte e UTI pediátrica. Antídoto: Naloxona.",
+    "ativo": true,
+    "criado_em": "2026-06-08T10:00:00Z",
+    "atualizado_em": "2026-06-08T10:00:00Z"
+  }},
+
+  {"model": "calculadora.dosereferencia", "pk": 11, "fields": {
+    "medicamento": 5,
+    "dose_mg_por_kg": "0.100000",
+    "dose_maxima_mg": "10.000",
+    "intervalo_horas": 4,
+    "fonte": "",
+    "observacoes": "Dor crônica e desmame de opioides — oral ou IV. Dose: 0,1 a 0,2 mg/kg. Intervalo: 4 a 12 horas. Meia-vida muito longa e variável — ajustar com cuidado para evitar acúmulo. Risco de prolongamento do intervalo QT. Antídoto: Naloxona.",
+    "ativo": true,
+    "criado_em": "2026-06-08T10:00:00Z",
+    "atualizado_em": "2026-06-08T10:00:00Z"
+  }},
+
+  {"model": "calculadora.dosereferencia", "pk": 12, "fields": {
+    "medicamento": 6,
+    "dose_mg_por_kg": "0.001000",
+    "dose_maxima_mg": null,
+    "intervalo_horas": null,
+    "fonte": "",
+    "observacoes": "Analgesia e sedação em UTI — infusão contínua IV. Dose: 0,001 a 0,005 mg/kg/h (1 a 5 mcg/kg/h). Antídoto: Naloxona.",
+    "ativo": true,
+    "criado_em": "2026-06-08T10:00:00Z",
+    "atualizado_em": "2026-06-08T10:00:00Z"
+  }},
+  {"model": "calculadora.dosereferencia", "pk": 13, "fields": {
+    "medicamento": 6,
+    "dose_mg_por_kg": "0.001000",
+    "dose_maxima_mg": "0.100",
+    "intervalo_horas": null,
+    "fonte": "",
+    "observacoes": "Sedação rápida para procedimento — IV bolus. Dose: 0,001 a 0,002 mg/kg (1 a 2 mcg/kg). Dose máxima: 0,1 mg (100 mcg). Risco de rigidez de parede torácica se infundido muito rapidamente. Dose única. Antídoto: Naloxona.",
+    "ativo": true,
+    "criado_em": "2026-06-08T10:00:00Z",
+    "atualizado_em": "2026-06-08T10:00:00Z"
+  }},
+
+  {"model": "calculadora.dosereferencia", "pk": 14, "fields": {
+    "medicamento": 7,
+    "dose_mg_por_kg": "0.001000",
+    "dose_maxima_mg": "0.200",
+    "intervalo_horas": 6,
+    "fonte": "",
+    "observacoes": "Sedação e coadjuvante de analgesia — oral. Dose: 0,001 a 0,005 mg/kg (1 a 5 mcg/kg). Intervalo: 6 a 8 horas. Atenção para hipotensão e bradicardia.",
+    "ativo": true,
+    "criado_em": "2026-06-08T10:00:00Z",
+    "atualizado_em": "2026-06-08T10:00:00Z"
+  }},
+
+  {"model": "calculadora.dosereferencia", "pk": 15, "fields": {
+    "medicamento": 8,
+    "dose_mg_por_kg": "0.000200",
+    "dose_maxima_mg": null,
+    "intervalo_horas": null,
+    "fonte": "",
+    "observacoes": "Sedação em UTI — infusão contínua IV. Dose: 0,0002 a 0,0015 mg/kg/h (0,2 a 1,5 mcg/kg/h). Não causa depressão respiratória importante. Atenção para hipotensão e bradicardia.",
+    "ativo": true,
+    "criado_em": "2026-06-08T10:00:00Z",
+    "atualizado_em": "2026-06-08T10:00:00Z"
+  }},
+
+  {"model": "calculadora.dosereferencia", "pk": 16, "fields": {
+    "medicamento": 9,
+    "dose_mg_por_kg": "0.000050",
+    "dose_maxima_mg": null,
+    "intervalo_horas": null,
+    "fonte": "",
+    "observacoes": "Analgesia cirúrgica e UTI — infusão contínua IV. Dose: 0,00005 a 0,0005 mg/kg/h (0,05 a 0,5 mcg/kg/h). Potência muito superior à da morfina. Antídoto: Naloxona.",
+    "ativo": true,
+    "criado_em": "2026-06-08T10:00:00Z",
+    "atualizado_em": "2026-06-08T10:00:00Z"
+  }},
+
+  {"model": "calculadora.dosereferencia", "pk": 17, "fields": {
+    "medicamento": 10,
+    "dose_mg_por_kg": "0.003000",
+    "dose_maxima_mg": null,
+    "intervalo_horas": null,
+    "fonte": "",
+    "observacoes": "Anestesia e sedação em procedimento — infusão contínua IV. Dose: 0,003 a 0,012 mg/kg/h (0,05 a 0,2 mcg/kg/min). Meia-vida ultracurta — efeito cessa minutos após desligar a infusão. Antídoto: Naloxona.",
+    "ativo": true,
+    "criado_em": "2026-06-08T10:00:00Z",
+    "atualizado_em": "2026-06-08T10:00:00Z"
+  }}
+]
