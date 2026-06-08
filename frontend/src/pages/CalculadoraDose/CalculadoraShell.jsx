@@ -538,9 +538,9 @@ function ConversaoForm({ medOrigem, conversoes, onBack }) {
             <div style={{ background: '#f9fafb', borderRadius: 16, padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
               <p style={{ margin: '0 0 4px', fontSize: 14, fontWeight: 600, color: '#374151' }}>Resumo</p>
               {[
-                ['Dose origem', `${fmt(doseNum)} ${resultado.unidade_origem}`],
+                [resultado.medicamento_origem, `${fmt(doseNum)} ${resultado.unidade_origem}`],
                 ...(precisaPeso ? [['Peso', `${fmt(pesoNum)} kg`]] : []),
-                ['Resultado', `${fmt(resultado.resultado)} ${resultado.unidade_destino}`],
+                [resultado.medicamento_destino, `${fmt(resultado.resultado)} ${resultado.unidade_destino}`],
               ].map(([k, v]) => (
                 <div key={k} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14, color: '#374151' }}>
                   <span>{k}</span><span style={{ fontWeight: 600, color: '#111827' }}>{v}</span>

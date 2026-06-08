@@ -289,9 +289,9 @@ const CalculadoraDoseMobile = ({ navegar }) => {
                             </div>
                             <div className="cm-summary-card">
                                 <p className="cm-summary-title">Resumo</p>
-                                <div className="cm-summary-row"><span>Dose origem</span><span>{fmt(doseConvNum)} {resultadoConv.unidade_origem}</span></div>
+                                <div className="cm-summary-row"><span>{resultadoConv.medicamento_origem}</span><span>{fmt(doseConvNum)} {resultadoConv.unidade_origem}</span></div>
                                 {precisaPeso && <div className="cm-summary-row"><span>Peso</span><span>{fmt(pesoConvNum)} kg</span></div>}
-                                <div className="cm-summary-row"><span>Resultado</span><span>{fmt(resultadoConv.resultado)} {resultadoConv.unidade_destino}</span></div>
+                                <div className="cm-summary-row"><span>{resultadoConv.medicamento_destino}</span><span>{fmt(resultadoConv.resultado)} {resultadoConv.unidade_destino}</span></div>
                             </div>
                         </div>
                     )}
