@@ -14,3 +14,14 @@ export function calcularDose({ peso_kg, dose_referencia_id, apresentacao_id }) {
     body: JSON.stringify({ peso_kg, dose_referencia_id, apresentacao_id }),
   })
 }
+
+export function fetchConversoes() {
+  return apiCall('/calculadora/conversoes/')
+}
+
+export function calcularConversao({ conversao_id, dose, peso }) {
+  return apiCall('/calculadora/converter/', {
+    method: 'POST',
+    body: JSON.stringify({ conversao_id, dose, peso }),
+  })
+}
