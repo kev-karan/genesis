@@ -111,8 +111,9 @@ class TestProtocolo:
             "Não voltou para Emergência"
 
     def test_favoritar_dentro_protocolo(self, logged_in):
-        """Test: FAB star favorita/desfavorita protocolo."""
+        """Favorita protocolo no hub, entra nele, verifica sidebar Favoritos."""
         driver = logged_in
+        from selenium.webdriver.common.by import By
 
         from pages.home_page import HomePage
         from pages.emergencia_page import EmergenciaPage
@@ -121,21 +122,56 @@ class TestProtocolo:
         try:
             home_page.click_emergencia_button()
             time.sleep(2)
+        except Exception as e:
+            pytest.skip(f"Não conseguiu abrir emergência: {e}")
 
-            emergencia_page = EmergenciaPage(driver)
-            card = emergencia_page.get_first_protocol_card()
-            card.click()
+        # Pega nome + estrela do primeiro card no desktop hub
+        try:
+            cards = driver.find_elements(
+                By.CSS_SELECTOR, '.proto-desktop .protocol-card.em-hub-card'
+            )
+            assert len(cards) >= 1, "Nenhum protocolo no hub desktop"
+            nome_card = cards[0].find_element(By.CSS_SELECTOR, '.protocol-name').text
+
+            # Favorita clicando na estrela (último div do card)
+            star_div = cards[0].find_elements(By.TAG_NAME, 'div')[-1]
+            driver.execute_script('arguments[0].click()', star_div)
+            time.sleep(2)
+        except Exception as e:
+            pytest.skip(f"Não conseguiu favoritar no hub: {e}")
+
+        # Entra no protocolo clicando no card
+        try:
+            cards = driver.find_elements(
+                By.CSS_SELECTOR, '.proto-desktop .protocol-card.em-hub-card'
+            )
+            cards[0].click()
             time.sleep(2)
         except Exception as e:
             pytest.skip(f"Não conseguiu navegar para protocolo: {e}")
 
         protocolo_page = ProtocoloPage(driver)
-        assert protocolo_page.is_page_loaded(), \
-            "Página protocolo não carregou"
+        assert protocolo_page.is_page_loaded(), "Página protocolo não carregou"
 
-        # Tenta favoritar
+        # Dentro do protocolo: sidebar Favoritos deve listar o protocolo favoritado
+        protocolo_page.expand_sidebar_card('Favoritos')
+        time.sleep(0.5)
+        labels = protocolo_page.get_sidebar_favorites_labels()
+        assert nome_card in labels, (
+            f"'{nome_card}' não aparece no sidebar Favoritos após favoritar. "
+            f"Labels: {labels}"
+        )
+
+        # Cleanup: volta ao hub e desfavorita
         try:
-            protocolo_page.toggle_favorite()
+            driver.find_element(By.CSS_SELECTOR, '.pd-back-btn').click()
             time.sleep(1)
-        except Exception as e:
-            pytest.skip(f"Não conseguiu clicar em favoritar: {e}")
+            cards = driver.find_elements(
+                By.CSS_SELECTOR, '.proto-desktop .protocol-card.em-hub-card'
+            )
+            if cards:
+                star_div = cards[0].find_elements(By.TAG_NAME, 'div')[-1]
+                driver.execute_script('arguments[0].click()', star_div)
+                time.sleep(1)
+        except Exception:
+            pass
