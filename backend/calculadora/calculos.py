@@ -17,6 +17,12 @@ def converter_mg_para_gotas(
     return round(ml * gotas_por_ml, 1)
 
 
+def calcular_conversao(tipo: str, dose: float, fator: float, peso_kg: float | None = None) -> float:
+    if tipo == 'peso':
+        return round(dose * peso_kg * fator, 2)
+    return round(dose * fator, 2)
+
+
 def calcular_dose_completa(
     peso_kg: float,
     dose_mg_por_kg: float,
@@ -42,6 +48,7 @@ def calcular_dose_completa(
         dose_final_volume = converter_mg_para_ml(
             dose_final_mg, concentracao_mg_por_ml
         )
+        # comprimido: concentracao_mg_por_ml = mg/comprimido → resultado = nº comprimidos
 
     return {
         "dose_calculada_mg": dose_calculada_mg,

@@ -1369,7 +1369,7 @@ body {
 .pd-droga-pill:hover { opacity: 0.85; }
 
 /* Quick actions */
-.pd-acoes-card { padding: 0; flex: none; max-height: 200px; }
+.pd-acoes-card { padding: 0; flex: none; }
 .pd-card-title  { font-size: 16px; font-weight: 600; color: #002646; margin: 0; padding: 12px 14px; background: #FBFCFF; border-bottom: 1px solid rgba(145,196,241,0.3); flex-shrink: 0; }
 
 .pd-acoes-grid {

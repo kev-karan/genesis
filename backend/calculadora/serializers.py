@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Medicamento, DoseReferencia, ApresentacaoMedicamento
+from .models import Medicamento, DoseReferencia, ApresentacaoMedicamento, ConversaoMedicamento
 
 
 class DoseReferenciaSerializer(serializers.ModelSerializer):
@@ -26,6 +26,27 @@ class ApresentacaoMedicamentoSerializer(serializers.ModelSerializer):
             "apresentacao",
             "gotas_por_ml",
             "via_administracao",
+        ]
+
+
+class ConversaoSerializer(serializers.ModelSerializer):
+    medicamento_origem_nome = serializers.CharField(source='medicamento_origem.nome', read_only=True)
+    medicamento_destino_nome = serializers.CharField(source='medicamento_destino.nome', read_only=True)
+
+    class Meta:
+        model = ConversaoMedicamento
+        fields = [
+            'id',
+            'medicamento_origem',
+            'medicamento_origem_nome',
+            'medicamento_destino',
+            'medicamento_destino_nome',
+            'tipo',
+            'fator',
+            'unidade_origem',
+            'unidade_destino',
+            'descricao',
+            'observacoes',
         ]
 
 

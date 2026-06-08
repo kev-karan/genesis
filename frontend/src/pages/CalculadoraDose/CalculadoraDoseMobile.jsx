@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import TopBar from '../../components/TopBar';
-import { fetchMedicamentos, fetchMedicamento, calcularDose } from '../../api/calculadora';
+import { fetchMedicamentos, fetchMedicamento, calcularDose, fetchConversoes, calcularConversao } from '../../api/calculadora';
 import './CalculadoraDoseMobile.css';
 
-const FAVS_KEY = 'calc_favs';
+const FAVS_KEY      = 'calc_favs';
+const CONV_FAVS_KEY = 'calc_conv_favs';
 
 const PALETTE = ['#1B5DCA', '#504FA8', '#2BA880', '#D58B02', '#D94F4F', '#7C3AED'];
 const medColor = (id) => PALETTE[id % PALETTE.length];
 
 const fmt = (n) => Number(n) % 1 === 0 ? Number(n) : Number(n).toFixed(2);
-const UNIDADE = { ml: 'mL', gotas: 'gotas' };
+const UNIDADE = { ml: 'mL', gotas: 'gotas', comprimido: 'comprimido(s)' };
 
 function IcoPill({ color = 'white' }) {
     return (
@@ -41,11 +42,22 @@ function SelectCard({ selected, onClick, children }) {
 }
 
 const CalculadoraDoseMobile = ({ navegar }) => {
+    const [tab, setTab]                   = useState('dose');
     const [medicamentos, setMedicamentos] = useState([]);
     const [loadingMeds, setLoadingMeds]   = useState(true);
     const [errorMeds, setErrorMeds]       = useState(null);
     const [favs, setFavs]                 = useState(() => JSON.parse(localStorage.getItem(FAVS_KEY) || '[]'));
+    const [convFavs, setConvFavs]         = useState(() => JSON.parse(localStorage.getItem(CONV_FAVS_KEY) || '[]'));
     const [selectedMed, setSelectedMed]   = useState(null);
+    const [conversoes, setConversoes]     = useState([]);
+    const [loadingConv, setLoadingConv]   = useState(true);
+    const [medOrigem, setMedOrigem]       = useState(null);
+    const [selectedConversao, setSelectedConversao] = useState(null);
+    const [doseConv, setDoseConv]         = useState('');
+    const [pesoConv, setPesoConv]         = useState('');
+    const [resultadoConv, setResultadoConv] = useState(null);
+    const [loadingConvCalc, setLoadingConvCalc] = useState(false);
+    const [erroConv, setErroConv]         = useState(null);
 
     const [detalhe, setDetalhe]                           = useState(null);
     const [loadingDetalhe, setLoadingDetalhe]             = useState(false);
@@ -62,12 +74,22 @@ const CalculadoraDoseMobile = ({ navegar }) => {
             .then(setMedicamentos)
             .catch(e => setErrorMeds(e.message))
             .finally(() => setLoadingMeds(false));
+        fetchConversoes()
+            .then(setConversoes)
+            .catch(() => {})
+            .finally(() => setLoadingConv(false));
     }, []);
 
     const toggleFav = (id) => {
         const updated = favs.includes(id) ? favs.filter(f => f !== id) : [...favs, id];
         setFavs(updated);
         localStorage.setItem(FAVS_KEY, JSON.stringify(updated));
+    };
+
+    const toggleConvFav = (id) => {
+        const updated = convFavs.includes(id) ? convFavs.filter(f => f !== id) : [...convFavs, id];
+        setConvFavs(updated);
+        localStorage.setItem(CONV_FAVS_KEY, JSON.stringify(updated));
     };
 
     const selectMed = (med) => {
@@ -88,6 +110,34 @@ const CalculadoraDoseMobile = ({ navegar }) => {
             })
             .catch(e => setErrorDetalhe(e.message))
             .finally(() => setLoadingDetalhe(false));
+    };
+
+    const selectOrigem = (med) => {
+        setMedOrigem(med);
+        setSelectedConversao(null);
+        setDoseConv('');
+        setPesoConv('');
+        setResultadoConv(null);
+        setErroConv(null);
+    };
+
+    const converterMed = async () => {
+        setLoadingConvCalc(true);
+        setErroConv(null);
+        try {
+            const doseNum = parseFloat(doseConv.replace(',', '.'));
+            const pesoNum = parseFloat(pesoConv.replace(',', '.'));
+            const r = await calcularConversao({
+                conversao_id: selectedConversao.id,
+                dose: doseNum,
+                peso: selectedConversao.tipo === 'peso' ? pesoNum : undefined,
+            });
+            setResultadoConv(r);
+        } catch (e) {
+            setErroConv(e.message);
+        } finally {
+            setLoadingConvCalc(false);
+        }
     };
 
     const pesoNum      = parseFloat(peso.replace(',', '.'));
@@ -114,6 +164,160 @@ const CalculadoraDoseMobile = ({ navegar }) => {
     const outros  = medicamentos.filter(m => !favs.includes(m.id));
     const ordered = [...favList, ...outros];
 
+    const tabStyle = (active) => ({
+        flex: 1, padding: '8px 0', borderRadius: 20, border: `2px solid ${active ? '#2a569f' : '#e5e7eb'}`,
+        background: active ? '#2a569f' : 'white', color: active ? 'white' : '#6B7A8D',
+        fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s',
+    });
+
+    const paresConv = medOrigem ? conversoes.filter(c => c.medicamento_origem === medOrigem.id) : [];
+    const doseConvNum = parseFloat(doseConv.replace(',', '.'));
+    const pesoConvNum = parseFloat(pesoConv.replace(',', '.'));
+    const precisaPeso = selectedConversao?.tipo === 'peso';
+    const podeConverter = selectedConversao && doseConvNum > 0 && (!precisaPeso || pesoConvNum > 0);
+
+    const origensRaw = [];
+    const seen = new Set();
+    for (const c of conversoes) {
+        if (!seen.has(c.medicamento_origem)) {
+            seen.add(c.medicamento_origem);
+            origensRaw.push({ id: c.medicamento_origem, nome: c.medicamento_origem_nome });
+        }
+    }
+    const origens = [
+        ...origensRaw.filter(m => convFavs.includes(m.id)),
+        ...origensRaw.filter(m => !convFavs.includes(m.id)),
+    ];
+
+    if (tab === 'conversao') {
+        if (!medOrigem) {
+            return (
+                <div className="screen proto-mobile">
+                    <TopBar />
+                    <div className="content">
+                        <button className="back-btn" onClick={() => navegar('home')}>
+                            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                            </svg>
+                            Voltar
+                        </button>
+                        <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+                            <button style={tabStyle(false)} onClick={() => setTab('dose')}>Dose</button>
+                            <button style={tabStyle(true)}>Conversão</button>
+                        </div>
+                        <div className="section-header">
+                            <h1 className="page-title">Conversão</h1>
+                            <p className="page-subtitle">Selecione o medicamento para converter</p>
+                        </div>
+                        {loadingConv && <p style={{ color: '#6B7A8D', fontSize: 14, padding: '8px 0' }}>Carregando...</p>}
+                        <div className="protocol-list" style={{ paddingBottom: 32 }}>
+                            {origens.map(med => (
+                                <button key={med.id} className="protocol-card" onClick={() => selectOrigem(med)}>
+                                    <div className="protocol-icon" style={{ background: medColor(med.id) }}>
+                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M7 16V4m0 0L3 8m4-4l4 4"/><path d="M17 8v12m0 0l4-4m-4 4l-4-4"/>
+                                        </svg>
+                                    </div>
+                                    <span className="protocol-name" style={{ textAlign: 'left', flex: 1 }}>{med.nome}</span>
+                                    <div
+                                        onClick={e => { e.stopPropagation(); toggleConvFav(med.id); }}
+                                        style={{ padding: '8px', display: 'flex', alignItems: 'center', fontSize: '20px', color: convFavs.includes(med.id) ? '#F5A623' : '#ccc', transition: 'color 0.2s' }}
+                                    >
+                                        {convFavs.includes(med.id) ? '★' : '☆'}
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        return (
+            <div className="screen proto-mobile">
+                <TopBar />
+                <div className="content">
+                    <button className="back-btn" onClick={() => setMedOrigem(null)}>
+                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Todas as conversões
+                    </button>
+                    <div className="section-header">
+                        <h1 className="page-title">{medOrigem.nome}</h1>
+                    </div>
+
+                    <div className="cm-form-card" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                        <div>
+                            <p style={{ margin: '0 0 10px', fontSize: 13, fontWeight: 600, color: '#374151' }}>Converter para</p>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                {paresConv.map(par => (
+                                    <SelectCard key={par.id} selected={selectedConversao?.id === par.id}
+                                        onClick={() => { setSelectedConversao(par); setResultadoConv(null); }}>
+                                        <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: '#002646' }}>{par.medicamento_destino_nome}</p>
+                                        <p style={{ margin: '2px 0 0', fontSize: 12, color: '#6B7A8D' }}>{par.descricao}</p>
+                                        <p style={{ margin: '2px 0 0', fontSize: 11, color: '#9CA3AF' }}>{par.unidade_origem} → {par.unidade_destino}</p>
+                                        {par.observacoes ? <p style={{ margin: '4px 0 0', fontSize: 11, color: '#9CA3AF' }}>{par.observacoes}</p> : null}
+                                    </SelectCard>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="cm-field">
+                            <label className="cm-label">Dose atual ({selectedConversao?.unidade_origem || '—'})</label>
+                            <div className="cm-input-row">
+                                <input className="cm-input" type="text" inputMode="decimal" placeholder="Ex: 2.5"
+                                    value={doseConv}
+                                    onChange={e => { setDoseConv(e.target.value.replace(/[^0-9.,]/g, '')); setResultadoConv(null); }} />
+                                <span className="cm-unit" style={{ fontSize: 11, padding: '0 10px', whiteSpace: 'nowrap' }}>
+                                    {selectedConversao?.unidade_origem || '—'}
+                                </span>
+                            </div>
+                        </div>
+
+                        {precisaPeso && (
+                            <div className="cm-field">
+                                <label className="cm-label">Peso do paciente</label>
+                                <div className="cm-input-row">
+                                    <input className="cm-input" type="text" inputMode="decimal" placeholder="Ex: 10"
+                                        value={pesoConv}
+                                        onChange={e => { setPesoConv(e.target.value.replace(/[^0-9.,]/g, '')); setResultadoConv(null); }} />
+                                    <span className="cm-unit">kg</span>
+                                </div>
+                            </div>
+                        )}
+
+                        {erroConv && <p style={{ color: '#D94F4F', fontSize: 13, margin: 0 }}>{erroConv}</p>}
+
+                        <button className="cm-btn" onClick={converterMed}
+                            disabled={!podeConverter || loadingConvCalc}
+                            style={{ opacity: podeConverter && !loadingConvCalc ? 1 : 0.5 }}>
+                            {loadingConvCalc ? 'Calculando...' : 'Converter'}
+                        </button>
+                    </div>
+
+                    {resultadoConv && (
+                        <div className="cm-result-section">
+                            <div className="cm-result-card">
+                                <span className="cm-result-label">Dose convertida</span>
+                                <div className="cm-result-value">
+                                    <strong>{fmt(resultadoConv.resultado)}</strong>
+                                    <span className="cm-result-unit"> {resultadoConv.unidade_destino}</span>
+                                </div>
+                            </div>
+                            <div className="cm-summary-card">
+                                <p className="cm-summary-title">Resumo</p>
+                                <div className="cm-summary-row"><span>{resultadoConv.medicamento_origem}</span><span>{fmt(doseConvNum)} {resultadoConv.unidade_origem}</span></div>
+                                {precisaPeso && <div className="cm-summary-row"><span>Peso</span><span>{fmt(pesoConvNum)} kg</span></div>}
+                                <div className="cm-summary-row"><span>{resultadoConv.medicamento_destino}</span><span>{fmt(resultadoConv.resultado)} {resultadoConv.unidade_destino}</span></div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+        );
+    }
+
     if (!selectedMed) {
         return (
             <div className="screen proto-mobile">
@@ -125,6 +329,10 @@ const CalculadoraDoseMobile = ({ navegar }) => {
                         </svg>
                         Voltar
                     </button>
+                    <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+                        <button style={tabStyle(true)}>Dose</button>
+                        <button style={tabStyle(false)} onClick={() => setTab('conversao')}>Conversão</button>
+                    </div>
                     <div className="section-header">
                         <h1 className="page-title">Calculadora</h1>
                         <p className="page-subtitle">Selecione o medicamento que deseja calcular</p>

@@ -22,7 +22,7 @@ class RegistrarAcessoView(APIView):
 
 class ListarAcessosRecentesView(APIView):
     def get(self, request):
-        acessos = AcessoRecente.objects.filter(usuario=request.user).order_by('-ultimo_acesso')[:10]
+        acessos = AcessoRecente.objects.filter(usuario=request.user).order_by('-ultimo_acesso')[:5]
         dados = [
             {
                 "id": acesso.id,

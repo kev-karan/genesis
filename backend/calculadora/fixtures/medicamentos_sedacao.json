@@ -1,0 +1,69 @@
+[
+  {"model": "calculadora.medicamento", "pk": 1, "fields": {"nome": "Midazolam", "principio_ativo": "", "categoria": "Sedativo", "observacoes": "", "ativo": true, "criado_em": "2026-06-07T10:00:00Z", "atualizado_em": "2026-06-07T10:00:00Z"}},
+  {"model": "calculadora.medicamento", "pk": 2, "fields": {"nome": "Diazepam", "principio_ativo": "", "categoria": "Benzodiazepínico", "observacoes": "", "ativo": true, "criado_em": "2026-06-07T10:00:00Z", "atualizado_em": "2026-06-07T10:00:00Z"}},
+  {"model": "calculadora.medicamento", "pk": 3, "fields": {"nome": "Lorazepam", "principio_ativo": "", "categoria": "Sedativo", "observacoes": "", "ativo": true, "criado_em": "2026-06-07T10:00:00Z", "atualizado_em": "2026-06-07T10:00:00Z"}},
+  {"model": "calculadora.medicamento", "pk": 4, "fields": {"nome": "Morfina", "principio_ativo": "", "categoria": "Opioide", "observacoes": "", "ativo": true, "criado_em": "2026-06-07T10:00:00Z", "atualizado_em": "2026-06-07T10:00:00Z"}},
+  {"model": "calculadora.medicamento", "pk": 5, "fields": {"nome": "Metadona", "principio_ativo": "", "categoria": "Opioide", "observacoes": "", "ativo": true, "criado_em": "2026-06-07T10:00:00Z", "atualizado_em": "2026-06-07T10:00:00Z"}},
+  {"model": "calculadora.medicamento", "pk": 6, "fields": {"nome": "Fentanil", "principio_ativo": "", "categoria": "Opioide", "observacoes": "", "ativo": true, "criado_em": "2026-06-07T10:00:00Z", "atualizado_em": "2026-06-07T10:00:00Z"}},
+  {"model": "calculadora.medicamento", "pk": 7, "fields": {"nome": "Clonidina", "principio_ativo": "", "categoria": "Alfa-2 Agonista", "observacoes": "", "ativo": true, "criado_em": "2026-06-07T10:00:00Z", "atualizado_em": "2026-06-07T10:00:00Z"}},
+  {"model": "calculadora.medicamento", "pk": 8, "fields": {"nome": "Dexmedetomidina", "principio_ativo": "", "categoria": "Alfa-2 Agonista", "observacoes": "", "ativo": true, "criado_em": "2026-06-07T10:00:00Z", "atualizado_em": "2026-06-07T10:00:00Z"}},
+  {"model": "calculadora.medicamento", "pk": 9, "fields": {"nome": "Sufentanil", "principio_ativo": "", "categoria": "Opioide", "observacoes": "", "ativo": true, "criado_em": "2026-06-07T10:00:00Z", "atualizado_em": "2026-06-07T10:00:00Z"}},
+  {"model": "calculadora.medicamento", "pk": 10, "fields": {"nome": "Remifentanil", "principio_ativo": "", "categoria": "Opioide", "observacoes": "", "ativo": true, "criado_em": "2026-06-07T10:00:00Z", "atualizado_em": "2026-06-07T10:00:00Z"}},
+
+  {"model": "calculadora.conversaomedicamento", "pk": 1, "fields": {
+    "medicamento_origem": 1, "medicamento_destino": 2,
+    "tipo": "peso", "fator": "0.6000",
+    "unidade_origem": "mcg/kg/min", "unidade_destino": "mg/dia",
+    "descricao": "Midazolam IV → Diazepam enteral",
+    "observacoes": "Fracionar 6/6 h. Dose máx: 10 mg/dose.", "ativo": true,
+    "criado_em": "2026-06-07T10:00:00Z", "atualizado_em": "2026-06-07T10:00:00Z"
+  }},
+  {"model": "calculadora.conversaomedicamento", "pk": 2, "fields": {
+    "medicamento_origem": 3, "medicamento_destino": 2,
+    "tipo": "fixa", "fator": "5.0000",
+    "unidade_origem": "mg", "unidade_destino": "mg",
+    "descricao": "Lorazepam → Diazepam enteral",
+    "observacoes": "Dose máx Lorazepam: 4 mg/dose. Dose máx Diazepam: 10 mg/dose.", "ativo": true,
+    "criado_em": "2026-06-07T10:00:00Z", "atualizado_em": "2026-06-07T10:00:00Z"
+  }},
+  {"model": "calculadora.conversaomedicamento", "pk": 3, "fields": {
+    "medicamento_origem": 4, "medicamento_destino": 4,
+    "tipo": "peso", "fator": "0.0720",
+    "unidade_origem": "mcg/kg/h", "unidade_destino": "mg/dia",
+    "descricao": "Morfina IV → Morfina enteral (VO)",
+    "observacoes": "Fracionar 4/4 h.", "ativo": true,
+    "criado_em": "2026-06-07T10:00:00Z", "atualizado_em": "2026-06-07T10:00:00Z"
+  }},
+  {"model": "calculadora.conversaomedicamento", "pk": 4, "fields": {
+    "medicamento_origem": 4, "medicamento_destino": 5,
+    "tipo": "peso", "fator": "0.0480",
+    "unidade_origem": "mcg/kg/h", "unidade_destino": "mg/dia",
+    "descricao": "Morfina IV → Metadona oral",
+    "observacoes": "D1: iniciar Metadona 50% sem reduzir Morfina. D2: Metadona 100%.", "ativo": true,
+    "criado_em": "2026-06-07T10:00:00Z", "atualizado_em": "2026-06-07T10:00:00Z"
+  }},
+  {"model": "calculadora.conversaomedicamento", "pk": 5, "fields": {
+    "medicamento_origem": 6, "medicamento_destino": 4,
+    "tipo": "peso", "fator": "1.8000",
+    "unidade_origem": "mcg/kg/h", "unidade_destino": "mg/dia",
+    "descricao": "Fentanil IV → Morfina enteral (VO)",
+    "observacoes": "Fracionar 4/4 h.", "ativo": true,
+    "criado_em": "2026-06-07T10:00:00Z", "atualizado_em": "2026-06-07T10:00:00Z"
+  }},
+  {"model": "calculadora.conversaomedicamento", "pk": 6, "fields": {
+    "medicamento_origem": 6, "medicamento_destino": 4,
+    "tipo": "fixa", "fator": "5.0000",
+    "unidade_origem": "mcg/kg/h", "unidade_destino": "mcg/kg/h",
+    "descricao": "Fentanil IV → Morfina IV contínua",
+    "observacoes": "Manter mesma unidade mcg/kg/h.", "ativo": true,
+    "criado_em": "2026-06-07T10:00:00Z", "atualizado_em": "2026-06-07T10:00:00Z"
+  }},
+  {"model": "calculadora.conversaomedicamento", "pk": 7, "fields": {
+    "medicamento_origem": 8, "medicamento_destino": 7,
+    "tipo": "fixa", "fator": "5.0000",
+    "unidade_origem": "mcg/kg/h", "unidade_destino": "mcg/kg/dose",
+    "descricao": "Dexmedetomidina IV → Clonidina enteral",
+    "observacoes": "Clonidina 6/6 h. Dose máx: 200 mcg. Após 2ª dose reduzir Dex 50%; após 3ª suspender.", "ativo": true,
+    "criado_em": "2026-06-07T10:00:00Z", "atualizado_em": "2026-06-07T10:00:00Z"
+  }}
+]
