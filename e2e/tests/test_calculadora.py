@@ -105,12 +105,11 @@ class TestCalculadora:
         calc_page.click_calcular()
         time.sleep(2)
 
-        if calc_page.has_result_section():
-            has_warning = calc_page.has_dose_limitada_warning()
-            if not has_warning:
-                pytest.skip("Aviso de dose limitada não exibido (medicamento pode não ter limite)")
-        else:
-            pytest.skip("Resultado não foi calculado")
+        assert calc_page.has_result_section(), \
+            "Resultado não foi calculado para peso 200kg"
+
+        if not calc_page.has_dose_limitada_warning():
+            pytest.skip("Medicamento selecionado não possui dose_maxima_mg configurada")
 
     def test_campos_vazios_nao_calcula(self, logged_in):
         driver = logged_in
@@ -137,4 +136,5 @@ class TestCalculadora:
             time.sleep(1)
             assert not calc_page.has_result_section(), "Calculou sem dados completos"
         else:
-            assert not is_enabled, "Botão deveria estar desabilitado com campos vazios"
+            assert not calc_page.is_calculate_button_enabled(), \
+                "Botão calcular deveria estar desabilitado com campos vazios"
