@@ -143,3 +143,35 @@ class EstudoPage:
             return True
         except _SELENIUM_EXC:
             return False
+
+    def click_multipla_opcao_by_text(self, text):
+        try:
+            btns = self.driver.find_elements(By.CSS_SELECTOR, '.med-options .med-btn--outline')
+            for b in btns:
+                if text in b.text:
+                    b.click()
+                    return True
+        except _SELENIUM_EXC:
+            pass
+        return False
+
+    def click_avancar(self):
+        """Clica em 'Próxima pergunta' ou 'Concluir' após responder uma questão."""
+        try:
+            btn = self.driver.find_element(
+                By.XPATH,
+                "//button[contains(text(), 'Próxima') or contains(text(), 'Concluir')]"
+            )
+            btn.click()
+            return True
+        except _SELENIUM_EXC:
+            return False
+
+    def has_conclusao_button(self):
+        try:
+            self.driver.find_element(
+                By.XPATH, "//button[contains(text(), 'Voltar ao Modo Estudo')]"
+            )
+            return True
+        except _SELENIUM_EXC:
+            return False

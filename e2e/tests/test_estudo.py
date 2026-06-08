@@ -244,3 +244,54 @@ class TestEstudo:
             new_question = estudo_page.get_current_question_text()
             assert new_question is not None and len(new_question) > 0, \
                 "Próxima pergunta não carregou após avançar"
+
+    def test_caso_concluido(self, logged_in, reset_caso):
+        # Percorre todas as questões do Caso Dengue e verifica tela de conclusão.
+        # Q1: múltipla → "Dengue com sinais de alarme"
+        # Q2: binária  → "Sim"
+        # Q3: numérica → "42"
+        driver = logged_in
+
+        try:
+            driver.find_element(By.XPATH, "//button[contains(text(), 'MODO DE ESTUDO')]").click()
+        except Exception:
+            pytest.skip("Botão Modo de Estudo não encontrado na topbar")
+        time.sleep(2)
+
+        estudo_page = EstudoPage(driver)
+        assert estudo_page.is_page_loaded(), "Modo Estudo não carregou"
+        assert estudo_page.select_caso_by_name("Dengue"), "Caso Dengue não encontrado"
+        time.sleep(2)
+
+        assert estudo_page.click_iniciar_caso(), "Botão 'Iniciar Caso' não encontrado"
+        time.sleep(2)
+
+        assert estudo_page.click_iniciar_questoes(), "Botão 'Iniciar questões' não encontrado"
+        time.sleep(2)
+
+        # Q1 — múltipla escolha
+        assert estudo_page.click_multipla_opcao_by_text("Dengue com sinais de alarme"), \
+            "Opção 'Dengue com sinais de alarme' não encontrada"
+        time.sleep(0.3)
+        assert estudo_page.click_confirmar(), "Botão Confirmar não encontrado (Q1)"
+        time.sleep(2)
+        assert estudo_page.click_avancar(), "Botão avançar não encontrado após Q1"
+        time.sleep(2)
+
+        # Q2 — binária
+        assert estudo_page.click_binary_answer("Sim"), "Opção 'Sim' não encontrada (Q2)"
+        time.sleep(2)
+        assert estudo_page.click_avancar(), "Botão avançar não encontrado após Q2"
+        time.sleep(2)
+
+        # Q3 — numérica
+        assert estudo_page.enter_numeric_answer("42"), "Input numérico não encontrado (Q3)"
+        time.sleep(0.3)
+        assert estudo_page.click_confirmar(), "Botão Confirmar não encontrado (Q3)"
+        time.sleep(2)
+        assert estudo_page.click_avancar(), "Botão 'Concluir' não encontrado"
+        time.sleep(2)
+
+        assert estudo_page.is_concluido(), "Tela 'Caso concluído!' não apareceu"
+        assert estudo_page.has_conclusao_button(), \
+            "Botão 'Voltar ao Modo Estudo' não encontrado na conclusão"
