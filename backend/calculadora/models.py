@@ -31,10 +31,10 @@ class DoseReferencia(models.Model):
     )
 
     dose_mg_por_kg = models.DecimalField(
-        max_digits=10,
-        decimal_places=3,
-        validators=[MinValueValidator(Decimal("0.001"))],
-        help_text="Dose em mg por kg. Ex: 10 mg/kg."
+        max_digits=12,
+        decimal_places=6,
+        validators=[MinValueValidator(Decimal("0.000001"))],
+        help_text="Dose em mg por kg (ou mg/kg/h para infusões contínuas)."
     )
 
     dose_maxima_mg = models.DecimalField(
@@ -118,6 +118,7 @@ class ApresentacaoMedicamento(models.Model):
     APRESENTACAO_CHOICES = [
         ("ml", "mL"),
         ("gotas", "Gotas"),
+        ("comprimido", "Comprimido"),
     ]
 
     medicamento = models.ForeignKey(

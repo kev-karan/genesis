@@ -8,7 +8,7 @@ const PALETTE = ['#1B5DCA', '#504FA8', '#2BA880', '#D58B02', '#D94F4F', '#7C3AED
 const medColor = (id) => PALETTE[id % PALETTE.length]
 
 const fmt = (n) => Number(n) % 1 === 0 ? Number(n) : Number(n).toFixed(2)
-const UNIDADE = { ml: 'mL', gotas: 'gotas' }
+const UNIDADE = { ml: 'mL', gotas: 'gotas', comprimido: 'comprimido(s)' }
 
 function IcoPill({ size = 22, color = 'currentColor' }) {
   return (
