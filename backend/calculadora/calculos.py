@@ -17,6 +17,12 @@ def converter_mg_para_gotas(
     return round(ml * gotas_por_ml, 1)
 
 
+def calcular_conversao(tipo: str, dose: float, fator: float, peso_kg: float | None = None) -> float:
+    if tipo == 'peso':
+        return round(dose * peso_kg * fator, 2)
+    return round(dose * fator, 2)
+
+
 def calcular_dose_completa(
     peso_kg: float,
     dose_mg_por_kg: float,
