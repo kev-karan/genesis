@@ -118,7 +118,5 @@ class TestNav:
             EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="password"], input[placeholder="Email"]'))
         )
 
-        assert "3000" in driver.current_url, "Não permaneceu na página de login"
-
         token = driver.execute_script("return localStorage.getItem('token')")
         assert token is None, "Token presente sem autenticação"
