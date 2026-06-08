@@ -2,7 +2,6 @@ import json
 import pytest
 import time
 from selenium.webdriver.common.by import By
-from pages.home_page import HomePage
 from pages.calculadora_page import CalculadoraPage
 
 
@@ -18,136 +17,82 @@ def _abrir_calculadora(driver):
 class TestCalculadora:
     def test_calculadora_acessivel_home(self, logged_in):
         driver = logged_in
-        home_page = HomePage(driver)
-        assert home_page.is_page_loaded(), "Home não carregou"
-
-        try:
-            calc_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'CALCULADORA')]")
-            calc_btn.click()
-        except:
-            pytest.skip("Botão Calculadora não encontrado na topbar")
-
-        time.sleep(2)
+        if not _abrir_calculadora(driver):
+            pytest.skip("Botão CALCULADORA não encontrado na topbar")
 
         calc_page = CalculadoraPage(driver)
-        assert calc_page.is_page_loaded(), "Calculadora não carregou"
-
-        count = calc_page.get_medication_count()
-        assert count > 0, "Nenhum medicamento listado na calculadora"
+        assert calc_page.wait_for_desktop_hub(), "Hub de medicamentos (desktop) não carregou"
+        nomes = calc_page.get_desktop_medication_names()
+        assert len(nomes) > 0, "Nenhum medicamento listado na calculadora"
 
     def test_selecionar_medicamento_exibe_opcoes(self, logged_in):
         driver = logged_in
-
-        try:
-            calc_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'CALCULADORA')]")
-            calc_btn.click()
-        except:
-            pytest.skip("Botão Calculadora não encontrado na topbar")
-        time.sleep(2)
+        if not _abrir_calculadora(driver):
+            pytest.skip("Botão CALCULADORA não encontrado na topbar")
 
         calc_page = CalculadoraPage(driver)
-        assert calc_page.is_page_loaded(), "Calculadora não carregou"
-
-        if not calc_page.select_first_medication():
-            pytest.skip("Nenhum medicamento disponível")
-        time.sleep(2)
-
-        assert calc_page.is_detail_loaded(), "Detalhes do medicamento não carregaram"
+        assert calc_page.wait_for_desktop_hub(), "Hub não carregou"
+        assert calc_page.select_desktop_medication_by_name('Midazolam'), \
+            "Midazolam não encontrado na lista"
+        assert calc_page.wait_for_desktop_form(), \
+            "Formulário não carregou após selecionar Midazolam"
 
     def test_calculo_basico(self, logged_in):
         driver = logged_in
-
-        try:
-            calc_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'CALCULADORA')]")
-            calc_btn.click()
-        except:
-            pytest.skip("Botão Calculadora não encontrado na topbar")
-        time.sleep(2)
+        if not _abrir_calculadora(driver):
+            pytest.skip("Botão CALCULADORA não encontrado na topbar")
 
         calc_page = CalculadoraPage(driver)
-        if not calc_page.select_first_medication():
-            pytest.skip("Nenhum medicamento disponível")
-        time.sleep(2)
+        assert calc_page.wait_for_desktop_hub(), "Hub não carregou"
+        assert calc_page.select_desktop_medication_by_name('Midazolam'), "Midazolam não encontrado"
+        assert calc_page.wait_for_desktop_form(), "Formulário não carregou"
 
-        if not calc_page.is_detail_loaded():
-            pytest.skip("Detalhes do medicamento não carregaram")
+        calc_page.click_desktop_dose_ref(0)
+        time.sleep(0.3)
+        calc_page.click_desktop_apresentacao(0)
+        time.sleep(0.3)
+        calc_page.enter_desktop_peso(10)
+        time.sleep(0.3)
 
-        calc_page.select_dose_reference(0)
-        calc_page.select_apresentacao(0)
-        calc_page.enter_peso(20)
-
-        if not calc_page.is_calculate_button_enabled():
-            pytest.skip("Botão calcular não habilitado após preenchimento")
-
-        calc_page.click_calcular()
-        time.sleep(2)
-
-        assert calc_page.has_result_section(), "Seção de resultado não apareceu"
-
-        volume = calc_page.get_result_volume()
-        assert volume is not None and len(volume) > 0, "Volume não foi calculado"
+        assert calc_page.click_desktop_calcular(), "Botão 'Calcular dose' não habilitou"
+        assert calc_page.has_desktop_result_with_text('Volume a administrar'), \
+            "Seção de resultado não apareceu"
 
     def test_dose_limitada_exibe_aviso(self, logged_in):
         driver = logged_in
-
-        try:
-            calc_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'CALCULADORA')]")
-            calc_btn.click()
-        except:
-            pytest.skip("Botão Calculadora não encontrado na topbar")
-        time.sleep(2)
+        if not _abrir_calculadora(driver):
+            pytest.skip("Botão CALCULADORA não encontrado na topbar")
 
         calc_page = CalculadoraPage(driver)
-        if not calc_page.select_first_medication():
-            pytest.skip("Nenhum medicamento disponível")
-        time.sleep(2)
+        assert calc_page.wait_for_desktop_hub(), "Hub não carregou"
+        # Midazolam dose 0 = 0.25 mg/kg, max 20 mg — peso 200 kg produz dose limitada
+        assert calc_page.select_desktop_medication_by_name('Midazolam'), "Midazolam não encontrado"
+        assert calc_page.wait_for_desktop_form(), "Formulário não carregou"
 
-        if not calc_page.is_detail_loaded():
-            pytest.skip("Detalhes do medicamento não carregaram")
+        calc_page.click_desktop_dose_ref(0)
+        time.sleep(0.3)
+        calc_page.click_desktop_apresentacao(0)
+        time.sleep(0.3)
+        calc_page.enter_desktop_peso(200)
+        time.sleep(0.3)
 
-        calc_page.select_dose_reference(0)
-        calc_page.select_apresentacao(0)
-        calc_page.enter_peso(200)
-
-        if not calc_page.is_calculate_button_enabled():
-            pytest.skip("Botão calcular não habilitado")
-
-        calc_page.click_calcular()
-        time.sleep(2)
-
-        assert calc_page.has_result_section(), \
-            "Resultado não foi calculado para peso 200kg"
-
-        if not calc_page.has_dose_limitada_warning():
-            pytest.skip("Medicamento selecionado não possui dose_maxima_mg configurada")
+        assert calc_page.click_desktop_calcular(), "Botão 'Calcular dose' não habilitou"
+        assert calc_page.has_desktop_dose_limitada_warning(), \
+            "Aviso de dose máxima atingida não apareceu para peso 200 kg"
 
     def test_campos_vazios_nao_calcula(self, logged_in):
         driver = logged_in
-
-        try:
-            calc_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'CALCULADORA')]")
-            calc_btn.click()
-        except:
-            pytest.skip("Botão Calculadora não encontrado na topbar")
-        time.sleep(2)
+        if not _abrir_calculadora(driver):
+            pytest.skip("Botão CALCULADORA não encontrado na topbar")
 
         calc_page = CalculadoraPage(driver)
-        if not calc_page.select_first_medication():
-            pytest.skip("Nenhum medicamento disponível")
-        time.sleep(2)
+        assert calc_page.wait_for_desktop_hub(), "Hub não carregou"
+        assert calc_page.select_desktop_medication_by_name('Midazolam'), "Midazolam não encontrado"
+        assert calc_page.wait_for_desktop_form(), "Formulário não carregou"
 
-        if not calc_page.is_detail_loaded():
-            pytest.skip("Detalhes do medicamento não carregaram")
-
-        is_enabled = calc_page.is_calculate_button_enabled()
-
-        if is_enabled:
-            calc_page.click_calcular()
-            time.sleep(1)
-            assert not calc_page.has_result_section(), "Calculou sem dados completos"
-        else:
-            assert not calc_page.is_calculate_button_enabled(), \
-                "Botão calcular deveria estar desabilitado com campos vazios"
+        # Nenhum campo preenchido — botão deve estar desabilitado
+        assert not calc_page.is_desktop_calcular_enabled(), \
+            "Botão 'Calcular dose' deveria estar desabilitado sem campos preenchidos"
 
     def test_calculo_comprimido(self, logged_in):
         driver = logged_in

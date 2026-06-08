@@ -244,9 +244,11 @@ class CalculadoraPage:
 
     def wait_for_desktop_form(self):
         try:
-            self.wait.until(lambda d: len(
-                d.find_elements(By.CSS_SELECTOR, '.proto-desktop .pd-card button')
-            ) > 1)
+            self.wait.until(lambda d: any(
+                'mg/kg' in b.text
+                for b in d.find_elements(By.CSS_SELECTOR, '.proto-desktop button')
+                if b.is_displayed()
+            ))
             return True
         except _SELENIUM_EXC:
             return False
@@ -317,6 +319,42 @@ class CalculadoraPage:
             self.wait.until(lambda d: text in d.find_element(
                 By.CSS_SELECTOR, '.proto-desktop'
             ).text)
+            return True
+        except _SELENIUM_EXC:
+            return False
+
+    def click_desktop_apresentacao(self, index=0):
+        try:
+            form_card = self.driver.find_element(By.CSS_SELECTOR, '.proto-desktop .pd-card')
+            btns = [
+                b for b in form_card.find_elements(By.TAG_NAME, 'button')
+                if b.is_displayed()
+                and 'mg/kg' not in b.text
+                and 'medicamentos' not in b.text.lower()
+                and 'Calcular' not in b.text
+                and b.text.strip()
+            ]
+            if btns and index < len(btns):
+                btns[index].click()
+                return True
+        except _SELENIUM_EXC:
+            pass
+        return False
+
+    def is_desktop_calcular_enabled(self):
+        try:
+            form_card = self.driver.find_element(By.CSS_SELECTOR, '.proto-desktop .pd-card')
+            for b in reversed(form_card.find_elements(By.TAG_NAME, 'button')):
+                if b.is_displayed() and 'Calcular' in b.text:
+                    return b.is_enabled()
+        except _SELENIUM_EXC:
+            pass
+        return False
+
+    def has_desktop_dose_limitada_warning(self):
+        try:
+            self.wait.until(lambda d: 'excede a dose máxima' in
+                            d.find_element(By.CSS_SELECTOR, '.proto-desktop').text)
             return True
         except _SELENIUM_EXC:
             return False
