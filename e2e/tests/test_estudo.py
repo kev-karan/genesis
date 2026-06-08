@@ -73,6 +73,7 @@ class TestEstudo:
             "Primeira questão não foi renderizada"
 
     def test_resposta_binaria_correta(self, logged_in):
+        # caso_dengue: ordem=1 é multipla_escolha, ordem=2 é binária (resposta_esperada='sim')
         driver = logged_in
 
         try:
@@ -83,8 +84,8 @@ class TestEstudo:
         time.sleep(2)
 
         estudo_page = EstudoPage(driver)
-        if not estudo_page.select_first_caso():
-            pytest.skip("Nenhum caso disponível")
+        if not estudo_page.select_caso_by_name("Dengue"):
+            pytest.skip("Caso Dengue não encontrado")
         time.sleep(2)
 
         if not estudo_page.click_iniciar_caso():
@@ -95,19 +96,25 @@ class TestEstudo:
             pytest.skip("Botão Iniciar questões não encontrado")
         time.sleep(2)
 
-        question_text = estudo_page.get_current_question_text()
-        if question_text is None:
-            pytest.skip("Questão não carregou")
+        # Ordem=1 é multipla_escolha — seleciona qualquer opção e avança
+        if estudo_page.click_first_multipla_escolha_opcao():
+            time.sleep(1)
+            estudo_page.click_confirmar()
+            time.sleep(2)
+            estudo_page.click_proxima_pergunta()
+            time.sleep(2)
 
+        # Ordem=2 é binária — resposta correta é 'Sim'
         if not estudo_page.click_binary_answer("Sim"):
-            pytest.skip("Primeira questão não é binária")
+            pytest.skip("Questão binária não encontrada na segunda posição")
         time.sleep(2)
 
-        correto = estudo_page.has_feedback_correto()
-        incorreto = estudo_page.has_feedback_incorreto()
-        assert correto or incorreto, "Nenhum feedback exibido após responder"
+        assert estudo_page.has_feedback_correto(), \
+            "Resposta correta 'Sim' deveria exibir feedback correto"
 
     def test_resposta_errada_feedback(self, logged_in):
+        # caso_dengue: ordem=1 é multipla_escolha, ordem=2 é binária (resposta_esperada='sim')
+        # 'Não' é resposta errada → deve exibir feedback incorreto
         driver = logged_in
 
         try:
@@ -118,8 +125,8 @@ class TestEstudo:
         time.sleep(2)
 
         estudo_page = EstudoPage(driver)
-        if not estudo_page.select_first_caso():
-            pytest.skip("Nenhum caso disponível")
+        if not estudo_page.select_caso_by_name("Dengue"):
+            pytest.skip("Caso Dengue não encontrado")
         time.sleep(2)
 
         if not estudo_page.click_iniciar_caso():
@@ -130,17 +137,21 @@ class TestEstudo:
             pytest.skip("Botão Iniciar questões não encontrado")
         time.sleep(2)
 
-        question_text = estudo_page.get_current_question_text()
-        if question_text is None:
-            pytest.skip("Questão não carregou")
+        # Ordem=1 é multipla_escolha — seleciona qualquer opção e avança
+        if estudo_page.click_first_multipla_escolha_opcao():
+            time.sleep(1)
+            estudo_page.click_confirmar()
+            time.sleep(2)
+            estudo_page.click_proxima_pergunta()
+            time.sleep(2)
 
+        # Ordem=2 é binária — 'Não' é resposta errada
         if not estudo_page.click_binary_answer("Não"):
-            pytest.skip("Primeira questão não é binária")
+            pytest.skip("Questão binária não encontrada na segunda posição")
         time.sleep(2)
 
-        incorreto = estudo_page.has_feedback_incorreto()
-        if not incorreto:
-            assert estudo_page.has_feedback_correto(), "Nenhum feedback exibido"
+        assert estudo_page.has_feedback_incorreto(), \
+            "Resposta errada deveria exibir feedback incorreto"
 
     def test_resposta_numerica(self, logged_in):
         driver = logged_in
@@ -229,10 +240,7 @@ class TestEstudo:
         except:
             pytest.skip("Botão de avançar não encontrado")
 
-        concluido = estudo_page.is_concluido()
-        if concluido:
-            assert True
-        else:
+        if not estudo_page.is_concluido():
             new_question = estudo_page.get_current_question_text()
             assert new_question is not None and len(new_question) > 0, \
                 "Próxima pergunta não carregou após avançar"
