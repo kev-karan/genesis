@@ -73,6 +73,47 @@ class DoseReferencia(models.Model):
         return f"{self.medicamento.nome} - {self.dose_mg_por_kg} mg/kg"
 
 
+class ConversaoMedicamento(models.Model):
+    TIPO_CHOICES = [
+        ('peso', 'Por peso (dose × peso × fator)'),
+        ('fixa', 'Equivalência fixa (dose × fator)'),
+    ]
+
+    medicamento_origem = models.ForeignKey(
+        Medicamento,
+        on_delete=models.CASCADE,
+        related_name='conversoes_origem',
+    )
+    medicamento_destino = models.ForeignKey(
+        Medicamento,
+        on_delete=models.CASCADE,
+        related_name='conversoes_destino',
+    )
+    tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)
+    fator = models.DecimalField(
+        max_digits=10,
+        decimal_places=4,
+        validators=[MinValueValidator(Decimal('0.0001'))],
+        help_text='tipo=peso: resultado = dose × peso_kg × fator. tipo=fixa: resultado = dose × fator.',
+    )
+    unidade_origem = models.CharField(max_length=30, help_text='Ex: mcg/kg/min, mg')
+    unidade_destino = models.CharField(max_length=30, help_text='Ex: mg/dia, mg')
+    descricao = models.CharField(max_length=255, blank=True)
+    observacoes = models.TextField(blank=True)
+    ativo = models.BooleanField(default=True)
+
+    criado_em = models.DateTimeField(auto_now_add=True)
+    atualizado_em = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['medicamento_origem__nome', 'medicamento_destino__nome']
+        verbose_name = 'Conversão de medicamento'
+        verbose_name_plural = 'Conversões de medicamentos'
+
+    def __str__(self):
+        return f'{self.medicamento_origem.nome} → {self.medicamento_destino.nome}'
+
+
 class ApresentacaoMedicamento(models.Model):
     APRESENTACAO_CHOICES = [
         ("ml", "mL"),
