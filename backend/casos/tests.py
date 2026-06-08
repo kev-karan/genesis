@@ -456,3 +456,48 @@ class RaciocinioCasoTestCase(AuthenticatedAPITestCase):
         self.assertEqual(response.status_code, 200)
         ordens = [p['ordem'] for p in response.data]
         self.assertEqual(ordens, sorted(ordens))
+
+
+@override_settings(PASSWORD_HASHERS=FAST_PASSWORD_HASHERS, DEBUG=True)
+class ResetRespostasTestCase(AuthenticatedAPITestCase):
+    def setUp(self):
+        self.client, self.user = self.autenticar()
+        fluxograma = Fluxograma.objects.create(titulo='F', descricao='', conteudo={})
+        caso = CasoClinico.objects.create(titulo='C', descricao='', ativo=True)
+        questao = Questao.objects.create(
+            caso_clinico=caso,
+            enunciado='Pergunta?',
+            tipo='binaria',
+            resposta_esperada='sim',
+            ordem=1,
+        )
+        RespostaUsuario.objects.create(usuario=self.user, questao=questao, resposta='sim', correta=True)
+        RespostaUsuario.objects.create(usuario=self.user, questao=questao, resposta='nao', correta=False)
+
+    def test_reset_deleta_respostas_do_usuario(self):
+        self.assertEqual(RespostaUsuario.objects.filter(usuario=self.user).count(), 2)
+
+        response = self.client.delete('/api/casos/respostas/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(RespostaUsuario.objects.filter(usuario=self.user).count(), 0)
+
+    def test_reset_nao_deleta_respostas_de_outro_usuario(self):
+        outro_client, outro_user = self.autenticar(username='outro')
+        questao = RespostaUsuario.objects.filter(usuario=self.user).first().questao
+        RespostaUsuario.objects.create(usuario=outro_user, questao=questao, resposta='sim', correta=True)
+
+        self.client.delete('/api/casos/respostas/')
+
+        self.assertEqual(RespostaUsuario.objects.filter(usuario=outro_user).count(), 1)
+
+    def test_reset_sem_autenticacao_retorna_401(self):
+        from rest_framework.test import APIClient
+        anon = APIClient()
+        response = anon.delete('/api/casos/respostas/')
+        self.assertEqual(response.status_code, 401)
+
+    @override_settings(DEBUG=False)
+    def test_reset_indisponivel_fora_do_debug(self):
+        response = self.client.delete('/api/casos/respostas/')
+        self.assertEqual(response.status_code, 404)

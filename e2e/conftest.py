@@ -123,6 +123,30 @@ def logged_in(driver):
 
 
 @pytest.fixture
+def reset_caso(setup_test_user):
+    """Limpa RespostaUsuario do usuário de teste antes de cada teste de estudo."""
+    session = requests_retry_session()
+    try:
+        resp = session.post(
+            f"{API_BASE_URL}/auth/login/",
+            json={"email": TEST_EMAIL, "password": TEST_PASSWORD},
+            timeout=10,
+        )
+        token = resp.json().get("token")
+        if token:
+            session.delete(
+                f"{API_BASE_URL}/casos/respostas/",
+                headers={"Authorization": f"Token {token}"},
+                timeout=10,
+            )
+    except Exception as e:
+        print(f"\nAviso: reset_caso falhou: {e}")
+    finally:
+        session.close()
+    yield
+
+
+@pytest.fixture
 def clean_driver(driver):
     """Limpa localStorage antes de cada teste e aguarda frontend."""
     max_wait = 60
