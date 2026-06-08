@@ -205,25 +205,359 @@
       "descricao": "Algoritmo de conversão de sedativos analgésicos",
       "data_criacao": "2026-05-09T14:00:00Z",
       "conteudo": {
-        "tipo": "grupos",
-        "grupos": [
+        "id": "algoritmo",
+        "texto": "Algoritmo de conversão de sedativos e analgésicos — UTIP",
+        "cor": "#1B6FD8",
+        "filhos": [
           {
-            "id": "sedativos",
-            "label": "Sedativos",
-            "color": "#1B6FD8",
-            "drogas": ["Midazolan Contínua", "Lorazepam"]
+            "id": "midazolam",
+            "texto": "Midazolam contínuo",
+            "cor": "#1B6FD8",
+            "filhos": [
+              {
+                "id": "midaz_conv",
+                "texto": "Converter para Diazepam enteral",
+                "cor": "#1B6FD8",
+                "filhos": [
+                  {
+                    "id": "midaz_equiv",
+                    "texto": "Equivalência\n1 mg Midazolam IV = 2,5–5 mg Diazepam VO",
+                    "cor": "#1B6FD8",
+                    "pill": true,
+                    "filhos": []
+                  },
+                  {
+                    "id": "midaz_calc",
+                    "texto": "Cálculo\nDose Diazepam/dia = Dose MDZ × Peso × 0,6",
+                    "cor": "#1B6FD8",
+                    "filhos": [
+                      {
+                        "id": "midaz_ex",
+                        "texto": "Exemplo\n10 kg + 2,5 mcg/kg/min → 15 mg/dia",
+                        "cor": "#1663BF",
+                        "pill": true,
+                        "filhos": []
+                      }
+                    ]
+                  },
+                  {
+                    "id": "midaz_adm",
+                    "texto": "Administração\n• Fracionar 6/6 h\n• Dose máxima: 10 mg/dose",
+                    "cor": "#1663BF",
+                    "pill": true,
+                    "filhos": []
+                  }
+                ]
+              }
+            ]
           },
           {
-            "id": "analgésicos",
-            "label": "Analgésicos",
-            "color": "#3D3190",
-            "drogas": ["Morfina Contínua", "Fentanil Contínuo"]
+            "id": "lorazepam",
+            "texto": "Lorazepam",
+            "cor": "#1B6FD8",
+            "filhos": [
+              {
+                "id": "loraz_conv",
+                "texto": "Converter para Diazepam enteral",
+                "cor": "#1B6FD8",
+                "filhos": [
+                  {
+                    "id": "loraz_equiv",
+                    "texto": "Equivalência\n1 mg Lorazepam = 2,5–10 mg Diazepam\nConversão inicial: 1 mg Lorazepam = 5 mg Diazepam",
+                    "cor": "#1B6FD8",
+                    "pill": true,
+                    "filhos": []
+                  },
+                  {
+                    "id": "loraz_max",
+                    "texto": "Dose máxima\n• Lorazepam: 4 mg/dose\n• Diazepam: 10 mg/dose",
+                    "cor": "#1663BF",
+                    "pill": true,
+                    "filhos": []
+                  }
+                ]
+              }
+            ]
           },
           {
-            "id": "alfa2",
-            "label": "Alfa-2",
-            "color": "#1A8C8C",
-            "drogas": ["Clonidina Contínua", "Dexamedetomidina"]
+            "id": "morfina",
+            "texto": "Morfina contínua",
+            "cor": "#3D3190",
+            "filhos": [
+              {
+                "id": "morf_enteral",
+                "texto": "Converter para Morfina enteral",
+                "cor": "#3D3190",
+                "filhos": [
+                  {
+                    "id": "morf_equiv",
+                    "texto": "Equivalência\n10 mg Morfina IV = 30 mg Morfina VO",
+                    "cor": "#3D3190",
+                    "pill": true,
+                    "filhos": []
+                  },
+                  {
+                    "id": "morf_calc",
+                    "texto": "Cálculo\nMorfina VO/dia = Dose contínua × Peso × 0,072",
+                    "cor": "#3D3190",
+                    "filhos": [
+                      {
+                        "id": "morf_ex",
+                        "texto": "Exemplo\n15 kg + 12 mcg/kg/h → 13 mg/dia",
+                        "cor": "#2E2570",
+                        "pill": true,
+                        "filhos": []
+                      }
+                    ]
+                  },
+                  {
+                    "id": "morf_adm",
+                    "texto": "Administração\nFracionar 4/4 h",
+                    "cor": "#2E2570",
+                    "pill": true,
+                    "filhos": []
+                  }
+                ]
+              },
+              {
+                "id": "morf_metadona",
+                "texto": "Converter para Metadona oral",
+                "cor": "#3D3190",
+                "filhos": [
+                  {
+                    "id": "meta_equiv",
+                    "texto": "Equivalência\n• 10 mg Morfina IV/SC = 20 mg Metadona VO\n• 10 mg Morfina VO = 6,7 mg Metadona VO",
+                    "cor": "#3D3190",
+                    "pill": true,
+                    "filhos": []
+                  },
+                  {
+                    "id": "meta_calc",
+                    "texto": "Cálculo\nMetadona/dia = Dose Morfina × Peso × 0,048",
+                    "cor": "#3D3190",
+                    "filhos": [
+                      {
+                        "id": "meta_ex",
+                        "texto": "Exemplo\n12 kg + 14 mcg/kg/h → 8 mg/dia",
+                        "cor": "#2E2570",
+                        "pill": true,
+                        "filhos": []
+                      }
+                    ]
+                  },
+                  {
+                    "id": "meta_desmame",
+                    "texto": "Desmame",
+                    "cor": "#3D3190",
+                    "filhos": [
+                      {
+                        "id": "meta_d1",
+                        "texto": "D1\n• Metadona 50%\n• Sem reduzir Morfina",
+                        "cor": "#2E2570",
+                        "pill": true,
+                        "filhos": []
+                      },
+                      {
+                        "id": "meta_d2",
+                        "texto": "D2\nMetadona 100%",
+                        "cor": "#2E2570",
+                        "pill": true,
+                        "filhos": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "fentanil",
+            "texto": "Fentanil contínuo",
+            "cor": "#3D3190",
+            "filhos": [
+              {
+                "id": "fent_enteral",
+                "texto": "Converter para Morfina enteral",
+                "cor": "#3D3190",
+                "filhos": [
+                  {
+                    "id": "fent_equiv",
+                    "texto": "Equivalência\n1 mcg/kg/h Fentanil = 0,05 mg/kg/dia Morfina",
+                    "cor": "#3D3190",
+                    "pill": true,
+                    "filhos": []
+                  },
+                  {
+                    "id": "fent_calc",
+                    "texto": "Cálculo\nMorfina VO/dia = Dose Fentanil × Peso × 1,8",
+                    "cor": "#3D3190",
+                    "filhos": [
+                      {
+                        "id": "fent_ex",
+                        "texto": "Exemplo\n10 kg + 1 mcg/kg/h → 18 mg/dia",
+                        "cor": "#2E2570",
+                        "pill": true,
+                        "filhos": []
+                      }
+                    ]
+                  },
+                  {
+                    "id": "fent_adm",
+                    "texto": "Administração\nFracionar 4/4 h",
+                    "cor": "#2E2570",
+                    "pill": true,
+                    "filhos": []
+                  }
+                ]
+              },
+              {
+                "id": "fent_morf",
+                "texto": "Converter para Morfina contínua",
+                "cor": "#3D3190",
+                "filhos": [
+                  {
+                    "id": "fent_morf_equiv",
+                    "texto": "Equivalência\nFentanil × 5",
+                    "cor": "#3D3190",
+                    "filhos": [
+                      {
+                        "id": "fent_morf_ex",
+                        "texto": "Exemplo\nFentanil 2 mcg/kg/h → Morfina 10 mcg/kg/h",
+                        "cor": "#2E2570",
+                        "pill": true,
+                        "filhos": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "clonidina",
+            "texto": "Clonidina contínua",
+            "cor": "#1A8C8C",
+            "filhos": [
+              {
+                "id": "clon_conv",
+                "texto": "Converter para Clonidina enteral",
+                "cor": "#1A8C8C",
+                "filhos": [
+                  {
+                    "id": "clon_reducao",
+                    "texto": "Redução inicial\nReduzir 1 mcg/kg/h a cada 12 h",
+                    "cor": "#1A8C8C",
+                    "filhos": [
+                      {
+                        "id": "clon_atingir",
+                        "texto": "Quando atingir 1 mcg/kg/h contínuo",
+                        "cor": "#1A8C8C",
+                        "filhos": [
+                          {
+                            "id": "clon_oral",
+                            "texto": "Após 12 h — Iniciar Clonidina VO\n5 mcg/kg/dose 6/6 h",
+                            "cor": "#1A8C8C",
+                            "filhos": [
+                              {
+                                "id": "clon_suspender",
+                                "texto": "Após 1ª dose oral\nSuspender infusão contínua",
+                                "cor": "#137A7A",
+                                "pill": true,
+                                "filhos": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "clon_desmame",
+                "texto": "Desmame VO\nReduzir 1 mcg/kg/dose a cada 24 h",
+                "cor": "#1A8C8C",
+                "filhos": [
+                  {
+                    "id": "clon_espac",
+                    "texto": "Quando atingir 1 mcg/kg 6/6 h — Espaçar intervalos\n• 8/8 h → 12/12 h → 24/24 h → Suspender",
+                    "cor": "#137A7A",
+                    "pill": true,
+                    "filhos": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "dexmed",
+            "texto": "Dexmedetomidina",
+            "cor": "#1A8C8C",
+            "filhos": [
+              {
+                "id": "dex_conv",
+                "texto": "Converter para Clonidina enteral",
+                "cor": "#1A8C8C",
+                "filhos": [
+                  {
+                    "id": "dex_calc",
+                    "texto": "Cálculo\nDose Clonidina = 5 × dose da Dexmedetomidina",
+                    "cor": "#1A8C8C",
+                    "filhos": [
+                      {
+                        "id": "dex_ex",
+                        "texto": "Exemplo\nDex 0,7 mcg/kg/h → Clonidina 3,5 mcg/kg/dose",
+                        "cor": "#137A7A",
+                        "pill": true,
+                        "filhos": []
+                      }
+                    ]
+                  },
+                  {
+                    "id": "dex_adm",
+                    "texto": "Administração\nClonidina 6/6 h",
+                    "cor": "#1A8C8C",
+                    "filhos": [
+                      {
+                        "id": "dex_d2",
+                        "texto": "Após 2ª dose de Clonidina\nReduzir Dexmedetomidina em 50%",
+                        "cor": "#1A8C8C",
+                        "filhos": [
+                          {
+                            "id": "dex_d3",
+                            "texto": "Após 3ª dose de Clonidina\nSuspender Dexmedetomidina",
+                            "cor": "#137A7A",
+                            "pill": true,
+                            "filhos": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "id": "dex_max",
+                    "texto": "Dose máxima de Clonidina VO\n200 mcg",
+                    "cor": "#137A7A",
+                    "pill": true,
+                    "filhos": []
+                  }
+                ]
+              },
+              {
+                "id": "dex_prosseguir",
+                "texto": "Prosseguir com desmame da Clonidina",
+                "cor": "#137A7A",
+                "pill": true,
+                "filhos": []
+              }
+            ]
+          },
+          {
+            "id": "outras",
+            "texto": "Outras conversões\n• Sufentanil → Metadona\n• Fentanil → Remifentanil",
+            "cor": "#5A6A7A",
+            "pill": true,
+            "filhos": []
           }
         ]
       }
