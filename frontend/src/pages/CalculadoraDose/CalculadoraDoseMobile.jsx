@@ -3,13 +3,14 @@ import TopBar from '../../components/TopBar';
 import { fetchMedicamentos, fetchMedicamento, calcularDose, fetchConversoes, calcularConversao } from '../../api/calculadora';
 import './CalculadoraDoseMobile.css';
 
-const FAVS_KEY = 'calc_favs';
+const FAVS_KEY      = 'calc_favs';
+const CONV_FAVS_KEY = 'calc_conv_favs';
 
 const PALETTE = ['#1B5DCA', '#504FA8', '#2BA880', '#D58B02', '#D94F4F', '#7C3AED'];
 const medColor = (id) => PALETTE[id % PALETTE.length];
 
 const fmt = (n) => Number(n) % 1 === 0 ? Number(n) : Number(n).toFixed(2);
-const UNIDADE = { ml: 'mL', gotas: 'gotas' };
+const UNIDADE = { ml: 'mL', gotas: 'gotas', comprimido: 'comprimido(s)' };
 
 function IcoPill({ color = 'white' }) {
     return (
@@ -46,6 +47,7 @@ const CalculadoraDoseMobile = ({ navegar }) => {
     const [loadingMeds, setLoadingMeds]   = useState(true);
     const [errorMeds, setErrorMeds]       = useState(null);
     const [favs, setFavs]                 = useState(() => JSON.parse(localStorage.getItem(FAVS_KEY) || '[]'));
+    const [convFavs, setConvFavs]         = useState(() => JSON.parse(localStorage.getItem(CONV_FAVS_KEY) || '[]'));
     const [selectedMed, setSelectedMed]   = useState(null);
     const [conversoes, setConversoes]     = useState([]);
     const [loadingConv, setLoadingConv]   = useState(true);
@@ -82,6 +84,12 @@ const CalculadoraDoseMobile = ({ navegar }) => {
         const updated = favs.includes(id) ? favs.filter(f => f !== id) : [...favs, id];
         setFavs(updated);
         localStorage.setItem(FAVS_KEY, JSON.stringify(updated));
+    };
+
+    const toggleConvFav = (id) => {
+        const updated = convFavs.includes(id) ? convFavs.filter(f => f !== id) : [...convFavs, id];
+        setConvFavs(updated);
+        localStorage.setItem(CONV_FAVS_KEY, JSON.stringify(updated));
     };
 
     const selectMed = (med) => {
@@ -168,14 +176,18 @@ const CalculadoraDoseMobile = ({ navegar }) => {
     const precisaPeso = selectedConversao?.tipo === 'peso';
     const podeConverter = selectedConversao && doseConvNum > 0 && (!precisaPeso || pesoConvNum > 0);
 
-    const origens = [];
+    const origensRaw = [];
     const seen = new Set();
     for (const c of conversoes) {
         if (!seen.has(c.medicamento_origem)) {
             seen.add(c.medicamento_origem);
-            origens.push({ id: c.medicamento_origem, nome: c.medicamento_origem_nome });
+            origensRaw.push({ id: c.medicamento_origem, nome: c.medicamento_origem_nome });
         }
     }
+    const origens = [
+        ...origensRaw.filter(m => convFavs.includes(m.id)),
+        ...origensRaw.filter(m => !convFavs.includes(m.id)),
+    ];
 
     if (tab === 'conversao') {
         if (!medOrigem) {
@@ -206,7 +218,13 @@ const CalculadoraDoseMobile = ({ navegar }) => {
                                             <path d="M7 16V4m0 0L3 8m4-4l4 4"/><path d="M17 8v12m0 0l4-4m-4 4l-4-4"/>
                                         </svg>
                                     </div>
-                                    <span className="protocol-name" style={{ textAlign: 'left' }}>{med.nome}</span>
+                                    <span className="protocol-name" style={{ textAlign: 'left', flex: 1 }}>{med.nome}</span>
+                                    <div
+                                        onClick={e => { e.stopPropagation(); toggleConvFav(med.id); }}
+                                        style={{ padding: '8px', display: 'flex', alignItems: 'center', fontSize: '20px', color: convFavs.includes(med.id) ? '#F5A623' : '#ccc', transition: 'color 0.2s' }}
+                                    >
+                                        {convFavs.includes(med.id) ? '★' : '☆'}
+                                    </div>
                                 </button>
                             ))}
                         </div>

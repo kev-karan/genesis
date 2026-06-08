@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { fetchMedicamentos, fetchMedicamento, calcularDose, fetchConversoes, calcularConversao } from '../../api/calculadora'
 
-const RECENTS_KEY = 'calc_recents'
-const FAVS_KEY    = 'calc_favs'
+const RECENTS_KEY     = 'calc_recents'
+const FAVS_KEY        = 'calc_favs'
+const CONV_FAVS_KEY   = 'calc_conv_favs'
 
 const PALETTE = ['#1B5DCA', '#504FA8', '#2BA880', '#D58B02', '#D94F4F', '#7C3AED']
 const medColor = (id) => PALETTE[id % PALETTE.length]
@@ -382,7 +383,7 @@ function TabPill({ label, active, onClick }) {
   )
 }
 
-function ConversaoHub({ conversoes, loading, error, onSelect }) {
+function ConversaoHub({ conversoes, loading, error, onSelect, convFavs, onToggleConvFav }) {
   if (loading) return <div className="pd-card" style={{ padding: 24 }}><p style={{ color: '#6B7A8D', fontSize: 14, margin: 0 }}>Carregando conversões...</p></div>
   if (error)   return <div className="pd-card" style={{ padding: 24 }}><p style={{ color: '#D94F4F', fontSize: 14, margin: 0 }}>{error}</p></div>
 
@@ -395,11 +396,15 @@ function ConversaoHub({ conversoes, loading, error, onSelect }) {
     }
   }
 
+  const favList = origens.filter(m => convFavs.includes(m.id))
+  const outros  = origens.filter(m => !convFavs.includes(m.id))
+  const ordered = [...favList, ...outros]
+
   return (
     <div className="pd-card" style={{ padding: 24, flex: 'none' }}>
-      {origens.length === 0 && <p style={{ color: '#6B7A8D', fontSize: 14, margin: 0 }}>Nenhuma conversão cadastrada.</p>}
+      {ordered.length === 0 && <p style={{ color: '#6B7A8D', fontSize: 14, margin: 0 }}>Nenhuma conversão cadastrada.</p>}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 12 }}>
-        {origens.map(med => (
+        {ordered.map(med => (
           <button
             key={med.id}
             className="protocol-card em-hub-card"
@@ -409,7 +414,13 @@ function ConversaoHub({ conversoes, loading, error, onSelect }) {
             <div className="protocol-icon" style={{ background: medColor(med.id) }}>
               <IcoConversao size={20} color="white" />
             </div>
-            <span className="protocol-name">{med.nome}</span>
+            <span className="protocol-name" style={{ flex: 1 }}>{med.nome}</span>
+            <div
+              onClick={e => { e.stopPropagation(); onToggleConvFav(med.id) }}
+              style={{ padding: 8, display: 'flex', alignItems: 'center' }}
+            >
+              <IcoStar filled={convFavs.includes(med.id)} />
+            </div>
           </button>
         ))}
       </div>
@@ -566,10 +577,12 @@ export default function CalculadoraShell({ navegar }) {
   const [medOrigem, setMedOrigem]       = useState(null)
   const [recents, setRecents]           = useState([])
   const [favs, setFavs]                 = useState([])
+  const [convFavs, setConvFavs]         = useState([])
 
   useEffect(() => {
     setRecents(JSON.parse(localStorage.getItem(RECENTS_KEY) || '[]'))
     setFavs(JSON.parse(localStorage.getItem(FAVS_KEY) || '[]'))
+    setConvFavs(JSON.parse(localStorage.getItem(CONV_FAVS_KEY) || '[]'))
   }, [])
 
   useEffect(() => {
@@ -593,6 +606,12 @@ export default function CalculadoraShell({ navegar }) {
     const updated = favs.includes(id) ? favs.filter(f => f !== id) : [...favs, id]
     setFavs(updated)
     localStorage.setItem(FAVS_KEY, JSON.stringify(updated))
+  }
+
+  const toggleConvFav = (id) => {
+    const updated = convFavs.includes(id) ? convFavs.filter(f => f !== id) : [...convFavs, id]
+    setConvFavs(updated)
+    localStorage.setItem(CONV_FAVS_KEY, JSON.stringify(updated))
   }
 
   const subtitle = tab === 'conversao'
@@ -640,6 +659,8 @@ export default function CalculadoraShell({ navegar }) {
                 loading={loadingConv}
                 error={errorConv}
                 onSelect={setMedOrigem}
+                convFavs={convFavs}
+                onToggleConvFav={toggleConvFav}
               />
             ) : (
               <ConversaoForm
@@ -676,11 +697,15 @@ export default function CalculadoraShell({ navegar }) {
 
           <ToggleSidebarCard title="Favoritos" icon={<IcoStar filled />}>
             <div className="pd-sb-list">
-              {favs.length === 0
-                ? <p style={{ fontSize: 12, color: '#999', padding: '10px 14px' }}>Nenhum favorito ainda</p>
-                : medicamentos.filter(m => favs.includes(m.id)).map((med, i) => (
+              {favs.length === 0 && convFavs.length === 0 && (
+                <p style={{ fontSize: 12, color: '#999', padding: '10px 14px' }}>Nenhum favorito ainda</p>
+              )}
+              {favs.length > 0 && (
+                <>
+                  <p style={{ fontSize: 11, fontWeight: 600, color: '#9CA3AF', padding: '8px 14px 4px', margin: 0, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Doses</p>
+                  {medicamentos.filter(m => favs.includes(m.id)).map((med, i) => (
                     <button key={i} className="pd-sb-item pd-sb-item-btn"
-                      onClick={() => setSelectedMed(med)}
+                      onClick={() => { setTab('dose'); setSelectedMed(med) }}
                       style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px' }}
                     >
                       <div style={{ width: 32, height: 32, borderRadius: 6, background: medColor(med.id), display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -689,8 +714,29 @@ export default function CalculadoraShell({ navegar }) {
                       <p className="pd-sb-item-label" style={{ flex: 1 }}>{med.nome}</p>
                       <IcoStar filled />
                     </button>
-                  ))
-              }
+                  ))}
+                </>
+              )}
+              {convFavs.length > 0 && (
+                <>
+                  <p style={{ fontSize: 11, fontWeight: 600, color: '#9CA3AF', padding: '8px 14px 4px', margin: 0, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Conversões</p>
+                  {conversoes
+                    .filter((c, i, arr) => convFavs.includes(c.medicamento_origem) && arr.findIndex(x => x.medicamento_origem === c.medicamento_origem) === i)
+                    .map((c, i) => (
+                      <button key={i} className="pd-sb-item pd-sb-item-btn"
+                        onClick={() => { setTab('conversao'); setMedOrigem({ id: c.medicamento_origem, nome: c.medicamento_origem_nome }) }}
+                        style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px' }}
+                      >
+                        <div style={{ width: 32, height: 32, borderRadius: 6, background: medColor(c.medicamento_origem), display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <IcoConversao size={16} color="white" />
+                        </div>
+                        <p className="pd-sb-item-label" style={{ flex: 1 }}>{c.medicamento_origem_nome}</p>
+                        <IcoStar filled />
+                      </button>
+                    ))
+                  }
+                </>
+              )}
             </div>
           </ToggleSidebarCard>
 
