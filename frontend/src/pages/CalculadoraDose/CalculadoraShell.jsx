@@ -597,7 +597,7 @@ export default function CalculadoraShell({ navegar }) {
   }, [])
 
   const handleResult = (r) => {
-    const updated = [r, ...recents].slice(0, 10)
+    const updated = [r, ...recents].slice(0, 5)
     setRecents(updated)
     localStorage.setItem(RECENTS_KEY, JSON.stringify(updated))
   }
