@@ -96,6 +96,18 @@ class TestCalculos(SimpleTestCase):
         self.assertEqual(resultado["volume"], 40.0)
         self.assertEqual(resultado["unidade_volume"], "gotas")
 
+    def test_calcular_dose_completa_comprimido(self):
+        resultado = calcular_dose_completa(
+            peso_kg=20,
+            dose_mg_por_kg=Decimal("0.1"),
+            dose_maxima_mg=None,
+            concentracao_mg_por_ml=Decimal("5"),
+            apresentacao="comprimido",
+        )
+        self.assertEqual(resultado["dose_final_mg"], Decimal("2.0"))
+        self.assertAlmostEqual(float(resultado["volume"]), 0.4, places=5)
+        self.assertEqual(resultado["unidade_volume"], "comprimido")
+
 
 class TestCalculadoraAPI(TestCase):
     def setUp(self):
@@ -182,6 +194,21 @@ class TestCalculadoraAPI(TestCase):
         self.assertEqual(resposta.status_code, 200)
         self.assertTrue(resposta.data["dose_limitada"])
         self.assertEqual(resposta.data["dose_final_mg"], 500)
+
+    def test_calcular_api_comprimido(self):
+        apresentacao_comp = ApresentacaoMedicamento.objects.create(
+            medicamento=self.medicamento,
+            concentracao_mg_por_ml=Decimal("5"),
+            apresentacao="comprimido",
+        )
+        dados = {
+            "peso_kg": 20,
+            "dose_referencia_id": self.dose_ref.id,
+            "apresentacao_id": apresentacao_comp.id,
+        }
+        resposta = self.client.post(self.url, dados, format="json")
+        self.assertEqual(resposta.status_code, 200)
+        self.assertEqual(resposta.data["unidade_volume"], "comprimido")
 
 
 class TestMedicamentosAPI(TestCase):
