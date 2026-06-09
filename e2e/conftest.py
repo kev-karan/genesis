@@ -147,6 +147,30 @@ def reset_caso(setup_test_user):
 
 
 @pytest.fixture
+def reset_favorites(setup_test_user):
+    """Limpa todos os Favorito do usuário de teste antes de cada teste."""
+    session = requests_retry_session()
+    try:
+        resp = session.post(
+            f"{API_BASE_URL}/auth/login/",
+            json={"email": TEST_EMAIL, "password": TEST_PASSWORD},
+            timeout=10,
+        )
+        token = resp.json().get("token")
+        if token:
+            session.delete(
+                f"{API_BASE_URL}/favoritos/reset/",
+                headers={"Authorization": f"Token {token}"},
+                timeout=10,
+            )
+    except Exception as e:
+        print(f"\nAviso: reset_favorites falhou: {e}")
+    finally:
+        session.close()
+    yield
+
+
+@pytest.fixture
 def clean_driver(driver):
     """Limpa localStorage antes de cada teste e aguarda frontend."""
     max_wait = 60

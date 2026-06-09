@@ -63,7 +63,7 @@ def _wait_for_hub(driver, timeout=10):
 
 
 class TestFavoritos:
-    def test_favoritar_fluxograma_emergencia(self, logged_in):
+    def test_favoritar_fluxograma_emergencia(self, logged_in, reset_favorites):
         driver = logged_in
         _abrir_emergencia(driver)
 
@@ -89,7 +89,7 @@ class TestFavoritos:
         _click_star(driver, index=0)
         time.sleep(1)
 
-    def test_desfavoritar_fluxograma(self, logged_in):
+    def test_desfavoritar_fluxograma(self, logged_in, reset_favorites):
         driver = logged_in
         _abrir_emergencia(driver)
 
@@ -122,7 +122,7 @@ class TestFavoritos:
             f"'{segundo_nome}' ainda está em primeiro após desfavoritar"
         )
 
-    def test_favorito_persiste_entre_sessoes(self, logged_in):
+    def test_favorito_persiste_entre_sessoes(self, logged_in, reset_favorites):
         driver = logged_in
         _abrir_emergencia(driver)
 

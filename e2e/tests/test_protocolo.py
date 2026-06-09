@@ -110,7 +110,7 @@ class TestProtocolo:
         assert emergencia_page.is_page_loaded(), \
             "Não voltou para Emergência"
 
-    def test_favoritar_dentro_protocolo(self, logged_in):
+    def test_favoritar_dentro_protocolo(self, logged_in, reset_favorites):
         """Favorita protocolo no hub, entra nele, verifica sidebar Favoritos."""
         driver = logged_in
         from selenium.webdriver.common.by import By

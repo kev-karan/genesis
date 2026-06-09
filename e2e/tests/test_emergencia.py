@@ -32,8 +32,9 @@ class TestEmergencia:
         count = emergencia_page.get_protocol_count()
         assert count > 0, "Nenhum protocolo disponível"
 
-    def test_favoritar_protocolo(self, logged_in):
+    def test_favoritar_protocolo(self, logged_in, reset_favorites):
         """Test: Clicar na estrela de um protocolo o favorita."""
+        from selenium.webdriver.common.by import By
         driver = logged_in
 
         # Navega para Modo Emergência
@@ -50,16 +51,19 @@ class TestEmergencia:
         assert emergencia_page.is_page_loaded(), \
             "Modo Emergência não carregou"
 
-        # Pega primeiro card
-        card = emergencia_page.get_first_protocol_card()
-        assert card is not None, "Nenhum card encontrado"
+        cards = driver.find_elements(By.CSS_SELECTOR, '.proto-desktop .protocol-card.em-hub-card')
+        assert len(cards) > 0, "Nenhum card encontrado"
 
-        # Tenta favoritar
-        try:
-            emergencia_page.toggle_favorite_on_card(card)
+        star_div = cards[0].find_elements(By.TAG_NAME, 'div')[-1]
+        driver.execute_script('arguments[0].click()', star_div)
+        time.sleep(1)
+
+        # Cleanup
+        cards = driver.find_elements(By.CSS_SELECTOR, '.proto-desktop .protocol-card.em-hub-card')
+        if cards:
+            star_div = cards[0].find_elements(By.TAG_NAME, 'div')[-1]
+            driver.execute_script('arguments[0].click()', star_div)
             time.sleep(1)
-        except Exception as e:
-            pytest.skip(f"Não conseguiu favoritar: {e}")
 
     def test_selecionar_protocolo(self, logged_in):
         """Test: Clicar em um protocolo navega para sua página."""
