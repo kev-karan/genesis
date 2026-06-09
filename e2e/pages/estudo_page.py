@@ -122,6 +122,20 @@ class EstudoPage:
         except _SELENIUM_EXC:
             return False
 
+    def click_confirmar_if_available(self):
+        """Clica em Confirmar se presente e habilitado (multipla_escolha); no-op rápido para binária."""
+        try:
+            self.driver.implicitly_wait(2)
+            btn = self.driver.find_element(
+                By.XPATH, "//button[text()='Confirmar' and not(@disabled)]"
+            )
+            btn.click()
+            return True
+        except _SELENIUM_EXC:
+            return False
+        finally:
+            self.driver.implicitly_wait(10)
+
     def has_feedback_correto(self):
         try:
             self.wait.until(EC.presence_of_element_located((
