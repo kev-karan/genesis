@@ -44,6 +44,13 @@ class ContaPage:
             return False
 
     def is_bottom_nav_conta_active(self):
+        # Desktop: BottomNav oculto; verifica pelo título da página
+        try:
+            self.driver.find_element(By.XPATH, "//*[contains(text(),'Minha Conta')]")
+            return True
+        except _SELENIUM_EXC:
+            pass
+        # Fallback mobile
         try:
             conta_btn = self.driver.find_element(By.CSS_SELECTOR, '.nav-btn[aria-label="Minha Conta"]')
             svg = conta_btn.find_element(By.TAG_NAME, 'svg')
@@ -53,17 +60,26 @@ class ContaPage:
             return False
 
     def click_home_nav(self):
-        try:
-            btn = self.driver.find_element(By.CSS_SELECTOR, '.nav-btn[aria-label="Home"]')
-            btn.click()
-            return True
-        except _SELENIUM_EXC:
-            return False
+        # Desktop: botão INÍCIO na topbar
+        for locator in [
+            (By.XPATH, "//button[contains(., 'INÍCIO')]"),
+            (By.CSS_SELECTOR, '.nav-btn[aria-label="Home"]'),
+        ]:
+            try:
+                btn = self.driver.find_element(*locator)
+                btn.click()
+                return True
+            except _SELENIUM_EXC:
+                pass
+        return False
 
     def click_bottom_nav_conta(self):
-        try:
-            btn = self.driver.find_element(By.CSS_SELECTOR, '.nav-btn[aria-label="Minha Conta"]')
-            btn.click()
-            return True
-        except _SELENIUM_EXC:
-            return False
+        # Desktop: .pd-user-btn; mobile: BottomNav (oculto em desktop)
+        for selector in ['.pd-user-btn', '.nav-btn[aria-label="Minha Conta"]']:
+            try:
+                btn = self.driver.find_element(By.CSS_SELECTOR, selector)
+                btn.click()
+                return True
+            except _SELENIUM_EXC:
+                pass
+        return False

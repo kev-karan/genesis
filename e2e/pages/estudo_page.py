@@ -76,7 +76,7 @@ class EstudoPage:
             return False
 
     def get_current_question_text(self):
-        # Desktop QuestoesMain: <p> direct child of .pd-card (no CSS class)
+        # Desktop QuestoesMain: <p> filho direto de .pd-card (sem classe CSS)
         for selector in ['.pd-main .pd-card > p', '.med-question']:
             try:
                 el = self.driver.find_element(By.CSS_SELECTOR, selector)
@@ -87,7 +87,7 @@ class EstudoPage:
         return None
 
     def click_first_multipla_escolha_opcao(self):
-        # Desktop: option buttons are grandchildren of .pd-card through a div
+        # Desktop: botões de opção são netos de .pd-card via div intermediário
         for selector in ['.pd-main .pd-card > div > button', '.med-options .med-btn--outline']:
             try:
                 btn = self.driver.find_element(By.CSS_SELECTOR, selector)
@@ -166,7 +166,7 @@ class EstudoPage:
             return False
 
     def click_multipla_opcao_by_text(self, text):
-        # Desktop: buttons inside .pd-main with matching text
+        # Desktop: botão com texto correspondente dentro de .pd-main
         try:
             btn = self.driver.find_element(
                 By.XPATH, f"//div[contains(@class,'pd-main')]//button[contains(.,'{text}')]"
@@ -175,7 +175,7 @@ class EstudoPage:
             return True
         except _SELENIUM_EXC:
             pass
-        # Mobile fallback
+        # Fallback mobile
         try:
             btns = self.driver.find_elements(By.CSS_SELECTOR, '.med-options .med-btn--outline')
             for b in btns:
