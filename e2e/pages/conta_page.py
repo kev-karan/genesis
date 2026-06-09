@@ -37,7 +37,7 @@ class ContaPage:
 
     def click_logout(self):
         try:
-            btn = self.driver.find_element(By.XPATH, "//button[contains(text(), 'Sair')]")
+            btn = self.driver.find_element(By.XPATH, "//button[contains(., 'Sair')]")
             btn.click()
             return True
         except _SELENIUM_EXC:

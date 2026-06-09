@@ -10,7 +10,7 @@ class TestEstudo:
         driver = logged_in
 
         try:
-            estudo_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'MODO DE ESTUDO')]")
+            estudo_btn = driver.find_element(By.XPATH, "//button[contains(., 'MODO DE ESTUDO')]")
             estudo_btn.click()
         except:
             pytest.skip("Botão Modo de Estudo não encontrado na topbar")
@@ -26,7 +26,7 @@ class TestEstudo:
         driver = logged_in
 
         try:
-            estudo_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'MODO DE ESTUDO')]")
+            estudo_btn = driver.find_element(By.XPATH, "//button[contains(., 'MODO DE ESTUDO')]")
             estudo_btn.click()
         except:
             pytest.skip("Botão Modo de Estudo não encontrado na topbar")
@@ -46,7 +46,7 @@ class TestEstudo:
         driver = logged_in
 
         try:
-            estudo_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'MODO DE ESTUDO')]")
+            estudo_btn = driver.find_element(By.XPATH, "//button[contains(., 'MODO DE ESTUDO')]")
             estudo_btn.click()
         except:
             pytest.skip("Botão Modo de Estudo não encontrado na topbar")
@@ -77,7 +77,7 @@ class TestEstudo:
         driver = logged_in
 
         try:
-            estudo_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'MODO DE ESTUDO')]")
+            estudo_btn = driver.find_element(By.XPATH, "//button[contains(., 'MODO DE ESTUDO')]")
             estudo_btn.click()
         except:
             pytest.skip("Botão Modo de Estudo não encontrado na topbar")
@@ -118,7 +118,7 @@ class TestEstudo:
         driver = logged_in
 
         try:
-            estudo_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'MODO DE ESTUDO')]")
+            estudo_btn = driver.find_element(By.XPATH, "//button[contains(., 'MODO DE ESTUDO')]")
             estudo_btn.click()
         except:
             pytest.skip("Botão Modo de Estudo não encontrado na topbar")
@@ -157,7 +157,7 @@ class TestEstudo:
         driver = logged_in
 
         try:
-            estudo_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'MODO DE ESTUDO')]")
+            estudo_btn = driver.find_element(By.XPATH, "//button[contains(., 'MODO DE ESTUDO')]")
             estudo_btn.click()
         except:
             pytest.skip("Botão Modo de Estudo não encontrado na topbar")
@@ -196,7 +196,7 @@ class TestEstudo:
         driver = logged_in
 
         try:
-            estudo_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'MODO DE ESTUDO')]")
+            estudo_btn = driver.find_element(By.XPATH, "//button[contains(., 'MODO DE ESTUDO')]")
             estudo_btn.click()
         except:
             pytest.skip("Botão Modo de Estudo não encontrado na topbar")
@@ -234,7 +234,7 @@ class TestEstudo:
             pytest.skip("Feedback não apareceu")
 
         try:
-            prox_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'Próxima') or contains(text(), 'Concluir')]")
+            prox_btn = driver.find_element(By.XPATH, "//button[contains(., 'Próxima') or contains(., 'Concluir')]")
             prox_btn.click()
             time.sleep(2)
         except:
@@ -253,7 +253,7 @@ class TestEstudo:
         driver = logged_in
 
         try:
-            driver.find_element(By.XPATH, "//button[contains(text(), 'MODO DE ESTUDO')]").click()
+            driver.find_element(By.XPATH, "//button[contains(., 'MODO DE ESTUDO')]").click()
         except Exception:
             pytest.skip("Botão Modo de Estudo não encontrado na topbar")
         time.sleep(2)

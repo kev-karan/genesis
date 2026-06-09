@@ -53,7 +53,7 @@ class EstudoPage:
 
     def click_iniciar_caso(self):
         try:
-            btn = self.driver.find_element(By.XPATH, "//button[contains(text(), 'Iniciar Caso')]")
+            btn = self.driver.find_element(By.XPATH, "//button[contains(., 'Iniciar Caso')]")
             btn.click()
             return True
         except _SELENIUM_EXC:
@@ -61,7 +61,7 @@ class EstudoPage:
 
     def click_iniciar_questoes(self):
         try:
-            btn = self.driver.find_element(By.XPATH, "//button[contains(text(), 'Iniciar questões')]")
+            btn = self.driver.find_element(By.XPATH, "//button[contains(., 'Iniciar questões')]")
             btn.click()
             return True
         except _SELENIUM_EXC:
@@ -123,7 +123,7 @@ class EstudoPage:
 
     def click_proxima_pergunta(self):
         try:
-            btn = self.driver.find_element(By.XPATH, "//button[contains(text(), 'Próxima')]")
+            btn = self.driver.find_element(By.XPATH, "//button[contains(., 'Próxima')]")
             btn.click()
             return True
         except _SELENIUM_EXC:
@@ -160,7 +160,7 @@ class EstudoPage:
         try:
             btn = self.driver.find_element(
                 By.XPATH,
-                "//button[contains(text(), 'Próxima') or contains(text(), 'Concluir')]"
+                "//button[contains(., 'Próxima') or contains(., 'Concluir')]"
             )
             btn.click()
             return True
@@ -170,7 +170,7 @@ class EstudoPage:
     def has_conclusao_button(self):
         try:
             self.driver.find_element(
-                By.XPATH, "//button[contains(text(), 'Voltar ao Modo Estudo')]"
+                By.XPATH, "//button[contains(., 'Voltar ao Modo Estudo')]"
             )
             return True
         except _SELENIUM_EXC:

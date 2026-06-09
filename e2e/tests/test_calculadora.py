@@ -7,7 +7,7 @@ from pages.calculadora_page import CalculadoraPage
 
 def _abrir_calculadora(driver):
     try:
-        btn = driver.find_element(By.XPATH, "//button[contains(text(), 'CALCULADORA')]")
+        btn = driver.find_element(By.XPATH, "//button[contains(., 'CALCULADORA')]")
         btn.click()
         return True
     except Exception:
