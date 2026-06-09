@@ -76,19 +76,26 @@ class EstudoPage:
             return False
 
     def get_current_question_text(self):
-        try:
-            question = self.driver.find_element(By.CSS_SELECTOR, '.med-question')
-            return question.text
-        except _SELENIUM_EXC:
-            return None
+        # Desktop QuestoesMain: <p> direct child of .pd-card (no CSS class)
+        for selector in ['.pd-main .pd-card > p', '.med-question']:
+            try:
+                el = self.driver.find_element(By.CSS_SELECTOR, selector)
+                if el.text:
+                    return el.text
+            except _SELENIUM_EXC:
+                pass
+        return None
 
     def click_first_multipla_escolha_opcao(self):
-        try:
-            btn = self.driver.find_element(By.CSS_SELECTOR, '.med-options .med-btn--outline')
-            btn.click()
-            return True
-        except _SELENIUM_EXC:
-            return False
+        # Desktop: option buttons are grandchildren of .pd-card through a div
+        for selector in ['.pd-main .pd-card > div > button', '.med-options .med-btn--outline']:
+            try:
+                btn = self.driver.find_element(By.CSS_SELECTOR, selector)
+                btn.click()
+                return True
+            except _SELENIUM_EXC:
+                pass
+        return False
 
     def click_binary_answer(self, answer):
         try:
@@ -117,14 +124,20 @@ class EstudoPage:
 
     def has_feedback_correto(self):
         try:
-            self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.med-feedback--success')))
+            self.wait.until(EC.presence_of_element_located((
+                By.XPATH,
+                "//*[contains(@class,'med-feedback--success') or contains(text(),'Correto!')]"
+            )))
             return True
         except _SELENIUM_EXC:
             return False
 
     def has_feedback_incorreto(self):
         try:
-            self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.med-feedback--error')))
+            self.wait.until(EC.presence_of_element_located((
+                By.XPATH,
+                "//*[contains(@class,'med-feedback--error') or contains(text(),'Incorreto')]"
+            )))
             return True
         except _SELENIUM_EXC:
             return False
@@ -153,6 +166,16 @@ class EstudoPage:
             return False
 
     def click_multipla_opcao_by_text(self, text):
+        # Desktop: buttons inside .pd-main with matching text
+        try:
+            btn = self.driver.find_element(
+                By.XPATH, f"//div[contains(@class,'pd-main')]//button[contains(.,'{text}')]"
+            )
+            btn.click()
+            return True
+        except _SELENIUM_EXC:
+            pass
+        # Mobile fallback
         try:
             btns = self.driver.find_elements(By.CSS_SELECTOR, '.med-options .med-btn--outline')
             for b in btns:
