@@ -15,14 +15,18 @@ class EstudoPage:
 
     def is_page_loaded(self):
         try:
-            self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.protocol-list, .page-title')))
+            self.wait.until(EC.presence_of_element_located(
+                (By.CSS_SELECTOR, '.proto-desktop .protocol-card.em-hub-card')
+            ))
             return True
         except _SELENIUM_EXC:
             return False
 
     def get_caso_cards(self):
         try:
-            return self.driver.find_elements(By.CSS_SELECTOR, '.protocol-list .protocol-card')
+            return self.driver.find_elements(
+                By.CSS_SELECTOR, '.proto-desktop .protocol-card.em-hub-card'
+            )
         except _SELENIUM_EXC:
             return []
 
@@ -32,15 +36,19 @@ class EstudoPage:
     def select_caso_by_name(self, name):
         cards = self.get_caso_cards()
         for card in cards:
-            if name in card.text:
-                card.click()
+            try:
+                titulo = card.find_element(By.CSS_SELECTOR, '.protocol-name').text
+            except Exception:
+                titulo = card.text
+            if name in titulo:
+                self.driver.execute_script('arguments[0].click()', card)
                 return True
         return False
 
     def select_first_caso(self):
         cards = self.get_caso_cards()
         if cards:
-            cards[0].click()
+            self.driver.execute_script('arguments[0].click()', cards[0])
             return True
         return False
 
