@@ -32,24 +32,22 @@ class TestNav:
         driver = logged_in
 
         try:
-            conta_btn = driver.find_element(By.CSS_SELECTOR, '.nav-btn[aria-label="Minha Conta"]')
-            conta_btn.click()
-        except:
-            pytest.skip("Botão Minha Conta na BottomNav não encontrado")
+            driver.find_element(By.CSS_SELECTOR, '.pd-user-btn').click()
+        except Exception:
+            pytest.skip("Botão Minha Conta não encontrado")
         time.sleep(2)
 
         try:
             WebDriverWait(driver, 5).until(
                 EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Minha Conta')]"))
             )
-        except:
+        except Exception:
             pytest.skip("Minha Conta não carregou após navegação")
 
         try:
-            home_btn = driver.find_element(By.CSS_SELECTOR, '.nav-btn[aria-label="Home"]')
-            home_btn.click()
-        except:
-            pytest.skip("Botão Home na BottomNav não encontrado")
+            driver.find_element(By.XPATH, "//button[contains(., 'INÍCIO')]").click()
+        except Exception:
+            pytest.skip("Botão Home não encontrado")
         time.sleep(2)
 
         home_page = HomePage(driver)
@@ -59,7 +57,7 @@ class TestNav:
         driver = logged_in
 
         try:
-            calc_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'CALCULADORA')]")
+            calc_btn = driver.find_element(By.XPATH, "//button[contains(., 'CALCULADORA')]")
             calc_btn.click()
         except:
             pytest.skip("Botão CALCULADORA na DesktopTopBar não encontrado")
@@ -73,7 +71,7 @@ class TestNav:
             pytest.skip("Calculadora não carregou via DesktopTopBar")
 
         try:
-            emergencia_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'MODO DE EMERGÊNCIA')]")
+            emergencia_btn = driver.find_element(By.XPATH, "//button[contains(., 'MODO DE EMERGÊNCIA')]")
             emergencia_btn.click()
         except:
             pytest.skip("Botão MODO DE EMERGÊNCIA na DesktopTopBar não encontrado")
@@ -87,21 +85,31 @@ class TestNav:
             pytest.skip("Modo Emergência não carregou via DesktopTopBar")
 
         try:
-            estudo_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'MODO DE ESTUDO')]")
+            estudo_btn = driver.find_element(By.XPATH, "//button[contains(., 'MODO DE ESTUDO')]")
             estudo_btn.click()
-        except:
+        except Exception:
             pytest.skip("Botão MODO DE ESTUDO na DesktopTopBar não encontrado")
-        time.sleep(2)
+        time.sleep(1)
+
+        # Sair da emergência exibe modal de confirmação — confirma saída
+        try:
+            sair_btn = WebDriverWait(driver, 3).until(
+                EC.element_to_be_clickable((By.XPATH, "//button[text()='Sair']"))
+            )
+            sair_btn.click()
+            time.sleep(1)
+        except Exception:
+            pass
 
         try:
             WebDriverWait(driver, 5).until(
                 EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Modo de Estudo')]"))
             )
-        except:
+        except Exception:
             pytest.skip("Modo Estudo não carregou via DesktopTopBar")
 
         try:
-            home_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'INÍCIO')]")
+            home_btn = driver.find_element(By.XPATH, "//button[contains(., 'INÍCIO')]")
             home_btn.click()
         except:
             pytest.skip("Botão INÍCIO na DesktopTopBar não encontrado")

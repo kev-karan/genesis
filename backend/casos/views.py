@@ -96,3 +96,13 @@ def raciocinio_caso(request, id):
     passos = PassoRaciocinio.objects.filter(questao__caso_clinico_id=id).order_by('ordem')
     serializer = PassoRaciocinioSerializer(passos, many=True)
     return Response(serializer.data)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def reset_respostas(request):
+    from django.conf import settings
+    if not settings.DEBUG:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    deleted, _ = RespostaUsuario.objects.filter(usuario=request.user).delete()
+    return Response({'deleted': deleted}, status=status.HTTP_200_OK)

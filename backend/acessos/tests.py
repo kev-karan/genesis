@@ -99,8 +99,8 @@ class AcessosRecentesTestCase(AuthenticatedAPITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 0)
 
-    def test_listar_acessos_recentes_max_10(self):
-        for i in range(15):
+    def test_listar_acessos_recentes_max_5(self):
+        for i in range(8):
             fluxo = Fluxograma.objects.create(
                 titulo=f'Protocol {i}',
                 descricao=f'Description {i}',
@@ -111,7 +111,7 @@ class AcessosRecentesTestCase(AuthenticatedAPITestCase):
         response = self.client.get('/api/acessos/recentes/')
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 10)
+        self.assertEqual(len(response.data), 5)
 
     def test_usuario_nao_ve_acessos_de_outro_usuario(self):
         outro_usuario = User.objects.create_user(username='outro', password='pass123')

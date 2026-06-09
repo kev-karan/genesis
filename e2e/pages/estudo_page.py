@@ -15,14 +15,18 @@ class EstudoPage:
 
     def is_page_loaded(self):
         try:
-            self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.protocol-list, .page-title')))
+            self.wait.until(EC.presence_of_element_located(
+                (By.CSS_SELECTOR, '.proto-desktop .protocol-card.em-hub-card')
+            ))
             return True
         except _SELENIUM_EXC:
             return False
 
     def get_caso_cards(self):
         try:
-            return self.driver.find_elements(By.CSS_SELECTOR, '.protocol-list .protocol-card')
+            return self.driver.find_elements(
+                By.CSS_SELECTOR, '.proto-desktop .protocol-card.em-hub-card'
+            )
         except _SELENIUM_EXC:
             return []
 
@@ -32,15 +36,19 @@ class EstudoPage:
     def select_caso_by_name(self, name):
         cards = self.get_caso_cards()
         for card in cards:
-            if name in card.text:
-                card.click()
+            try:
+                titulo = card.find_element(By.CSS_SELECTOR, '.protocol-name').text
+            except Exception:
+                titulo = card.text
+            if name in titulo:
+                self.driver.execute_script('arguments[0].click()', card)
                 return True
         return False
 
     def select_first_caso(self):
         cards = self.get_caso_cards()
         if cards:
-            cards[0].click()
+            self.driver.execute_script('arguments[0].click()', cards[0])
             return True
         return False
 
@@ -53,7 +61,7 @@ class EstudoPage:
 
     def click_iniciar_caso(self):
         try:
-            btn = self.driver.find_element(By.XPATH, "//button[contains(text(), 'Iniciar Caso')]")
+            btn = self.driver.find_element(By.XPATH, "//button[contains(., 'Iniciar Caso')]")
             btn.click()
             return True
         except _SELENIUM_EXC:
@@ -61,26 +69,33 @@ class EstudoPage:
 
     def click_iniciar_questoes(self):
         try:
-            btn = self.driver.find_element(By.XPATH, "//button[contains(text(), 'Iniciar questões')]")
+            btn = self.driver.find_element(By.XPATH, "//button[contains(., 'Iniciar questões')]")
             btn.click()
             return True
         except _SELENIUM_EXC:
             return False
 
     def get_current_question_text(self):
-        try:
-            question = self.driver.find_element(By.CSS_SELECTOR, '.med-question')
-            return question.text
-        except _SELENIUM_EXC:
-            return None
+        # Desktop QuestoesMain: <p> filho direto de .pd-card (sem classe CSS)
+        for selector in ['.pd-main .pd-card > p', '.med-question']:
+            try:
+                el = self.driver.find_element(By.CSS_SELECTOR, selector)
+                if el.text:
+                    return el.text
+            except _SELENIUM_EXC:
+                pass
+        return None
 
     def click_first_multipla_escolha_opcao(self):
-        try:
-            btn = self.driver.find_element(By.CSS_SELECTOR, '.med-options .med-btn--outline')
-            btn.click()
-            return True
-        except _SELENIUM_EXC:
-            return False
+        # Desktop: botões de opção são netos de .pd-card via div intermediário
+        for selector in ['.pd-main .pd-card > div > button', '.med-options .med-btn--outline']:
+            try:
+                btn = self.driver.find_element(By.CSS_SELECTOR, selector)
+                btn.click()
+                return True
+            except _SELENIUM_EXC:
+                pass
+        return False
 
     def click_binary_answer(self, answer):
         try:
@@ -107,23 +122,43 @@ class EstudoPage:
         except _SELENIUM_EXC:
             return False
 
+    def click_confirmar_if_available(self):
+        """Clica em Confirmar se presente e habilitado (multipla_escolha); no-op rápido para binária."""
+        try:
+            self.driver.implicitly_wait(2)
+            btn = self.driver.find_element(
+                By.XPATH, "//button[text()='Confirmar' and not(@disabled)]"
+            )
+            btn.click()
+            return True
+        except _SELENIUM_EXC:
+            return False
+        finally:
+            self.driver.implicitly_wait(10)
+
     def has_feedback_correto(self):
         try:
-            self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.med-feedback--success')))
+            self.wait.until(EC.presence_of_element_located((
+                By.XPATH,
+                "//*[contains(@class,'med-feedback--success') or contains(text(),'Correto!')]"
+            )))
             return True
         except _SELENIUM_EXC:
             return False
 
     def has_feedback_incorreto(self):
         try:
-            self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.med-feedback--error')))
+            self.wait.until(EC.presence_of_element_located((
+                By.XPATH,
+                "//*[contains(@class,'med-feedback--error') or contains(text(),'Incorreto')]"
+            )))
             return True
         except _SELENIUM_EXC:
             return False
 
     def click_proxima_pergunta(self):
         try:
-            btn = self.driver.find_element(By.XPATH, "//button[contains(text(), 'Próxima')]")
+            btn = self.driver.find_element(By.XPATH, "//button[contains(., 'Próxima')]")
             btn.click()
             return True
         except _SELENIUM_EXC:
@@ -140,6 +175,48 @@ class EstudoPage:
         try:
             btn = self.driver.find_element(By.CSS_SELECTOR, '.med-back-btn, .back-btn, .pd-back-btn')
             btn.click()
+            return True
+        except _SELENIUM_EXC:
+            return False
+
+    def click_multipla_opcao_by_text(self, text):
+        # Desktop: botão com texto correspondente dentro de .pd-main
+        try:
+            btn = self.driver.find_element(
+                By.XPATH, f"//div[contains(@class,'pd-main')]//button[contains(.,'{text}')]"
+            )
+            btn.click()
+            return True
+        except _SELENIUM_EXC:
+            pass
+        # Fallback mobile
+        try:
+            btns = self.driver.find_elements(By.CSS_SELECTOR, '.med-options .med-btn--outline')
+            for b in btns:
+                if text in b.text:
+                    b.click()
+                    return True
+        except _SELENIUM_EXC:
+            pass
+        return False
+
+    def click_avancar(self):
+        """Clica em 'Próxima pergunta' ou 'Concluir' após responder uma questão."""
+        try:
+            btn = self.driver.find_element(
+                By.XPATH,
+                "//button[contains(., 'Próxima') or contains(., 'Concluir')]"
+            )
+            btn.click()
+            return True
+        except _SELENIUM_EXC:
+            return False
+
+    def has_conclusao_button(self):
+        try:
+            self.driver.find_element(
+                By.XPATH, "//button[contains(., 'Voltar ao Modo Estudo')]"
+            )
             return True
         except _SELENIUM_EXC:
             return False

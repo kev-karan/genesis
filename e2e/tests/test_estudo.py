@@ -10,7 +10,7 @@ class TestEstudo:
         driver = logged_in
 
         try:
-            estudo_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'MODO DE ESTUDO')]")
+            estudo_btn = driver.find_element(By.XPATH, "//button[contains(., 'MODO DE ESTUDO')]")
             estudo_btn.click()
         except:
             pytest.skip("Botão Modo de Estudo não encontrado na topbar")
@@ -26,7 +26,7 @@ class TestEstudo:
         driver = logged_in
 
         try:
-            estudo_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'MODO DE ESTUDO')]")
+            estudo_btn = driver.find_element(By.XPATH, "//button[contains(., 'MODO DE ESTUDO')]")
             estudo_btn.click()
         except:
             pytest.skip("Botão Modo de Estudo não encontrado na topbar")
@@ -46,7 +46,7 @@ class TestEstudo:
         driver = logged_in
 
         try:
-            estudo_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'MODO DE ESTUDO')]")
+            estudo_btn = driver.find_element(By.XPATH, "//button[contains(., 'MODO DE ESTUDO')]")
             estudo_btn.click()
         except:
             pytest.skip("Botão Modo de Estudo não encontrado na topbar")
@@ -77,7 +77,7 @@ class TestEstudo:
         driver = logged_in
 
         try:
-            estudo_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'MODO DE ESTUDO')]")
+            estudo_btn = driver.find_element(By.XPATH, "//button[contains(., 'MODO DE ESTUDO')]")
             estudo_btn.click()
         except:
             pytest.skip("Botão Modo de Estudo não encontrado na topbar")
@@ -118,7 +118,7 @@ class TestEstudo:
         driver = logged_in
 
         try:
-            estudo_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'MODO DE ESTUDO')]")
+            estudo_btn = driver.find_element(By.XPATH, "//button[contains(., 'MODO DE ESTUDO')]")
             estudo_btn.click()
         except:
             pytest.skip("Botão Modo de Estudo não encontrado na topbar")
@@ -157,7 +157,7 @@ class TestEstudo:
         driver = logged_in
 
         try:
-            estudo_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'MODO DE ESTUDO')]")
+            estudo_btn = driver.find_element(By.XPATH, "//button[contains(., 'MODO DE ESTUDO')]")
             estudo_btn.click()
         except:
             pytest.skip("Botão Modo de Estudo não encontrado na topbar")
@@ -180,8 +180,24 @@ class TestEstudo:
         if question_text is None:
             pytest.skip("Questão não carregou")
 
-        if not estudo_page.enter_numeric_answer("10"):
-            pytest.skip("Input numérico não encontrado")
+        # Avança pelas questões não-numéricas (Q1=multipla_escolha, Q2=binaria) até encontrar a numérica
+        for _ in range(5):
+            if estudo_page.enter_numeric_answer("10"):
+                break
+            answered = (
+                estudo_page.click_first_multipla_escolha_opcao()
+                or estudo_page.click_binary_answer("Sim")
+                or estudo_page.click_binary_answer("Não")
+            )
+            if not answered:
+                pytest.skip("Input numérico não encontrado e não foi possível avançar")
+            time.sleep(1)
+            estudo_page.click_confirmar_if_available()
+            time.sleep(2)
+            estudo_page.click_avancar()
+            time.sleep(2)
+        else:
+            pytest.skip("Input numérico não encontrado após percorrer questões")
         time.sleep(1)
 
         if not estudo_page.click_confirmar():
@@ -196,7 +212,7 @@ class TestEstudo:
         driver = logged_in
 
         try:
-            estudo_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'MODO DE ESTUDO')]")
+            estudo_btn = driver.find_element(By.XPATH, "//button[contains(., 'MODO DE ESTUDO')]")
             estudo_btn.click()
         except:
             pytest.skip("Botão Modo de Estudo não encontrado na topbar")
@@ -219,7 +235,11 @@ class TestEstudo:
         if question_text is None:
             pytest.skip("Questão não carregou")
 
-        if estudo_page.click_binary_answer("Sim"):
+        if estudo_page.click_first_multipla_escolha_opcao():
+            time.sleep(1)
+            estudo_page.click_confirmar_if_available()
+            time.sleep(2)
+        elif estudo_page.click_binary_answer("Sim"):
             time.sleep(2)
         elif estudo_page.enter_numeric_answer("10"):
             time.sleep(1)
@@ -234,7 +254,7 @@ class TestEstudo:
             pytest.skip("Feedback não apareceu")
 
         try:
-            prox_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'Próxima') or contains(text(), 'Concluir')]")
+            prox_btn = driver.find_element(By.XPATH, "//button[contains(., 'Próxima') or contains(., 'Concluir')]")
             prox_btn.click()
             time.sleep(2)
         except:
@@ -244,3 +264,54 @@ class TestEstudo:
             new_question = estudo_page.get_current_question_text()
             assert new_question is not None and len(new_question) > 0, \
                 "Próxima pergunta não carregou após avançar"
+
+    def test_caso_concluido(self, logged_in, reset_caso):
+        # Percorre todas as questões do Caso Dengue e verifica tela de conclusão.
+        # Q1: múltipla → "Dengue com sinais de alarme"
+        # Q2: binária  → "Sim"
+        # Q3: numérica → "42"
+        driver = logged_in
+
+        try:
+            driver.find_element(By.XPATH, "//button[contains(., 'MODO DE ESTUDO')]").click()
+        except Exception:
+            pytest.skip("Botão Modo de Estudo não encontrado na topbar")
+        time.sleep(2)
+
+        estudo_page = EstudoPage(driver)
+        assert estudo_page.is_page_loaded(), "Modo Estudo não carregou"
+        assert estudo_page.select_caso_by_name("Dengue"), "Caso Dengue não encontrado"
+        time.sleep(2)
+
+        assert estudo_page.click_iniciar_caso(), "Botão 'Iniciar Caso' não encontrado"
+        time.sleep(2)
+
+        assert estudo_page.click_iniciar_questoes(), "Botão 'Iniciar questões' não encontrado"
+        time.sleep(2)
+
+        # Q1 — múltipla escolha
+        assert estudo_page.click_multipla_opcao_by_text("Dengue com sinais de alarme"), \
+            "Opção 'Dengue com sinais de alarme' não encontrada"
+        time.sleep(0.3)
+        assert estudo_page.click_confirmar(), "Botão Confirmar não encontrado (Q1)"
+        time.sleep(2)
+        assert estudo_page.click_avancar(), "Botão avançar não encontrado após Q1"
+        time.sleep(2)
+
+        # Q2 — binária
+        assert estudo_page.click_binary_answer("Sim"), "Opção 'Sim' não encontrada (Q2)"
+        time.sleep(2)
+        assert estudo_page.click_avancar(), "Botão avançar não encontrado após Q2"
+        time.sleep(2)
+
+        # Q3 — numérica
+        assert estudo_page.enter_numeric_answer("42"), "Input numérico não encontrado (Q3)"
+        time.sleep(0.3)
+        assert estudo_page.click_confirmar(), "Botão Confirmar não encontrado (Q3)"
+        time.sleep(2)
+        assert estudo_page.click_avancar(), "Botão 'Concluir' não encontrado"
+        time.sleep(2)
+
+        assert estudo_page.is_concluido(), "Tela 'Caso concluído!' não apareceu"
+        assert estudo_page.has_conclusao_button(), \
+            "Botão 'Voltar ao Modo Estudo' não encontrado na conclusão"

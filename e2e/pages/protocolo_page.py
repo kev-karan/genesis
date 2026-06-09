@@ -83,3 +83,29 @@ class ProtocoloPage:
         if fav_btn:
             return '★' in fav_btn.text or 'filled' in fav_btn.get_attribute('class')
         return False
+
+    def expand_sidebar_card(self, title):
+        """Expande ToggleSidebarCard pelo título."""
+        try:
+            headers = self.driver.find_elements(By.CSS_SELECTOR, '.pd-sb-header')
+            for h in headers:
+                if title in h.text:
+                    if h.get_attribute('aria-expanded') != 'true':
+                        h.click()
+                    return True
+        except Exception:
+            pass
+        return False
+
+    def get_sidebar_favorites_labels(self):
+        """Retorna labels dos itens favoritos na sidebar."""
+        try:
+            headers = self.driver.find_elements(By.CSS_SELECTOR, '.pd-sb-header')
+            for h in headers:
+                if 'Favoritos' in h.text:
+                    parent = h.find_element(By.XPATH, '..')
+                    labels = parent.find_elements(By.CSS_SELECTOR, '.pd-sb-item-label')
+                    return [l.text for l in labels if l.is_displayed()]
+        except Exception:
+            pass
+        return []

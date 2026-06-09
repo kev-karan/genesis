@@ -57,3 +57,16 @@ def remover_favorito(request, id_fluxo):
         return JsonResponse({"status": "removido com sucesso"})
     except Favorito.DoesNotExist:
         return JsonResponse({"erro": "Favorito não encontrado"}, status=404)
+
+
+@api_view(['DELETE'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def reset_favoritos(request):
+    from django.conf import settings
+    if not settings.DEBUG:
+        from rest_framework.response import Response
+        from rest_framework import status
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    deleted, _ = Favorito.objects.filter(usuario=request.user).delete()
+    return JsonResponse({'deleted': deleted})
