@@ -21,19 +21,32 @@ class ContaPage:
             return False
 
     def get_user_email(self):
-        try:
-            email = self.driver.find_element(By.CSS_SELECTOR, '.content p[style*="font-weight: 700"], .content [style*="overflow-wrap: break-word"]')
-            return email.text
-        except _SELENIUM_EXC:
+        for selector in [
+            '.proto-desktop .pd-page-subtitle',
+            '.proto-desktop .pd-card p',
+            '.proto-desktop .pd-card span',
+        ]:
             try:
-                elements = self.driver.find_elements(By.XPATH, "//*[contains(text(), '@')]")
-                for el in elements:
-                    text = el.text.strip()
-                    if '@' in text and len(text) > 5:
-                        return text
+                el = self.driver.find_element(By.CSS_SELECTOR, selector)
+                text = el.text.strip()
+                if text and '@' in text:
+                    return text
             except _SELENIUM_EXC:
                 pass
-            return None
+        try:
+            elements = self.driver.find_elements(By.XPATH, "//*[contains(text(), '@')]")
+            for el in elements:
+                try:
+                    if not el.is_displayed():
+                        continue
+                except Exception:
+                    continue
+                text = el.text.strip()
+                if '@' in text and len(text) > 5:
+                    return text
+        except _SELENIUM_EXC:
+            pass
+        return None
 
     def click_logout(self):
         try:

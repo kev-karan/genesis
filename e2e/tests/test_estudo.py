@@ -180,8 +180,23 @@ class TestEstudo:
         if question_text is None:
             pytest.skip("Questão não carregou")
 
-        if not estudo_page.enter_numeric_answer("10"):
-            pytest.skip("Input numérico não encontrado")
+        # Advance past non-numeric questions (Q1=multipla_escolha, Q2=binaria) to reach Q3=numerica
+        for _ in range(5):
+            if estudo_page.enter_numeric_answer("10"):
+                break
+            # Answer current question (multipla_escolha or binaria) and advance
+            answered = (
+                estudo_page.click_first_multipla_escolha_opcao()
+                or estudo_page.click_binary_answer("Sim")
+                or estudo_page.click_binary_answer("Não")
+            )
+            if not answered:
+                pytest.skip("Input numérico não encontrado e não foi possível avançar")
+            time.sleep(2)
+            estudo_page.click_avancar()
+            time.sleep(2)
+        else:
+            pytest.skip("Input numérico não encontrado após percorrer questões")
         time.sleep(1)
 
         if not estudo_page.click_confirmar():
@@ -219,7 +234,9 @@ class TestEstudo:
         if question_text is None:
             pytest.skip("Questão não carregou")
 
-        if estudo_page.click_binary_answer("Sim"):
+        if estudo_page.click_first_multipla_escolha_opcao():
+            time.sleep(2)
+        elif estudo_page.click_binary_answer("Sim"):
             time.sleep(2)
         elif estudo_page.enter_numeric_answer("10"):
             time.sleep(1)
