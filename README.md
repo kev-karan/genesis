@@ -47,25 +47,27 @@ Abrange a calculadora de peso, sugestão de drogas análogas, e apresentação c
 ![alt text](imagens/backlog2.png)
 
 ---
-
-## 🗂️ Quadro de Sprints
-
-Cada sprint tem duração de **2 semanas**. As histórias épicas são desenvolvidas de forma sequencial ao longo das sprints.
-
----
-
 ## Sprint 1  [05/05] -> [19/05] 
-![alt text](imagens/sprint1.png)
+<img width="1600" height="398" alt="WhatsApp Image 2026-06-10 at 18 43 06" src="https://github.com/user-attachments/assets/97a7a73f-734f-430a-94f9-7e482aa8da80" />
+<img width="979" height="779" alt="WhatsApp Image 2026-06-10 at 18 47 41" src="https://github.com/user-attachments/assets/410ceed7-b261-43ea-b893-2ce159cc9732" />
 
 ---
 
 ## Sprint 2  [19/05] -> [02/06] 
-<img width="1692" height="174" alt="image" src="https://github.com/user-attachments/assets/1dbe07db-f644-4dc1-b442-bbce6a208264" />
+<img width="1600" height="433" alt="WhatsApp Image 2026-06-10 at 18 46 27" src="https://github.com/user-attachments/assets/f82804d2-74d0-4dc1-9082-6aacc2fe7749" />
+<img width="624" height="665" alt="WhatsApp Image 2026-06-10 at 18 47 15" src="https://github.com/user-attachments/assets/4729f203-dfcc-41d0-9eef-ab39a6eff078" />
 
 ---
 
 ## Sprint 3  [02/06] -> [16/06] 
-[quadro sprint 3]
+<img width="1600" height="403" alt="WhatsApp Image 2026-06-10 at 18 49 20" src="https://github.com/user-attachments/assets/bca39f5c-2b8f-464e-abe2-9c397b929d0a" />
+<img width="1468" height="672" alt="WhatsApp Image 2026-06-10 at 18 49 42" src="https://github.com/user-attachments/assets/4592cbf1-01b6-462b-a1c7-8dee6207a650" />
+
+
+---
+## Fim do Projeto
+<img width="1600" height="397" alt="WhatsApp Image 2026-06-10 at 18 52 17" src="https://github.com/user-attachments/assets/97c1fd5a-4230-4d9e-9229-0491bd3bcc23" />
+<img width="651" height="796" alt="WhatsApp Image 2026-06-10 at 18 52 32" src="https://github.com/user-attachments/assets/4a3ad9bf-789b-4bbd-9115-1812fd261b28" />
 
 ---
 ## 👥 Equipe do Projeto
