@@ -88,18 +88,11 @@ Abrange a calculadora de peso, sugestão de drogas análogas, e apresentação c
 | :--- | :--- |
 | **🎨 Protótipo Figma** | [![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)]([SUBSTITUA_PELO_LINK](https://www.figma.com/design/0CKf1YBE9cuDFhuE1TDcLO/GENESIS?node-id=109-141&t=jd230mV5uaztR4Mk-0)) | 
 | **🚀 Deploy** | [![Railway](https://img.shields.io/badge/Railway-131313?style=for-the-badge&logo=railway&logoColor=white)](URL) |
-| **📋 BDD das Histórias** | [![Google Docs](https://img.shields.io/badge/Google_Docs-4285F4?style=for-the-badge&logo=google-docs&logoColor=white)](URL) | 
-| **👥 Programação em par** | [![Google Docs](https://img.shields.io/badge/Google_Docs-4285F4?style=for-the-badge&logo=google-docs&logoColor=white)](URL) | 
+| **📋 BDD das Histórias** | [![Google Docs](https://img.shields.io/badge/Google_Docs-4285F4?style=for-the-badge&logo=google-docs&logoColor=white)](https://docs.google.com/document/d/1o6BcgU62VwbqI-tjaauCRkTmHkiH2h7DXR92eY073KM/edit?usp=sharing) | 
+| **👥 Programação em par** | [![Google Docs](https://img.shields.io/badge/Google_Docs-4285F4?style=for-the-badge&logo=google-docs&logoColor=white)](https://docs.google.com/document/d/1lIfEQ1AmVwwaDdUGdB3cigLJXAS4qZcXMGj4rbhwX8E/edit?tab=t.0) | 
 
 
 ---
-
-## 📊 Prints
-[Print do Jira]
-[Print do Issues]
-
----
-
 ## 🔑 Instruções de Acesso
 
 
