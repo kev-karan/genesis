@@ -41,7 +41,33 @@ Abrange o Modo de Emergência com acesso em um toque, fluxo guiado e simplificad
 Abrange a calculadora de peso, sugestão de drogas análogas, e apresentação clara dos resultados com base nos protocolos.
 
 ---
+## 👥 Equipe do Projeto
 
+| [<img src="https://github.com/perriniadrielly-http.png" width=115><br><sub>Adrielly Perrini</sub>](https://github.com/perriniadrielly-http) | [<img src="https://github.com/beatrizloyola.png" width=115><br><sub>Beatriz Loyola</sub>](https://github.com/beatrizloyola) | [<img src="https://github.com/celinaacav-png.png" width=115><br><sub>Celina Cavalcanti</sub>](https://github.com/celinaacav-png) | [<img src="https://github.com/DanDdC.png" width=115><br><sub>Daniel Donaire</sub>](https://github.com/DanDdC) | [<img src="https://github.com/juliatenoriocalado.png" width=115><br><sub>Julia Calado</sub>](https://github.com/juliatenoriocalado) |
+| :---: | :---: | :---: | :---: | :---: |
+| [<img src="https://github.com/kev-karan.png" width=115><br><sub>Kelwin Karan</sub>](https://github.com/kev-karan) | [<img src="https://github.com/Luiza029.png" width=115><br><sub>Luiza Costa</sub>](https://github.com/Luiza029) | [<img src="https://github.com/pedrovcb.png" width=115><br><sub>Pedro Bedor</sub>](https://github.com/pedrovcb) | [<img src="https://github.com/RafaCarrilho.png" width=115><br><sub>Rafael Carrilho</sub>](https://github.com/RafaCarrilho) | [<img src="https://github.com/vitoriaduran.png" width=115><br><sub>Vitória Gabrielle</sub>](https://github.com/vitoriaduran) |
+
+---
+<details>
+<summary>🚀 <b>Clique para expandir os detalhes da Entrega (SR2)</b></summary>
+
+<br />
+
+## 🔗 Central de Links do Projeto
+
+| Recurso | Link de Acesso |
+| :--- | :--- |
+| **🎨 Protótipo Figma** | [![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)]([SUBSTITUA_PELO_LINK](https://www.figma.com/design/0CKf1YBE9cuDFhuE1TDcLO/GENESIS?node-id=109-141&t=jd230mV5uaztR4Mk-0)) | 
+| **🚀 Deploy** | [![Railway](https://img.shields.io/badge/Railway-131313?style=for-the-badge&logo=railway&logoColor=white)](URL) |
+| **📋 BDD das Histórias** | [![Google Docs](https://img.shields.io/badge/Google_Docs-4285F4?style=for-the-badge&logo=google-docs&logoColor=white)](https://docs.google.com/document/d/1o6BcgU62VwbqI-tjaauCRkTmHkiH2h7DXR92eY073KM/edit?usp=sharing) | 
+| **👥 Programação em par** | [![Google Docs](https://img.shields.io/badge/Google_Docs-4285F4?style=for-the-badge&logo=google-docs&logoColor=white)](https://docs.google.com/document/d/1lIfEQ1AmVwwaDdUGdB3cigLJXAS4qZcXMGj4rbhwX8E/edit?tab=t.0) | 
+
+
+---
+## 🔑 Instruções de Acesso
+
+
+---
 ## ⬜ Backlog
 ![alt text](imagens/backlog1.png)
 ![alt text](imagens/backlog2.png)
@@ -70,34 +96,6 @@ Abrange a calculadora de peso, sugestão de drogas análogas, e apresentação c
 <img width="651" height="796" alt="WhatsApp Image 2026-06-10 at 18 52 32" src="https://github.com/user-attachments/assets/4a3ad9bf-789b-4bbd-9115-1812fd261b28" />
 
 ---
-## 👥 Equipe do Projeto
-
-| [<img src="https://github.com/perriniadrielly-http.png" width=115><br><sub>Adrielly Perrini</sub>](https://github.com/perriniadrielly-http) | [<img src="https://github.com/beatrizloyola.png" width=115><br><sub>Beatriz Loyola</sub>](https://github.com/beatrizloyola) | [<img src="https://github.com/celinaacav-png.png" width=115><br><sub>Celina Cavalcanti</sub>](https://github.com/celinaacav-png) | [<img src="https://github.com/DanDdC.png" width=115><br><sub>Daniel Donaire</sub>](https://github.com/DanDdC) | [<img src="https://github.com/juliatenoriocalado.png" width=115><br><sub>Julia Calado</sub>](https://github.com/juliatenoriocalado) |
-| :---: | :---: | :---: | :---: | :---: |
-| [<img src="https://github.com/kev-karan.png" width=115><br><sub>Kelwin Karan</sub>](https://github.com/kev-karan) | [<img src="https://github.com/Luiza029.png" width=115><br><sub>Luiza Costa</sub>](https://github.com/Luiza029) | [<img src="https://github.com/pedrovcb.png" width=115><br><sub>Pedro Bedor</sub>](https://github.com/pedrovcb) | [<img src="https://github.com/RafaCarrilho.png" width=115><br><sub>Rafael Carrilho</sub>](https://github.com/RafaCarrilho) | [<img src="https://github.com/vitoriaduran.png" width=115><br><sub>Vitória Gabrielle</sub>](https://github.com/vitoriaduran) |
-
----
-<details>
-<summary>🚀 <b>Clique para expandir os detalhes da Entrega (SR2)</b></summary>
-
-<br />
-
-## 🔗 Central de Links do Projeto
-
-| Recurso | Link de Acesso |
-| :--- | :--- |
-| **🎨 Protótipo Figma** | [![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)]([SUBSTITUA_PELO_LINK](https://www.figma.com/design/0CKf1YBE9cuDFhuE1TDcLO/GENESIS?node-id=109-141&t=jd230mV5uaztR4Mk-0)) | 
-| **🚀 Deploy** | [![Railway](https://img.shields.io/badge/Railway-131313?style=for-the-badge&logo=railway&logoColor=white)](URL) |
-| **📋 BDD das Histórias** | [![Google Docs](https://img.shields.io/badge/Google_Docs-4285F4?style=for-the-badge&logo=google-docs&logoColor=white)](https://docs.google.com/document/d/1o6BcgU62VwbqI-tjaauCRkTmHkiH2h7DXR92eY073KM/edit?usp=sharing) | 
-| **👥 Programação em par** | [![Google Docs](https://img.shields.io/badge/Google_Docs-4285F4?style=for-the-badge&logo=google-docs&logoColor=white)](https://docs.google.com/document/d/1lIfEQ1AmVwwaDdUGdB3cigLJXAS4qZcXMGj4rbhwX8E/edit?tab=t.0) | 
-
-
----
-## 🔑 Instruções de Acesso
-
-
----
-
 ## 🎥 Demonstrações em Vídeo (Screencasts)
 
 ### ⚙️ Pipeline de CI/CD
