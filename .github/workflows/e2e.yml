@@ -42,24 +42,19 @@ jobs:
           cache: "pip"
           cache-dependency-path: e2e/requirements.txt
 
+      - name: Install Firefox
+        uses: browser-actions/setup-firefox@v1
+        with:
+          firefox-version: latest
+
+      - name: Check Firefox
+        run: firefox --version
+
       - name: Install dependencies
         run: pip install -r e2e/requirements.txt
 
       - name: Run E2E tests
+        env:
+          E2E_BASE_URL: http://localhost:3000
+          E2E_API_URL: http://localhost:8000/api
         run: pytest e2e/tests -v --html=e2e/report.html --self-contained-html
-
-      - name: Show container logs on failure
-        if: failure()
-        run: docker compose -f e2e/docker-compose-e2e.yml logs --no-color
-
-      - name: Upload test report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: e2e-report
-          path: e2e/report.html
-          retention-days: 30
-
-      - name: Stop services
-        if: always()
-        run: docker compose -f e2e/docker-compose-e2e.yml down
