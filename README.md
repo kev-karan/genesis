@@ -65,9 +65,65 @@ Abrange a calculadora de peso, sugestão de drogas análogas, e apresentação c
 
 ---
 ## 🔑 Instruções de Acesso
-
-
+## 1. Criando sua conta
+ 
+1. Acesse o site e clique em **"Cadastrar"** na tela inicial.
+2. Preencha os campos:
+   - **E-mail** — será seu login
+   - **Senha**
+   - **Confirmar senha** (deve ser idêntica à senha)
+3. Clique em **"Criar conta"**.
+4. Após o cadastro, você será redirecionado para a tela de login.
+> ⚠️ Cada e-mail pode ter apenas **uma conta**. Se já existir uma conta com o e-mail informado, o sistema avisará.
+ 
 ---
+ 
+## 2. Fazendo login
+ 
+1. Na tela inicial, insira seu **e-mail** e **senha**.
+2. Clique em **"Entrar"**.
+3. Você será direcionado para a **página inicial (Home)**.
+---
+ 
+## 3. Estudando um fluxograma (Modo Estudo)
+ 
+O Modo Estudo permite explorar os protocolos clínicos com calma, acompanhar casos e responder questões.
+ 
+1. Na Home, clique em **"Modo Estudo"**.
+2. Você verá a lista de fluxogramas disponíveis (ex.: Dengue, Sedação).
+3. Clique no fluxograma desejado para abri-lo.
+4. Navegue pelas etapas do protocolo clínico.
+5. Se houver **casos clínicos** associados, você pode acessá-los para praticar com questões.
+**Dicas:**
+- Use a **estrela (⭐)** para salvar fluxogramas nos favoritos.
+- O sistema registra seus **acessos recentes** automaticamente.
+---
+ 
+## 4. Ativando o Modo Emergência
+ 
+O Modo Emergência é pensado para uso rápido em situações críticas, disponível tanto no celular quanto no computador.
+ 
+1. Na Home, clique/toque no botão **"Modo Emergência"**.
+2. A lista de protocolos de emergência disponíveis será exibida.
+3. Selecione o protocolo da situação atual (ex.: Dengue, Sedação).
+4. Siga o fluxo **passo a passo** guiado pelo sistema.
+
+**Para sair do Modo Emergência:**
+- Clique no botão de voltar/sair.
+- Uma confirmação será exibida: *"Você está em atendimento de emergência. Tem certeza que deseja sair?"*
+- Confirme clicando em **"Sair"**, ou cancele para continuar no modo.
+ 
+---
+ 
+## 5. Usando a Calculadora de Doses
+ 
+1. Acesse pelo menu principal ou diretamente durante um protocolo de emergência.
+2. Informe o **peso do paciente** (em kg).
+3. Selecione o **medicamento** desejado.
+4. O sistema calculará automaticamente a dose recomendada.
+5. Caso o medicamento não esteja disponível, serão sugeridas **drogas análogas**.
+---
+
 ## ⬜ Backlog
 ![alt text](imagens/backlog1.png)
 ![alt text](imagens/backlog2.png)
@@ -96,6 +152,9 @@ Abrange a calculadora de peso, sugestão de drogas análogas, e apresentação c
 <img width="651" height="796" alt="WhatsApp Image 2026-06-10 at 18 52 32" src="https://github.com/user-attachments/assets/4a3ad9bf-789b-4bbd-9115-1812fd261b28" />
 
 ---
+## Issues 
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/483951a3-710f-40d2-9c76-4e65bbc96d0c" />
+
 ## 🎥 Demonstrações em Vídeo (Screencasts)
 
 ### ⚙️ Pipeline de CI/CD
