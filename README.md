@@ -163,6 +163,6 @@ Apresentação da automação de build, testes e deploy contínuo.
 
 ### 🧪 Testes End-to-End (E2E)
 Execução dos cenários de teste automatizados simulando a jornada do usuário.
-* 📺 [Assistir execução dos testes E2E](URL)
+* 📺 [Assistir execução dos testes E2E](https://youtu.be/Vwzw8c6U0bQ)
 
 </details>
